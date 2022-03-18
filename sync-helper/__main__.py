@@ -1,11 +1,12 @@
 import argparse
+import pathlib
 
 from utile.conflictUtile import *
 from conflict.conflict import *
 
 def main():
     parser = argparse.ArgumentParser(description='Chromium sync helper tool')
-    parser.add_argument('path', type=str, help='path to repository')
+    parser.add_argument('path', type=pathlib.Path, help='path to repository')
     parser.add_argument('-c', '--conflict',action='store_const',
                         const=True, default=False, help='Show all conflicts')
     parser.add_argument('-b', '--blame', action='store_const',
