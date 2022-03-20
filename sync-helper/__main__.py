@@ -13,7 +13,7 @@ def main():
                         const=True, default=False, help='Show what revision and author last modified each conflict line')
     args = parser.parse_args()
     
-    # file conflicts list
+    # fill conflicts located in conflict.coflict
     ret = fill_conflicts(args.path)
     if ret == -1:
         print("Invalid path")
