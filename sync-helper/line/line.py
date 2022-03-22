@@ -7,4 +7,4 @@ class Line():
         self.content = content
     
     def __repr__(self):
-        return f"{self.rev:16}({self.author_name:20}{self.date:20}{self.line_num:>6s}){self.content}\n"
+        return f"{self.rev:44}({self.author_name:20}{self.date:20}{self.line_num:>6s}){self.content}\n"
