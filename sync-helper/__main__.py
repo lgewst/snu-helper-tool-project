@@ -4,6 +4,9 @@ import pathlib
 from utile.conflictUtile import *
 from conflict.conflict import *
 
+from utile.blameUtile import *
+from blame.blame import *
+
 def main():
     parser = argparse.ArgumentParser(description='Chromium sync helper tool')
     parser.add_argument('path', type=pathlib.Path, help='path to repository')
@@ -29,8 +32,10 @@ def main():
             print(cf)
         return
     elif args.blame:
-        ##TODO
-        pass
+        ret = fill_blame_info(args.path)
+        for bl in blames:
+            print(bl)
+        return
     else:
         ##TODO
         pass
