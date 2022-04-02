@@ -20,10 +20,10 @@ class TreeViewSet(viewsets.GenericViewSet):
         if not path.isdir(dirpath):
             raise InvalidPathException()
 
-        print(f"path={dirpath}")
-
-        directories = [{"name": f.name, "path": f.path} for f in scandir(dirpath) if f.is_dir()]
-        files = [{"name": f.name, "path": f.path} for f in scandir(dirpath) if f.is_file()]
+        # print(f"path={dirpath}")
+        directories = [] if path.samefile(chromium_repo, dirpath) else [{"name": "..", "path": path.relpath(dirpath+"/..", chromium_repo)}]
+        directories += [{"name": f.name, "path": path.relpath(f.path, chromium_repo)} for f in scandir(dirpath) if f.is_dir()]
+        files = [{"name": f.name, "path": path.relpath(f.path, chromium_repo)} for f in scandir(dirpath) if f.is_file()]
         
         data = {
             "directories": directories,
