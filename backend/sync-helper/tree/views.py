@@ -3,7 +3,7 @@ from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
-from os import scandir, path
+from os import scandir, path, sep
 from tree.models import *
 from config.error import *
 
@@ -17,7 +17,7 @@ class TreeViewSet(viewsets.GenericViewSet):
         p = request.query_params.get('path') if request.query_params.get('path') else DEFAULT_PATH
         dirpath = chromium_repo + p
 
-        if not path.isdir(dirpath):
+        if not (path.isdir(dirpath) and (path.abspath(dirpath)+sep).startswith(path.abspath(chromium_repo)+sep)):
             raise InvalidPathException()
 
         # print(f"path={dirpath}")
