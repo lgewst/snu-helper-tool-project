@@ -49,7 +49,19 @@ class SyncHelperException(APIException):
 
 class InitializeException(SyncHelperException):
     status_code = 400
-    message = "Initialize repositories and version first"
+    message = "Initialize repositories and version first!"
+
+class InvalidChromiumRepoException(SyncHelperException):
+    status_code = 400
+    message = "Invalid chromium repo"
+
+class InvalidWebososeRepoException(SyncHelperException):
+    status_code = 400
+    message = "Invalid webosose repo"
+
+class InvalidVersionException(SyncHelperException):
+    status_code = 400
+    message = "Invalid version"
 
 class InvalidPathException(SyncHelperException):
     status_code = 400

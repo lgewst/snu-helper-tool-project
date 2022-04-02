@@ -1,11 +1,11 @@
 from django.urls import include, path
 from rest_framework.routers import SimpleRouter
-from tree.views import TreeViewSet
+from chromium.views import ChromiumViewSet
 
-app_name = 'tree'
+app_name = 'chromium'
 
 router = SimpleRouter()
-router.register('tree', TreeViewSet, basename='tree')  # /tree/
+router.register('chromium', ChromiumViewSet, basename='chromium')  # /chromium/
 
 urlpatterns = [
     path('', include((router.urls))),

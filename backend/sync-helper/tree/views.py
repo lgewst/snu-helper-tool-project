@@ -12,17 +12,21 @@ class TreeViewSet(viewsets.GenericViewSet):
     # GET /tree/dir?path=<path>
     @action(detail=False, methods=['GET'], url_path='dir')
     def directroy_list(self, request):
+        if not Chromium.INITIALIZED:
+            raise InitializeException()
         DEFAULT_PATH = ""
-        p = request.query_params.get('path') if request.query_params.get('path') else DEFAULT_PATH
-        dirpath = chromium_repo + p
+        ROOT = Chromium.chromium_repo
 
-        if not (path.isdir(dirpath) and (path.abspath(dirpath)+sep).startswith(path.abspath(chromium_repo)+sep)):
+        p = request.query_params.get('path') if request.query_params.get('path') else DEFAULT_PATH
+        dirpath = ROOT + p
+
+        if not (path.isdir(dirpath) and (path.abspath(dirpath)+sep).startswith(path.abspath(ROOT)+sep)):
             raise InvalidPathException()
 
         # print(f"path={dirpath}")
-        directories = [] if path.samefile(chromium_repo, dirpath) else [{"name": "..", "path": path.relpath(dirpath+"/..", chromium_repo)}]
-        directories += [{"name": f.name, "path": path.relpath(f.path, chromium_repo)} for f in scandir(dirpath) if f.is_dir()]
-        files = [{"name": f.name, "path": path.relpath(f.path, chromium_repo)} for f in scandir(dirpath) if f.is_file()]
+        directories = [] if path.samefile(ROOT, dirpath) else [{"name": "..", "path": path.relpath(dirpath+"/..", ROOT)}]
+        directories += [{"name": f.name, "path": path.relpath(f.path, ROOT)} for f in scandir(dirpath) if f.is_dir()]
+        files = [{"name": f.name, "path": path.relpath(f.path, ROOT)} for f in scandir(dirpath) if f.is_file()]
         
         data = {
             "directories": directories,
