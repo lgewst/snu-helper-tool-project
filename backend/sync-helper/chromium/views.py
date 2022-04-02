@@ -27,7 +27,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
     
     # GET /chromium/dir?path=<path>
     @action(detail=False, methods=['GET'], url_path='dir')
-    def directroy_list(self, request):
+    def directory_list(self, request):
         if not Chromium.INITIALIZED:
             raise InitializeException()
         DEFAULT_PATH = ""
