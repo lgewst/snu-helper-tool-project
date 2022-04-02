@@ -4,11 +4,10 @@ from rest_framework.response import Response
 from rest_framework.decorators import action
 
 from os import scandir, path, sep
-from tree.models import *
+from chromium.models import *
 from config.error import *
 
 # Create your views here.
-
 class TreeViewSet(viewsets.GenericViewSet):
     # GET /tree/dir?path=<path>
     @action(detail=False, methods=['GET'], url_path='dir')

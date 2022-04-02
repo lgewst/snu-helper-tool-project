@@ -47,6 +47,10 @@ def custom_exception_handler(exc, context):
 class SyncHelperException(APIException):
     message = ""
 
+class InitializeException(SyncHelperException):
+    status_code = 400
+    message = "Initialize repositories and version first"
+
 class InvalidPathException(SyncHelperException):
     status_code = 400
     message = "Invalid path"
