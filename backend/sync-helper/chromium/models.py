@@ -1,6 +1,9 @@
 from django.db import models
 import os
 
+import datetime
+import linecache
+
 # static class
 class Chromium():
     INITIALIZED =       False
@@ -92,23 +95,41 @@ class Chromium():
         except Exception as e:
             return False 
 
-        msgs = os.popen(f"git blame -l --line-porcelain -L{start},{end} {path}")
+        msgs = os.popen(f"git blame -l --line-porcelain -L{start},{end} {path}").read().split('\n')[:-1]
 
         blame = []
-        ## TODO: msgs parsing
-        #
-        # blame = [
-        #   {
-        #     "commit_id": string,
-        #     "line_start": int,
-        #     "line_end": int,
-        #     "email": string,
-        #     "date": string  // format XXXX-XX-XX XX:XX:XX (ex. "2021-01-27 01:32:55")
-        #   }, ...
-        # ]
-        #
-        ##
+        prev_rev = None
+        prev_struct = {}
+        index = 0
+        max_index = len(msgs)
+        while index < max_index:
+            rev = msgs[index].split(' ')[0]
+            line_number = msgs[index].split(' ')[2]
+            author_name = msgs[index + 1][msgs[index + 1].find(' ') + 1:]
+            author_email = msgs[index + 2][msgs[index + 2].find('<') + 1:-1]
+            author_time = int(msgs[index + 3].split(' ')[1])
+            author_timezone = msgs[index + 4].split(' ')[1][1:]
+            author_tzdelta = int(author_timezone[0:2]) * 3600 + int(author_timezone[2:]) * 60
+            date = datetime.datetime(1970, 1, 1, 0, 0, 0) + datetime.timedelta(seconds=author_time + author_tzdelta)
+            date = date.strftime("%Y-%m-%d %H:%M:%S")
+            while not '\t' in msgs[index]:
+                index += 1
+            content = msgs[index][1:]
+            index += 1
 
+            if rev == prev_rev:
+                prev_struct['line_end'] = line_number
+                prev_struct['content'] += '\n' + content
+            else:
+                if len(prev_struct) > 0:
+                    blame.append(prev_struct)
+                prev_struct = {'commit_id': rev, 'line_start': line_number, 'line_end': line_number,
+                               'author_name': author_name, 'author_email': author_email, 'date': date,
+                               'content': content}
+                prev_rev = rev
+
+        blame.append(prev_struct)
+            
         Chromium.blames[id] = blame
         return blame
 
