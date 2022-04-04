@@ -21,7 +21,11 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             raise InvalidVersionException()
         if not Chromium.set_target_version(request.query_params.get('target_version')):
             raise InvalidVersionException()
-
+        
+        # fill Chromium conflicts
+        if not Chromium.fill_conflicts():
+            raise InvalidChromiumRepoException()
+        
         Chromium.INITIALIZED = True
         return Response({'message': 'initialized!'}, status=status.HTTP_200_OK)
     
@@ -30,6 +34,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
     def directory_list(self, request):
         if not Chromium.INITIALIZED:
             raise InitializeException()
+        
         DEFAULT_PATH = ""
         ROOT = Chromium.chromium_repo
 
@@ -51,4 +56,29 @@ class ChromiumViewSet(viewsets.GenericViewSet):
         
         return Response(data, status=status.HTTP_200_OK)
 
+    # GET /chromium/file?path=<path>
+    @action(detail=False, methods=['GET'], url_path='file')
+    def file(self, request):
+        if not Chromium.INITIALIZED:
+            raise InitializeException()
+        
+        ROOT = Chromium.chromium_repo
+        file_path = request.query_params.get('path')
 
+        if not file_path or not path.isfile(ROOT + file_path):
+            raise InvalidPathException()
+        
+        CODE = open(ROOT + file_path, "r").read().split("\n")
+        conflicts = []
+
+        for id in range(0, len(Chromium.conflicts)):
+            c = Chromium.conflicts[id]
+            if c.file_path == file_path:
+                line_start = c.conflict_mark[0]
+                line_end = c.conflict_mark[2]
+                code = [{"line": l, "content": CODE[l-1]} for l in range(line_start, line_end + 1)]
+
+                blame = Chromium.get_blame(id)
+                conflicts.append({"id" : str(id), "code": code, "blame": blame})
+
+        return Response({"conflicts": conflicts}, status=status.HTTP_200_OK)
