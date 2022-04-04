@@ -4,6 +4,8 @@ from blame.blame import *
 from conflict.conflict import *
 from line.line import *
 
+import linecache
+
 def fill_blame_info(path):
     for cf in conflicts:
         current_lines = make_lines(cf.current_line, cf.file_path)
@@ -30,3 +32,18 @@ def make_lines(conflict_line, file_path):
         lines.append(Line(rev, author_name, date, line_num, content))
 
     return lines
+
+def print_blame_info_short(path):
+    for cf in conflicts:
+        print('\n\n' + cf.file_path)
+        print('\n[current]')
+        print_lines_short(cf.current_line, cf.file_path)
+        print('[incoming]')
+        print_lines_short(cf.incoming_line, cf.file_path)
+    
+    return 0
+
+def print_lines_short(conflict_line, file_path):
+    for i in range(conflict_line[0], conflict_line[1] + 1):
+        conflict_file_line = linecache.getline(file_path, i)[:-1]
+        print(f"{str(i):>6s})    {conflict_file_line}")
