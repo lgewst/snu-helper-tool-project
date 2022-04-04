@@ -23,7 +23,7 @@ class Chromium():
         if not Chromium.is_git_repo(path):
             return False
         
-        Chromium.chromium_repo = path
+        Chromium.chromium_repo = path + ('/' if path[-1:] != '/' else '')
         return True
 
     def set_webosose_repo(path):
@@ -32,7 +32,7 @@ class Chromium():
         if not Chromium.is_git_repo(path):
             return False
         
-        Chromium.webosose_repo = path
+        Chromium.webosose_repo = path + ('/' if path[-1:] != '/' else '')
         return True
 
     def set_current_version(version):
