@@ -7,9 +7,10 @@ from rest_framework.views import exception_handler, set_rollback
 
 class CustomResponse(Response):
     def __init__(self, data=None, status=None, template_name=None, headers=None, exception=False, content_type=None,
-                 message=None):
+                 error_code=None, message=None):
         super().__init__(data, status, template_name, headers, exception, content_type)
         # custom field error_code, message
+        self.error_code = error_code
         self.message = message
 
 def custom_exception_handler(exc, context):
@@ -34,8 +35,10 @@ def custom_exception_handler(exc, context):
 
         set_rollback()
         if isinstance(exc, SyncHelperException):
-            response = CustomResponse(data, status=exc.status_code, headers=headers, message=exc.message)
+            response = CustomResponse(data, status=exc.status_code, headers=headers, 
+                                      error_code=exc.error_code, message=exc.message)
             response.data['status_code'] = response.status_code
+            response.data['error_code'] = response.error_code
             response.data['message'] = response.message
             response.data['detail'] = "SyncHelper Custom Error"
             return response
@@ -46,23 +49,29 @@ def custom_exception_handler(exc, context):
 
 class SyncHelperException(APIException):
     message = ""
+    error_code = 0
 
 class InitializeException(SyncHelperException):
     status_code = 400
+    error_code = 10000
     message = "Initialize repositories and version first!"
 
 class InvalidChromiumRepoException(SyncHelperException):
     status_code = 400
+    error_code = 10001
     message = "Invalid chromium repo"
 
 class InvalidWebososeRepoException(SyncHelperException):
     status_code = 400
+    error_code = 10002
     message = "Invalid webosose repo"
 
 class InvalidVersionException(SyncHelperException):
     status_code = 400
+    error_code = 10003
     message = "Invalid version"
 
 class InvalidPathException(SyncHelperException):
     status_code = 400
+    error_code = 10004
     message = "Invalid path"
