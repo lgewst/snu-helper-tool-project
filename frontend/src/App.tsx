@@ -16,15 +16,9 @@ function App() {
       {initialized ? (
         <BrowserRouter>
           <Switch>
-            <Route
-              path="/path"
-              render={() => <FolderPage title="FolderPage" />}
-            />
-            <Route path="/file" render={() => <FilePage title="FilePage" />} />
-            <Route
-              path="/error"
-              render={() => <ErrorPage title="ErrorPage" />}
-            />
+            <Route path="/path" render={() => <FolderPage />} />
+            <Route path="/file" render={() => <FilePage />} />
+            <Route path="/error" render={() => <ErrorPage />} />
             <Redirect from="/" to="/path" />
           </Switch>
         </BrowserRouter>
@@ -35,11 +29,7 @@ function App() {
               path="/init"
               exact
               render={() => (
-                <InitPage
-                  title="InitPage"
-                  initialized={initialized}
-                  setinit={setinit}
-                />
+                <InitPage initialized={initialized} setinit={setinit} />
               )}
             />
             <Redirect from="/" to="/init" />
