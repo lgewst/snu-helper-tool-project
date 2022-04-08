@@ -26,24 +26,22 @@ const InitPage = ({ initialized, setinit }: Props) => {
       ...initState,
       [name]: value,
     });
-    console.log(initState);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(initState);
-    const response = axios
+    axios
       .get('/chromium/init', { params: initState })
       .then((res) => {
-        console.log('res', res);
         alert(res.data.message);
         setinit(true);
-        console.log('init in page', initialized);
+        localStorage.setItem('initialized', 'true');
         // TODO 조ㅛ
         // store data somewhere
-        history.push('/dir');
+        history.push('/path');
       })
       .catch((err) => {
+        //TODO how to let user know error
         console.log('err', err);
         alert(err.response.data.message);
       });

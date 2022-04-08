@@ -5,11 +5,18 @@ import ErrorPage from './Containers/ErrorPage/ErrorPage';
 
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import InitPage from './Containers/InitPage/InitPage';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
-  const [initialized, setinit] = useState(false);
-  console.log('init in app', initialized);
+  const [initialized, setinit] = useState<boolean>();
+
+  useEffect(() => {
+    const localinit = localStorage.getItem('initialized');
+    const init = localinit === 'true' ? true : false;
+    setinit(init);
+  }, []);
+
+  if (initialized === undefined) return null;
 
   return (
     <div className="App">
