@@ -6,6 +6,7 @@ import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
 const FilePage = () => {
   const [conflictList, setConflictList] = useState([]);
   const location = useLocation();
+  const history = useHistory();
 
   const init = () => {
     const path = location.pathname.slice(6);
@@ -18,8 +19,8 @@ const FilePage = () => {
         setConflictList(res.data.conflicts);
       })
       .catch((err) => {
-        console.log(err.response.data.message);
-        //TODO history.push('/error/'); //redirects but does not refresh
+        //TODO how to let user know error
+        history.push('/error/');
       });
   };
   useEffect(() => {
