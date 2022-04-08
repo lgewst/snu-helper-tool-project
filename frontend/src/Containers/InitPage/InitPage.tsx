@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import './InitPage.css';
 
-const InitPage = ({ initialized, setinit }) => {
+interface Props {
+  initialized: boolean;
+  setinit: (e: boolean) => void;
+}
+
+const InitPage = ({ initialized, setinit }: Props) => {
   const history = useHistory();
   const [initState, setinitState] = useState({
     chromium_repo: '',
@@ -14,7 +20,7 @@ const InitPage = ({ initialized, setinit }) => {
   const { chromium_repo, webosose_repo, current_version, target_version } =
     initState;
 
-  const onChange = (e) => {
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setinitState({
       ...initState,
@@ -23,7 +29,7 @@ const InitPage = ({ initialized, setinit }) => {
     console.log(initState);
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     console.log(initState);
     const response = axios
@@ -57,7 +63,6 @@ const InitPage = ({ initialized, setinit }) => {
         id="chromium"
         name="chromium_repo"
         placeholder="ex. /home/seunghan/chromium/src"
-        size="50"
         onChange={onChange}
         value={chromium_repo}
       ></input>
@@ -68,7 +73,6 @@ const InitPage = ({ initialized, setinit }) => {
         id="webosose"
         name="webosose_repo"
         placeholder="ex. /home/seunghan/chromium91"
-        size="50"
         onChange={onChange}
         value={webosose_repo}
       ></input>
@@ -79,7 +83,6 @@ const InitPage = ({ initialized, setinit }) => {
         id="cur_ver"
         name="current_version"
         placeholder="ex. 91.0.4472.0"
-        size="50"
         onChange={onChange}
         value={current_version}
       ></input>
@@ -90,7 +93,6 @@ const InitPage = ({ initialized, setinit }) => {
         id="tar_ver"
         name="target_version"
         placeholder="ex. 92.0.4515.0"
-        size="50"
         onChange={onChange}
         value={target_version}
       ></input>
