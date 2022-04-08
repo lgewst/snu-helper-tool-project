@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
+import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
 
 const FilePage = () => {
   const [conflictList, setConflictList] = useState([]);
@@ -8,7 +9,7 @@ const FilePage = () => {
   const location = useLocation();
 
   const init = async () => {
-    const path = location.pathname.slice(5);
+    const path = location.pathname.slice(6);
     console.log(typeof location.pathname, 'filepath', path);
 
     const response = axios
@@ -28,11 +29,7 @@ const FilePage = () => {
 
   return (
     <div>
-      <div className="fileList">
-        {conflictList.map((conflict) => (
-          <div></div>
-        ))}
-      </div>
+      <ConflictInfo conflictList={conflictList} />
     </div>
   );
 };

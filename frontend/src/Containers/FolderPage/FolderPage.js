@@ -9,7 +9,7 @@ const FolderPage = () => {
   const location = useLocation();
 
   const init = async () => {
-    const path = location.pathname.slice(5);
+    const path = location.pathname.slice(6);
     console.log(typeof location.pathname, 'path', path);
 
     const response = axios

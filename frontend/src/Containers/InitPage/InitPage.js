@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 
-const InitPage = (props) => {
+const InitPage = ({ initialized, setinit }) => {
   const history = useHistory();
   const [initState, setinitState] = useState({
     chromium_repo: '',
@@ -29,22 +29,18 @@ const InitPage = (props) => {
     const response = axios
       .get('/chromium/init', { params: initState })
       .then((res) => {
+        console.log('res', res);
         alert(res.data.message);
-        // TODO
-        // store data in somewhere
+        setinit(true);
+        console.log('init in page', initialized);
+        // TODO 조ㅛ
+        // store data somewhere
         history.push('/dir');
       })
       .catch((err) => {
+        console.log('err', err);
         alert(err.response.data.message);
       });
-
-    if (response.status === 200) {
-      console.log(response.data.message);
-      alert(response.data.message);
-      history.push('/dir');
-    } else {
-      alert(response.data.message);
-    }
   };
 
   const init = async () => {};
