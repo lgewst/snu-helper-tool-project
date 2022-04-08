@@ -2,9 +2,19 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
 
+interface Folder {
+  name: string;
+  path: string;
+}
+
+interface File {
+  name: string;
+  path: string;
+}
+
 const FolderPage = () => {
-  const [folderList, setFolderList] = useState([]);
-  const [fileList, setFileList] = useState([]);
+  const [folderList, setFolderList] = useState<Folder[]>([]);
+  const [fileList, setFileList] = useState<File[]>([]);
   const history = useHistory();
   const location = useLocation();
 
@@ -15,7 +25,6 @@ const FolderPage = () => {
     const response = axios
       .get('/chromium/dir/', { params: { path: path } })
       .then((res) => {
-        console.log(res.data);
         setFolderList(res.data.directories);
         setFileList(res.data.files);
       })

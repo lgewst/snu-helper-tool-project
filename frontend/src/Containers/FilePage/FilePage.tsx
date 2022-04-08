@@ -5,14 +5,13 @@ import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
 
 const FilePage = () => {
   const [conflictList, setConflictList] = useState([]);
-  const history = useHistory();
   const location = useLocation();
 
-  const init = async () => {
+  const init = () => {
     const path = location.pathname.slice(6);
     console.log(typeof location.pathname, 'filepath', path);
 
-    const response = axios
+    axios
       .get('/chromium/file/', { params: { path: path } })
       .then((res) => {
         console.log(res.data);
@@ -20,7 +19,7 @@ const FilePage = () => {
       })
       .catch((err) => {
         console.log(err.response.data.message);
-        //history.push('/error/'); //redirects but does not refresh
+        //TODO history.push('/error/'); //redirects but does not refresh
       });
   };
   useEffect(() => {
