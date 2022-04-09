@@ -14,6 +14,12 @@ class Chromium():
     conflicts = []
     blames = {}
 
+    def init():
+        Chromium.blames = {}
+        Chromium.conflicts = []
+        Chromium.fill_conflicts()
+        Chromium.INITIALIZED = True
+
     def is_git_repo(path):
         try:
             os.chdir(path)
@@ -56,11 +62,7 @@ class Chromium():
 
     def fill_conflicts():
         ROOT = Chromium.chromium_repo
-
-        try:
-            os.chdir(ROOT)
-        except Exception as e:
-            return False
+        os.chdir(ROOT)
 
         msgs = os.popen('git diff --check').read().split("\n")
 

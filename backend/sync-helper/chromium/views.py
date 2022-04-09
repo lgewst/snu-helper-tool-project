@@ -21,11 +21,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
         if not Chromium.set_target_version(request.query_params.get('target_version')):
             raise InvalidVersionException()
         
-        # fill Chromium conflicts
-        if not Chromium.fill_conflicts():
-            raise InvalidChromiumRepoException()
-        
-        Chromium.INITIALIZED = True
+        Chromium.init()
         return Response({'message': 'initialized!'}, status=status.HTTP_200_OK)
     
     # GET /chromium/dir?path=<path>
