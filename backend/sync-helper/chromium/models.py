@@ -13,9 +13,11 @@ class Chromium():
     target_version =    "92.0.4515.0"
     conflicts = []
     blames = {}
+    diff_cache = {}
 
     def init():
         Chromium.blames = {}
+        Chromium.diff_cache = {}
         Chromium.conflicts = []
         Chromium.fill_conflicts()
         Chromium.INITIALIZED = True

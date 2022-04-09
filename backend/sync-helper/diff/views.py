@@ -8,11 +8,14 @@ from chromium.models import *
 from config.error import *
 
 def get_diff(path):
+    if path in Chromium.diff_cache.keys():
+        return Chromium.diff_cache[path]
+
     ROOT = Chromium.chromium_repo
     os.chdir(ROOT)
 
     msgs = os.popen(f"git diff --shortstat {Chromium.current_version}..{Chromium.target_version} {path}").read().split(" ")
-    
+
     try:
         insertion = int(msgs[msgs.index('insertions(+),') - 1])
     except ValueError:
@@ -22,6 +25,9 @@ def get_diff(path):
     except ValueError:
         deletion = 0
     
+    if insertion + deletion > 10000:
+        Chromium.diff_cache[path] = {"insertion": insertion, "deletion": deletion}
+
     return {"insertion": insertion, "deletion": deletion}
 
 # Create your views here.
