@@ -13,6 +13,14 @@ class Chromium():
     target_version =    "92.0.4515.0"
     conflicts = []
     blames = {}
+    diff_cache = {}
+
+    def init():
+        Chromium.blames = {}
+        Chromium.diff_cache = {}
+        Chromium.conflicts = []
+        Chromium.fill_conflicts()
+        Chromium.INITIALIZED = True
 
     def is_git_repo(path):
         try:
@@ -56,11 +64,7 @@ class Chromium():
 
     def fill_conflicts():
         ROOT = Chromium.chromium_repo
-
-        try:
-            os.chdir(ROOT)
-        except Exception as e:
-            return False
+        os.chdir(ROOT)
 
         msgs = os.popen('git diff --check').read().split("\n")
 
