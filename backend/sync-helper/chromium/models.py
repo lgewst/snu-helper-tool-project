@@ -118,21 +118,19 @@ class Chromium():
             date = date.strftime("%Y-%m-%d %H:%M:%S")
             while not '\t' in msgs[index]:
                 index += 1
-            content = msgs[index][1:]
             index += 1
 
             if rev == prev_rev:
                 prev_struct['line_end'] = line_number
-                prev_struct['content'] += '\n' + content
             else:
                 if len(prev_struct) > 0:
                     blame.append(prev_struct)
                 prev_struct = {'commit_id': rev, 'line_start': line_number, 'line_end': line_number,
-                               'author_name': author_name, 'author_email': author_email, 'date': date,
-                               'content': content}
+                               'author_name': author_name, 'author_email': author_email, 'date': date}
                 prev_rev = rev
 
         blame.append(prev_struct)
+        blame = list(filter(lambda x: x['author_name'] != 'Not Committed Yet', blame))
             
         Chromium.blames[id] = blame
         return blame
