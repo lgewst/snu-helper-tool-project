@@ -2,9 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
+import './Filepage.css';
+
+interface Code {
+  line: number;
+  content: string;
+}
+interface Blame {
+  commit_id: string;
+  line_start: number;
+  line_end: number;
+  author_name: string;
+  author_email: string;
+  date: string;
+}
+interface Conflict {
+  id: string;
+  code: Code[];
+  blame: Blame[];
+}
 
 const FilePage = () => {
-  const [conflictList, setConflictList] = useState([]);
+  const [conflictList, setConflictList] = useState<Conflict[]>([]);
   const location = useLocation();
   const history = useHistory();
 
@@ -29,6 +48,13 @@ const FilePage = () => {
 
   return (
     <div>
+      <div className="header">
+        <div className="header line">Line</div>
+        <div className="header code">Code</div>
+        <div className="header id">commit_id</div>
+        <div className="header author">author_name</div>
+        <div className="header date">date</div>
+      </div>
       <ConflictInfo conflictList={conflictList} />
     </div>
   );

@@ -1,0 +1,23 @@
+.codeline{
+    display: flex;
+    align-items: center;
+}
+
+.line{
+    width:50px;
+}
+.code::-webkit-scrollbar {
+    display: none;
+}
+.code {
+    justify-content: center;
+    width:700px;
+    height: 20px;
+    overflow-x: scroll;
+    white-space: nowrap;
+}
+
+.conflict{
+    display: flex;
+    align-items: center;
+}

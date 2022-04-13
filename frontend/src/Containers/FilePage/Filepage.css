@@ -1,0 +1,10 @@
+.header{
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.line{
+    justify-content: center;
+    width:50px;
+}
