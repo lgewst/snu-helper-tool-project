@@ -142,3 +142,6 @@ class Conflict():
         self.repo_path = repo_path
         self.file_path = file_path
         self.conflict_mark = [l1, l2, l3]
+    
+    def abs_path(self,):
+        return self.repo_path + self.file_path

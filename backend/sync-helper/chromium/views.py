@@ -41,9 +41,12 @@ class ChromiumViewSet(viewsets.GenericViewSet):
 
         # print(f"path={dirpath}")
         directories = [] if path.samefile(ROOT, dirpath) else [{"name": "..", "path": path.relpath(dirpath+"/..", ROOT)}]
-        directories += [{"name": f.name, "path": path.relpath(f.path, ROOT)} for f in scandir(dirpath) if f.is_dir()]
-        files = [{"name": f.name, "path": path.relpath(f.path, ROOT)} for f in scandir(dirpath) if f.is_file()]
+        directories += [{"name": f.name, "path": path.relpath(f.path, ROOT)} for f in scandir(dirpath) if
+                        f.is_dir() and any('..' not in path.relpath(conf.abs_path(), f.path) for conf in Chromium.conflicts)]
         
+        files = [{"name": f.name, "path": path.relpath(f.path, ROOT)} for f in scandir(dirpath) if
+                    f.is_file() and any(path.relpath(f.path, conf.abs_path()) == "." for conf in Chromium.conflicts)]
+
         data = {
             "directories": directories,
             "files": files
