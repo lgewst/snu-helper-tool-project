@@ -93,7 +93,8 @@ class Chromium():
         start = conf.conflict_mark[0]
         end = conf.conflict_mark[2]
 
-        func_for_line = read_function(path)
+        if path.split('.')[-1] == 'cc':
+            func_for_line = read_function(path)
 
         try:
             os.chdir(ROOT)
@@ -126,7 +127,6 @@ class Chromium():
             else:
                 if len(prev_struct) > 0:
                     blame.append(prev_struct)
-                    print(func_for_line[(int)(prev_struct['line_start'])])
                 prev_struct = {'commit_id': rev, 'line_start': line_number, 'line_end': line_number,
                                'author_name': author_name, 'author_email': author_email, 'date': date}
                 prev_rev = rev
