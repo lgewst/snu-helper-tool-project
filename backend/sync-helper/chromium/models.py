@@ -2,7 +2,7 @@ from django.db import models
 import os
 
 import datetime
-import linecache
+from readfunc.readfunc import read_function
 
 # static class
 class Chromium():
@@ -84,7 +84,6 @@ class Chromium():
         return True
     
     def get_blame(id):
-        # cache??
         if id in Chromium.blames.keys():
             return Chromium.blames[id]
 
@@ -93,6 +92,8 @@ class Chromium():
         path = os.path.relpath(conf.file_path, ROOT)
         start = conf.conflict_mark[0]
         end = conf.conflict_mark[2]
+
+        func_for_line = read_function(path)
 
         try:
             os.chdir(ROOT)
@@ -125,6 +126,7 @@ class Chromium():
             else:
                 if len(prev_struct) > 0:
                     blame.append(prev_struct)
+                    print(func_for_line[(int)(prev_struct['line_start'])])
                 prev_struct = {'commit_id': rev, 'line_start': line_number, 'line_end': line_number,
                                'author_name': author_name, 'author_email': author_email, 'date': date}
                 prev_rev = rev
