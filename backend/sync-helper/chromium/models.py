@@ -1,7 +1,7 @@
 from django.db import models
 import os
 import datetime
-import linecache
+from readfunc.readfunc import read_function
 
 from chromium.crawling import *
 
@@ -85,7 +85,6 @@ class Chromium():
         return True
     
     def get_blame(id):
-        # cache??
         if id in Chromium.blames.keys():
             return Chromium.blames[id]
 
@@ -94,6 +93,9 @@ class Chromium():
         path = os.path.relpath(conf.file_path, ROOT)
         start = conf.conflict_mark[0]
         end = conf.conflict_mark[2]
+
+        if path.split('.')[-1] == 'cc':
+            func_for_line = read_function(path)
 
         try:
             os.chdir(ROOT)
@@ -109,7 +111,7 @@ class Chromium():
         max_index = len(msgs)
         while index < max_index:
             rev = msgs[index].split(' ')[0]
-            line_number = msgs[index].split(' ')[2]
+            line_number = int(msgs[index].split(' ')[2])
             author_name = msgs[index + 1][msgs[index + 1].find(' ') + 1:]
             author_email = msgs[index + 2][msgs[index + 2].find('<') + 1:-1]
             author_time = int(msgs[index + 3].split(' ')[1])
