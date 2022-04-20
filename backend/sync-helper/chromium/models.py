@@ -110,7 +110,7 @@ class Chromium():
         max_index = len(msgs)
         while index < max_index:
             rev = msgs[index].split(' ')[0]
-            line_number = msgs[index].split(' ')[2]
+            line_number = int(msgs[index].split(' ')[2])
             author_name = msgs[index + 1][msgs[index + 1].find(' ') + 1:]
             author_email = msgs[index + 2][msgs[index + 2].find('<') + 1:-1]
             author_time = int(msgs[index + 3].split(' ')[1])
