@@ -1,8 +1,9 @@
 from django.db import models
 import os
-
 import datetime
 import linecache
+
+from chromium.crawling import *
 
 # static class
 class Chromium():
@@ -125,7 +126,7 @@ class Chromium():
             else:
                 if len(prev_struct) > 0:
                     blame.append(prev_struct)
-                prev_struct = {'commit_id': rev, 'line_start': line_number, 'line_end': line_number,
+                prev_struct = {'commit_id': rev, 'commit_url': commit_url(rev, path, Chromium.chromium_repo), 'review_url': review_url(rev, path), 'line_start': line_number, 'line_end': line_number,
                                'author_name': author_name, 'author_email': author_email, 'date': date}
                 prev_rev = rev
 
@@ -141,3 +142,6 @@ class Conflict():
         self.repo_path = repo_path
         self.file_path = file_path
         self.conflict_mark = [l1, l2, l3]
+    
+    def abs_path(self,):
+        return self.repo_path + self.file_path
