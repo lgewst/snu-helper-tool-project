@@ -14,10 +14,31 @@
     width:700px;
     height: 20px;
     overflow-x: scroll;
+}
+
+.conflict, .blame{
+    display: flex;
     white-space: nowrap;
 }
 
-.conflict{
-    display: flex;
-    align-items: center;
+.commit_id{
+    width:10px;
+    overflow: hidden;
+}
+
+.commit_id:hover{
+    display: block;
+}
+.commit_id {
+    position: relative;
+    display: block;
+  }
+
+.commit_id_text {
+    display: none;
+}
+    
+.commit_id:hover + .commit_id_text {
+    display: block;
+    color: red;
 }

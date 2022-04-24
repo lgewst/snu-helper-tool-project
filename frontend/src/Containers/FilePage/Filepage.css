@@ -1,10 +1,29 @@
+.filepage{
+
+    overflow-x: scroll;
+}
+
 .header{
     display: flex;
     flex-wrap: wrap;
-    align-items: center;
+    text-align: center;
 }
 
 .line{
-    justify-content: center;
+    text-align: center;
     width:50px;
+}
+
+.id{
+    width:10px;
+    overflow-x: scroll;
+}
+
+.author, .author_email{
+    width:230px;
+
+}
+
+.date{
+    width:200px;
 }

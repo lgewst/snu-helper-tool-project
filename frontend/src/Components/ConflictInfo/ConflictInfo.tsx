@@ -20,37 +20,65 @@ interface Conflict {
 }
 
 interface Props {
-  conflictList: Conflict[];
+  conflict: Conflict;
 }
 
-const ConflictInfo = ({ conflictList }: Props) => {
-  console.log(conflictList);
+const styles = {
+  odd_color: { backgroundColor: 'yellow' } as React.CSSProperties,
+  even_color: { backgroundColor: 'green' } as React.CSSProperties,
+  out_color: {} as React.CSSProperties,
+};
+
+const ConflictInfo = ({ conflict }: Props) => {
+  let i = 0;
+  let in_blame = false;
+  const blame = conflict.blame.map((blame) => (
+    <div className="blame" key={blame.line_start}>
+      <div className="commit_id">#</div>
+      <div className="commit_id_text">{blame.commit_id}</div>
+      <div>
+        {blame.line_start},{blame.line_end}
+      </div>
+      <a
+        className="author_email"
+        href={`https://chromium-review.googlesource.com/q/owner:${blame.author_email}`}
+      >
+        {blame.author_email}
+      </a>
+      <div className="date">{blame.date}</div>
+    </div>
+  ));
 
   return (
-    <div>
-      {conflictList.map((conflict) => (
-        <div key={conflict.id} className="conflict">
-          <div className="conflict_codeline">
-            {conflict.code.map((code) => (
-              <div className="codeline" key={code.line}>
-                <div className="line">{code.line}</div>
-                <div className="code">{code.content}</div>
-              </div>
-            ))}
+    <div key={conflict.id} className="conflict">
+      <div className="conflict_codeline">
+        {conflict.code.map((code) => (
+          <div
+            className="codeline"
+            key={code.line}
+            style={
+              in_blame
+                ? i % 2 === 0
+                  ? styles.odd_color
+                  : styles.even_color
+                : styles.out_color
+            }
+          >
+            <div className="line">{code.line}</div>
+            <div className="code">{code.content}</div>
+            <div className="blame">
+              {in_blame
+                ? code.line === conflict.blame[i].line_end
+                  ? ((in_blame = false), i++)
+                  : null
+                : code.line === conflict.blame[i].line_start
+                ? (in_blame = true)
+                : null}
+              {code.line === conflict.blame[i].line_start ? blame[i] : null}
+            </div>
           </div>
-          <div className="conflict_blame">
-            {conflict.blame.map((blame) => (
-              <div>
-                {blame.author_name === 'Not Committed Yet'
-                  ? 'X'
-                  : blame.author_name}
-                {blame.commit_id}
-                {blame.date}
-              </div>
-            ))}
-          </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

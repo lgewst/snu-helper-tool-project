@@ -34,12 +34,15 @@ const FilePage = () => {
     axios
       .get('/chromium/file/', { params: { path: path } })
       .then((res) => {
-        console.log(res.data);
+        //console.log(res.data);
+        //TODO let user know loading
         setConflictList(res.data.conflicts);
       })
       .catch((err) => {
-        //TODO how to let user know error
-        history.push('/error/');
+        if (err.response.data.error_code === 10004) {
+          alert('invalid path');
+          history.push('/error/');
+        }
       });
   };
   useEffect(() => {
@@ -47,15 +50,18 @@ const FilePage = () => {
   }, []);
 
   return (
-    <div>
+    <div className="filepage">
       <div className="header">
         <div className="header line">Line</div>
         <div className="header code">Code</div>
         <div className="header id">commit_id</div>
-        <div className="header author">author_name</div>
+        <div className="header author">author_email</div>
         <div className="header date">date</div>
       </div>
-      <ConflictInfo conflictList={conflictList} />
+
+      {conflictList.map((conflict) => (
+        <ConflictInfo conflict={conflict} key={conflict.id} />
+      ))}
     </div>
   );
 };
