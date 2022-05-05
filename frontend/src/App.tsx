@@ -2,6 +2,7 @@ import './App.css';
 import FolderPage from './Containers/FolderPage/FolderPage';
 import FilePage from './Containers/FilePage/FilePage';
 import ErrorPage from './Containers/ErrorPage/ErrorPage';
+import DiffPage from './Containers/DiffPage/DiffPage';
 
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import InitPage from './Containers/InitPage/InitPage';
@@ -33,6 +34,7 @@ function App() {
             <Route path="/path" render={() => <FolderPage />} />
             <Route path="/file" render={() => <FilePage />} />
             <Route path="/error" render={() => <ErrorPage />} />
+            <Route path="/diff" render={() => <DiffPage />} />
             <Redirect from="/" to="/path" />
           </Switch>
         </BrowserRouter>
