@@ -128,7 +128,7 @@ class Chromium():
             else:
                 if len(prev_struct) > 0:
                     blame.append(prev_struct)
-                prev_struct = {'commit_id': rev, 'commit_url': commit_url(rev, path, Chromium.chromium_repo), 'review_url': review_url(rev, path), 'line_start': line_number, 'line_end': line_number,
+                prev_struct = {'commit_id': rev, 'commit_url': commit_url(rev, path, Chromium.chromium_repo), 'review_url': review_url(rev, path, Chromium.chromium_repo), 'line_start': line_number, 'line_end': line_number,
                                'author_name': author_name, 'author_email': author_email, 'date': date}
                 prev_rev = rev
 

@@ -24,8 +24,8 @@ interface Props {
 }
 
 const styles = {
-  odd_color: { backgroundColor: 'yellow' } as React.CSSProperties,
-  even_color: { backgroundColor: 'green' } as React.CSSProperties,
+  odd_color: { backgroundColor: 'white' } as React.CSSProperties,
+  even_color: { backgroundColor: 'white' } as React.CSSProperties,
   out_color: {} as React.CSSProperties,
 };
 
@@ -36,9 +36,6 @@ const ConflictInfo = ({ conflict }: Props) => {
     <div className="blame" key={blame.line_start}>
       <div className="commit_id">#</div>
       <div className="commit_id_text">{blame.commit_id}</div>
-      <div>
-        {blame.line_start},{blame.line_end}
-      </div>
       <a
         className="author_email"
         href={`https://chromium-review.googlesource.com/q/owner:${blame.author_email}`}
