@@ -1,0 +1,20 @@
+.diff_dir,
+.diff_file,
+.diff_header {
+  display: flex;
+}
+.dirname,
+.filename,
+.diff_name {
+  color: black;
+  width: 300px;
+}
+
+.insertion {
+  color: red;
+  width: 80px;
+}
+
+.deletion {
+  color: blue;
+}
