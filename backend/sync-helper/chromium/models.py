@@ -136,7 +136,7 @@ class Chromium():
                 os.chdir(Chromium.webosose_repo + "src/")
                 msgs1 = os.popen(f"git blame -l --line-porcelain -L{l},{l} {path}").read().split('\n')[:-1]
                 rev = msgs1[0].split(' ')[0]
-                line_number = int(msgs1[0].split(' ')[2])
+                line_number = int(msgs[index].split(' ')[2])
                 author_name = msgs1[1][msgs1[1].find(' ') + 1:]
                 author_email = msgs1[2][msgs1[2].find('<') + 1:-1]
                 author_time = int(msgs1[3].split(' ')[1])
