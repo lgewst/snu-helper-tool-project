@@ -12,6 +12,8 @@ class Chromium():
     webosose_repo =     "/home/seunghan/chromium91/"
     current_version =   "91.0.4472.0"
     target_version =    "92.0.4515.0"
+    webos_patch =       "7cef9376f8f6f59d7dc8f572716c1aaf28b3d9b2"
+    chromium_patch =    ""
     conflicts = []
     blames = {}
     diff_cache = {}
@@ -21,6 +23,12 @@ class Chromium():
         Chromium.diff_cache = {}
         Chromium.conflicts = []
         Chromium.fill_conflicts()
+        Chromium.chromium_patch = os.popen("git log -1 --pretty=format:\"%H\"").read().replace("\n", "")
+        
+        os.chdir(Chromium.webosose_repo)
+        os.popen(f"git checkout {Chromium.webos_patch}")
+        os.chdir(Chromium.chromium_repo)
+        
         Chromium.INITIALIZED = True
 
     def is_git_repo(path):
@@ -97,6 +105,10 @@ class Chromium():
         if path.split('.')[-1] == 'cc':
             func_for_line = read_function(path)
 
+        f = open(Chromium.webosose_repo + "src/" + path, "r")
+        downstream_code = f.readlines()
+        f.close()
+
         try:
             os.chdir(ROOT)
         except Exception as e:
@@ -106,16 +118,36 @@ class Chromium():
 
         blame = []
         prev_rev = None
+        upstream = True
         prev_struct = {}
         index = 0
         max_index = len(msgs)
         while index < max_index:
             rev = msgs[index].split(' ')[0]
-            line_number = int(msgs[index].split(' ')[2])
-            author_name = msgs[index + 1][msgs[index + 1].find(' ') + 1:]
-            author_email = msgs[index + 2][msgs[index + 2].find('<') + 1:-1]
-            author_time = int(msgs[index + 3].split(' ')[1])
-            author_timezone = msgs[index + 4].split(' ')[1][1:]
+            if rev == Chromium.chromium_patch:
+                # webosose patch
+                upstream = False
+                tmp = index
+                while not '\t' in msgs[tmp]:
+                    tmp += 1
+                content = msgs[tmp][1:] + '\n'
+                l = downstream_code.index(content)
+
+                os.chdir(Chromium.webosose_repo + "src/")
+                msgs1 = os.popen(f"git blame -l --line-porcelain -L{l},{l} {path}").read().split('\n')[:-1]
+                rev = msgs1[0].split(' ')[0]
+                line_number = int(msgs[index].split(' ')[2])
+                author_name = msgs1[1][msgs1[1].find(' ') + 1:]
+                author_email = msgs1[2][msgs1[2].find('<') + 1:-1]
+                author_time = int(msgs1[3].split(' ')[1])
+                author_timezone = msgs1[4].split(' ')[1][1:]
+            else:
+                line_number = int(msgs[index].split(' ')[2])
+                author_name = msgs[index + 1][msgs[index + 1].find(' ') + 1:]
+                author_email = msgs[index + 2][msgs[index + 2].find('<') + 1:-1]
+                author_time = int(msgs[index + 3].split(' ')[1])
+                author_timezone = msgs[index + 4].split(' ')[1][1:]
+            
             author_tzdelta = int(author_timezone[0:2]) * 3600 + int(author_timezone[2:]) * 60
             date = datetime.datetime(1970, 1, 1, 0, 0, 0) + datetime.timedelta(seconds=author_time + author_tzdelta)
             date = date.strftime("%Y-%m-%d %H:%M:%S")
@@ -128,9 +160,12 @@ class Chromium():
             else:
                 if len(prev_struct) > 0:
                     blame.append(prev_struct)
-                prev_struct = {'commit_id': rev, 'commit_url': commit_url(rev, path, Chromium.chromium_repo), 'review_url': review_url(rev, path, Chromium.chromium_repo), 'line_start': line_number, 'line_end': line_number,
+                c_url = commit_url(rev, path, Chromium.chromium_repo) if upstream else f"https://github.com/webosose/chromium91/commit/{rev}"
+                r_url = review_url(rev, Chromium.chromium_repo if upstream else Chromium.webosose_repo)
+                prev_struct = {'commit_id': rev, 'commit_url': c_url, 'review_url': r_url, 'line_start': line_number, 'line_end': line_number,
                                'author_name': author_name, 'author_email': author_email, 'date': date}
                 prev_rev = rev
+                upstream = True
 
         blame.append(prev_struct)
         blame = list(filter(lambda x: x['author_name'] != 'Not Committed Yet', blame))
