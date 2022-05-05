@@ -7,6 +7,8 @@ interface Code {
 }
 interface Blame {
   commit_id: string;
+  commit_url: string;
+  review_url: string;
   line_start: number;
   line_end: number;
   author_name: string;
@@ -35,7 +37,13 @@ const ConflictInfo = ({ conflict }: Props) => {
   const blame = conflict.blame.map((blame) => (
     <div className="blame" key={blame.line_start}>
       <div className="commit_id">#</div>
-      <div className="commit_id_text">{blame.commit_id}</div>
+      <div className="commit_id_hover">
+        <div className="commit_id_text">{blame.commit_id}</div>
+        <a className="commit_url" href={blame.commit_url}>
+          commit_url
+        </a>
+      </div>
+
       <a
         className="author_email"
         href={`https://chromium-review.googlesource.com/q/owner:${blame.author_email}`}
@@ -64,7 +72,7 @@ const ConflictInfo = ({ conflict }: Props) => {
             <div className="line">{code.line}</div>
             <div className="code">{code.content}</div>
             <div className="blame">
-              {in_blame
+              {in_blame && i !== conflict.blame.length
                 ? code.line === conflict.blame[i].line_end
                   ? ((in_blame = false), i++)
                   : null

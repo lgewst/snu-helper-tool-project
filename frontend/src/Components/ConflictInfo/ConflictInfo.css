@@ -1,44 +1,37 @@
-.codeline{
-    display: flex;
-    align-items: center;
+.codeline {
+  display: flex;
+  align-items: center;
 }
 
-.line{
-    width:50px;
+.line {
+  width: 50px;
 }
 .code::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 .code {
-    justify-content: center;
-    width:700px;
-    height: 20px;
-    overflow-x: scroll;
+  justify-content: center;
+  width: 700px;
+  height: 20px;
+  overflow-x: scroll;
 }
 
-.conflict, .blame{
-    display: flex;
-    white-space: nowrap;
+.conflict,
+.blame {
+  display: flex;
+  white-space: nowrap;
 }
 
-.commit_id{
-    width:10px;
-    overflow: hidden;
-}
-
-.commit_id:hover{
-    display: block;
-}
 .commit_id {
-    position: relative;
-    display: block;
-  }
-
-.commit_id_text {
-    display: none;
+  width: 10px;
+  overflow: hidden;
 }
-    
-.commit_id:hover + .commit_id_text {
-    display: block;
-    color: red;
+
+.commit_id_hover {
+  display: none;
+}
+
+.commit_id:hover + .commit_id_hover {
+  display: block;
+  color: red;
 }
