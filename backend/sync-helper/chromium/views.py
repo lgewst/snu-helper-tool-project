@@ -7,6 +7,8 @@ from os import scandir, path, sep
 from chromium.models import *
 from config.error import *
 
+from readfunc.readfunc import read_function
+
 # Create your views here.
 class ChromiumViewSet(viewsets.GenericViewSet):
     # GET /chromium/init
@@ -65,6 +67,10 @@ class ChromiumViewSet(viewsets.GenericViewSet):
 
         if not file_path or not path.isfile(ROOT + file_path):
             raise InvalidPathException()
+
+        file_extension = file_path.split('.')[-1]
+        if file_extension == 'cc' or file_extension == 'h':
+            func_for_line = read_function(file_path)
         
         CODE = open(ROOT + file_path, "r").read().split("\n")
         conflicts = []
@@ -74,7 +80,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             if c.file_path == file_path:
                 line_start = c.conflict_mark[0]
                 line_end = c.conflict_mark[2]
-                code = [{"line": l, "content": CODE[l-1]} for l in range(line_start, line_end + 1)]
+                code = [{"line": l, "content": CODE[l-1], "function": func_for_line[l][0]} for l in range(line_start, line_end + 1)]
 
                 blame = Chromium.get_blame(id)
                 conflicts.append({"id" : str(id), "code": code, "blame": blame})

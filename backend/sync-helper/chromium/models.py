@@ -1,7 +1,6 @@
 from django.db import models
 import os
 import datetime
-from readfunc.readfunc import read_function
 
 from chromium.crawling import *
 
@@ -101,9 +100,6 @@ class Chromium():
         path = os.path.relpath(conf.file_path, ROOT)
         start = conf.conflict_mark[0]
         end = conf.conflict_mark[2]
-
-        if path.split('.')[-1] == 'cc':
-            func_for_line = read_function(path)
 
         f = open(Chromium.webosose_repo + "src/" + path, "r")
         downstream_code = f.readlines()
