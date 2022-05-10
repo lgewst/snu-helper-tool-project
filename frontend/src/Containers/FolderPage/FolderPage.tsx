@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import PathInfo from '../../Components/PathInfo/PathInfo';
 
 interface Folder {
   name: string;
@@ -17,10 +18,9 @@ const FolderPage = () => {
   const [fileList, setFileList] = useState<File[]>([]);
   const history = useHistory();
   const location = useLocation();
+  const path: string = location.pathname.slice(6);
 
   const init = async () => {
-    const path = location.pathname.slice(6);
-
     axios
       .get('/chromium/dir/', { params: { path: path } })
       .then((res) => {
@@ -58,6 +58,8 @@ const FolderPage = () => {
           </Link>
         ))}
       </div>
+
+      <PathInfo></PathInfo>
     </div>
   );
 };
