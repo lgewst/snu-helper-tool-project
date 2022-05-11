@@ -57,18 +57,20 @@ const FilePage = () => {
   }, []);
 
   return (
-    <div className="filepage">
-      <div className="header">
-        <div className="header line">Line</div>
-        <div className="header code">Code</div>
-        <div className="header id">commit_id</div>
-        <div className="header author">author_email</div>
-        <div className="header date">date</div>
-      </div>
+    <div className="wrapper">
+      <div className="filepage">
+        <div className="header">
+          <div className="header line">Line</div>
+          <div className="header code">Code</div>
+          <div className="header id">commit_id</div>
+          <div className="header author">author_email</div>
+          <div className="header date">date</div>
+        </div>
 
-      {conflictList.map((conflict) => (
-        <ConflictInfo conflict={conflict} key={conflict.id} />
-      ))}
+        {conflictList.map((conflict) => (
+          <ConflictInfo conflict={conflict} key={conflict.id} />
+        ))}
+      </div>
       <PathInfo></PathInfo>
     </div>
   );
