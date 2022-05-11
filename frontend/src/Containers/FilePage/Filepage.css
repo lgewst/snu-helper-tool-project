@@ -1,29 +1,35 @@
-.filepage{
-
-    overflow-x: scroll;
+.wrapper {
+  min-height: 100vh;
+  position: relative;
+  width: 100%;
 }
 
-.header{
-    display: flex;
-    flex-wrap: wrap;
-    text-align: center;
+.filepage {
+  padding-bottom: 50px;
+  overflow-x: scroll;
 }
 
-.line{
-    text-align: center;
-    width:50px;
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  text-align: center;
 }
 
-.id{
-    width:10px;
-    overflow-x: scroll;
+.line {
+  text-align: center;
+  width: 50px;
 }
 
-.author, .author_email{
-    width:230px;
-
+.id {
+  width: 10px;
+  overflow-x: scroll;
 }
 
-.date{
-    width:200px;
+.author,
+.author_email {
+  width: 230px;
+}
+
+.date {
+  width: 200px;
 }

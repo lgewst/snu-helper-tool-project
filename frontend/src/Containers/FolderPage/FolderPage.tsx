@@ -40,26 +40,28 @@ const FolderPage = () => {
   }, [location.pathname]);
 
   return (
-    <div>
-      <div className="folderList">
-        {folderList.map((folder) => (
-          <Link
-            className="folder"
-            to={`/path/${folder.path}`}
-            key={folder.name}
-          >
-            {folder.name}
-            <br />
-          </Link>
-        ))}
-      </div>
-      <div className="fileList">
-        {fileList.map((file) => (
-          <Link className="file" to={`/file/${file.path}`} key={file.name}>
-            {file.name}
-            <br />
-          </Link>
-        ))}
+    <div className="wrapper">
+      <div className="pathlist">
+        <div className="folderList">
+          {folderList.map((folder) => (
+            <Link
+              className="folder"
+              to={`/path/${folder.path}`}
+              key={folder.name}
+            >
+              {folder.name}
+              <br />
+            </Link>
+          ))}
+        </div>
+        <div className="fileList">
+          {fileList.map((file) => (
+            <Link className="file" to={`/file/${file.path}`} key={file.name}>
+              {file.name}
+              <br />
+            </Link>
+          ))}
+        </div>
       </div>
 
       <PathInfo></PathInfo>
