@@ -81,10 +81,9 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                 line_start = c.conflict_mark[0]
                 line_end = c.conflict_mark[2]
                 try:
-                    func_name = func_for_line[l][0]
+                    code = [{"line": l, "content": CODE[l-1], "function": func_for_line[l][0]} for l in range(line_start, line_end + 1)]
                 except:
-                    func_name = ''
-                code = [{"line": l, "content": CODE[l-1], "function": func_name} for l in range(line_start, line_end + 1)]
+                    code = [{"line": l, "content": CODE[l-1], "function": ''} for l in range(line_start, line_end + 1)]
 
                 blame = Chromium.get_blame(id)
                 conflicts.append({"id" : str(id), "code": code, "blame": blame})
