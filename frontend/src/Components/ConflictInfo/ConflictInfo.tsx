@@ -9,6 +9,7 @@ interface Blame {
   commit_id: string;
   commit_url: string;
   review_url: string;
+  author_url: string;
   line_start: number;
   line_end: number;
   author_name: string;
@@ -47,23 +48,9 @@ const ConflictInfo = ({ conflict }: Props) => {
         </a>
       </div>
       <div>
-        {blame.author_email.includes('lge') ? (
-          <a
-            className="author_email"
-            href={`https://github.com/webosose/chromium91/commits?author=${
-              blame.author_name.split(' ')[0]
-            }`}
-          >
-            {blame.author_email}
-          </a>
-        ) : (
-          <a
-            className="author_email"
-            href={`https://chromium-review.googlesource.com/q/owner:${blame.author_email}`}
-          >
-            {blame.author_email}
-          </a>
-        )}
+        <a className="author_email" href={blame.author_url}>
+          {blame.author_email}
+        </a>
       </div>
 
       <div className="date">{blame.date}</div>
