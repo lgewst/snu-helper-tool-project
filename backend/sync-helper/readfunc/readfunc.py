@@ -22,6 +22,9 @@ def read_function(path):
         line = linecache.getline(path, line_index)
         if line == '':
             break
+        elif '{' in line and '}' in line:
+            line_index += 1
+            continue
         elif '//' in line and line.split('//')[0].count(' ') == len(line.split('//')[0]):
             line_index += 1
             continue
