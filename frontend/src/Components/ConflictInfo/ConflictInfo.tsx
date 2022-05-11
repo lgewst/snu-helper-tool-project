@@ -34,7 +34,6 @@ const styles = {
 
 const ConflictInfo = ({ conflict }: Props) => {
   let i = 0;
-  let in_blame = false;
   const blame = conflict.blame.map((blame) => (
     <div className="blame" key={blame.line_start}>
       <div className="commit_id">#</div>
@@ -61,28 +60,14 @@ const ConflictInfo = ({ conflict }: Props) => {
     <div key={conflict.id} className="conflict">
       <div className="conflict_codeline">
         {conflict.code.map((code) => (
-          <div
-            className="codeline"
-            key={code.line}
-            style={
-              in_blame
-                ? i % 2 === 0
-                  ? styles.odd_color
-                  : styles.even_color
-                : styles.out_color
-            }
-          >
+          <div className="codeline" key={code.line}>
             <div className="line">{code.line}</div>
             <div className="code">{code.content}</div>
             <div className="blame">
-              {in_blame && i !== conflict.blame.length
-                ? code.line === conflict.blame[i].line_end
-                  ? ((in_blame = false), i++)
-                  : null
-                : code.line === conflict.blame[i].line_start
-                ? (in_blame = true)
+              {i < conflict.blame.length &&
+              code.line === conflict.blame[i].line_start
+                ? blame[i++]
                 : null}
-              {code.line === conflict.blame[i].line_start ? blame[i] : null}
             </div>
           </div>
         ))}
