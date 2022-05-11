@@ -5,16 +5,22 @@
 }
 .dirname,
 .filename,
-.diff_name {
+.diff_name,
+.version {
   color: black;
   width: 300px;
 }
 
 .insertion {
   color: red;
-  width: 80px;
+  width: 100px;
 }
 
 .deletion {
   color: blue;
+}
+
+.summary {
+  display: flex;
+  font-size: 20px;
 }
