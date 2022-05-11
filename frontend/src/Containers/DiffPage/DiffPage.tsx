@@ -18,20 +18,12 @@ interface File {
 }
 
 interface Diff {
-  total_insertion: number;
-  total_deletion: number;
-  current_version: string;
-  target_version: string;
   directories: Dir[];
   files: File[];
 }
 
 const DiffPage = () => {
   const [diffList, setDiffList] = useState<Diff>({
-    total_insertion: 0,
-    total_deletion: 0,
-    current_version: '',
-    target_version: '',
     directories: [],
     files: [],
   });
@@ -60,14 +52,6 @@ const DiffPage = () => {
 
   return (
     <div className="diff">
-      <div className="summary">
-        <div className="version">
-          {diffList.current_version} ➔ {diffList.target_version}
-        </div>
-        <div className="insertion"> +{diffList.total_insertion}</div>
-        <div className="deletion"> - {diffList.total_deletion}</div>
-      </div>
-      <br />
       <div className="diff_header">
         <div className="diff_name">name</div>
         <div className="insertion">insertion</div>
