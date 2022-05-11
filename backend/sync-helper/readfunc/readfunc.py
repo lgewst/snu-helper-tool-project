@@ -162,6 +162,6 @@ def read_function(path):
 
     for line_num in range(1, line_index):
         if not line_num in func_for_line.keys():
-            func_for_line[line_num] = ['None']
+            func_for_line[line_num] = ['']
 
     return func_for_line
