@@ -41,6 +41,9 @@ const FilePage = () => {
         setConflictList(res.data.conflicts);
       })
       .catch((err) => {
+        if (err.response.data.error_code === 10000) {
+          localStorage.setItem('initialized', 'false');
+        }
         if (err.response.data.error_code === 10004) {
           alert('invalid path');
           history.push('/error/');

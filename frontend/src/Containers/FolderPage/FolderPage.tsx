@@ -27,9 +27,12 @@ const FolderPage = () => {
         setFolderList(res.data.directories);
         setFileList(res.data.files);
       })
-      .catch(() => {
+      .catch((err) => {
+        if (err.response.data.error_code === 10000) {
+          localStorage.setItem('initialized', 'false');
+        }
         //TODO how to let user know error
-        history.push('/error/');
+        else history.push('/error/');
       });
   };
   useEffect(() => {
