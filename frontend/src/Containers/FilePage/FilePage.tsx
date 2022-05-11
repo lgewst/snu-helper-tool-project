@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 import axios from 'axios';
 import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
+import PathInfo from '../../Components/PathInfo/PathInfo';
 import './Filepage.css';
 
 interface Code {
@@ -68,6 +69,7 @@ const FilePage = () => {
       {conflictList.map((conflict) => (
         <ConflictInfo conflict={conflict} key={conflict.id} />
       ))}
+      <PathInfo></PathInfo>
     </div>
   );
 };
