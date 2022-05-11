@@ -27,14 +27,7 @@ interface Diff {
 }
 
 const DiffPage = () => {
-  const [diffList, setDiffList] = useState<Diff>({
-    total_insertion: 0,
-    total_deletion: 0,
-    current_version: '',
-    target_version: '',
-    directories: [],
-    files: [],
-  });
+  const [diffList, setDiffList] = useState<Diff>();
   const location = useLocation();
   const history = useHistory();
 
@@ -62,10 +55,10 @@ const DiffPage = () => {
     <div className="diff">
       <div className="summary">
         <div className="version">
-          {diffList.current_version} ➔ {diffList.target_version}
+          {diffList?.current_version} ➔ {diffList?.target_version}
         </div>
-        <div className="insertion"> +{diffList.total_insertion}</div>
-        <div className="deletion"> - {diffList.total_deletion}</div>
+        <div className="insertion"> +{diffList?.total_insertion}</div>
+        <div className="deletion"> - {diffList?.total_deletion}</div>
       </div>
       <br />
       <div className="diff_header">
@@ -74,7 +67,7 @@ const DiffPage = () => {
         <div className="deletion">deletion</div>
       </div>
       <div>
-        {diffList.directories.map((dir, i) => (
+        {diffList?.directories.map((dir, i) => (
           <div className="diff_dir" key={i}>
             <Link className="dirname" to={`/diff/${dir.path}`} key={i}>
               {dir.name}
@@ -86,7 +79,7 @@ const DiffPage = () => {
         ))}
       </div>
       <div>
-        {diffList.files.map((file, i) => (
+        {diffList?.files.map((file, i) => (
           <div className="diff_file" key={i}>
             <div className="filename">{file.name}</div>
             <div className="insertion">+{file.insertion}</div>
