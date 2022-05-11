@@ -25,8 +25,7 @@ def get_diff(path):
     except ValueError:
         deletion = 0
     
-    if insertion + deletion > 10000:
-        Chromium.diff_cache[path] = {"insertion": insertion, "deletion": deletion}
+    Chromium.diff_cache[path] = {"insertion": insertion, "deletion": deletion}
 
     return {"insertion": insertion, "deletion": deletion}
 
@@ -55,9 +54,22 @@ class DiffViewSet(viewsets.GenericViewSet):
         
         directories = parent + [{**dir, **get_diff(dir["path"])} for dir in directories]
         files = [{**file, **get_diff(file["path"])} for file in files]
+
+        tot_insert = 0
+        tot_delete = 0
+        for dir in directories:
+            tot_insert += dir["insertion"]
+            tot_delete += dir["deletion"]
         
+        for f in files:
+            tot_insert += f["insertion"]
+            tot_delete += f["deletion"]
 
         data = {
+            "total_insertion": tot_insert,
+            "total_deletion": tot_delete,
+            "current_version": Chromium.current_version,
+            "target_version": Chromium.target_version,
             "directories": directories,
             "files": files,
         }

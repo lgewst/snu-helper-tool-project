@@ -1,0 +1,21 @@
+.path {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 50px;
+
+  display: flex;
+}
+
+.path_name {
+  margin-right: 10px;
+  text-decoration: none;
+}
+
+.path_name::after {
+  content: '>';
+  margin-left: 10px;
+}
+.path_name:last-of-type::after {
+  content: '';
+}

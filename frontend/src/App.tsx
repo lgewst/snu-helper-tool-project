@@ -13,12 +13,6 @@ function App() {
   const [initialized, setinit] = useState<boolean>();
 
   useEffect(() => {
-    axios.get('/chromium/file/').catch((err) => {
-      if (err.response.data.error_code === 10000) {
-        localStorage.setItem('initialized', 'false');
-        setinit(false);
-      }
-    });
     const localinit = localStorage.getItem('initialized');
     const init = localinit === 'true' ? true : false;
     setinit(init);
