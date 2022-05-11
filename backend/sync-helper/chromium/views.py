@@ -80,7 +80,11 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             if c.file_path == file_path:
                 line_start = c.conflict_mark[0]
                 line_end = c.conflict_mark[2]
-                code = [{"line": l, "content": CODE[l-1], "function": func_for_line[l][0]} for l in range(line_start, line_end + 1)]
+                try:
+                    func_name = func_for_line[l][0]
+                except:
+                    func_name = 'None'
+                code = [{"line": l, "content": CODE[l-1], "function": func_name} for l in range(line_start, line_end + 1)]
 
                 blame = Chromium.get_blame(id)
                 conflicts.append({"id" : str(id), "code": code, "blame": blame})
