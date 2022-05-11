@@ -8,6 +8,7 @@ import './Filepage.css';
 interface Code {
   line: number;
   content: string;
+  function: string;
 }
 interface Blame {
   commit_id: string;
