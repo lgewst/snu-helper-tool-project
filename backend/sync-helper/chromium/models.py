@@ -115,11 +115,11 @@ class Chromium():
 
         blame = []
         prev_rev = None
-        upstream = True
         prev_struct = {}
         index = 0
         max_index = len(msgs)
         while index < max_index:
+            upstream = True
             rev = msgs[index].split(' ')[0]
             if rev == Chromium.chromium_patch:
                 # webosose patch
@@ -168,7 +168,6 @@ class Chromium():
                                'line_start': line_number, 'line_end': line_number, 'author_name': author_name,
                                'author_email': author_email, 'date': date, 'commit_msg':commit_msg}
                 prev_rev = rev
-                upstream = True
 
         blame.append(prev_struct)
         blame = list(filter(lambda x: x['author_name'] != 'Not Committed Yet', blame))
