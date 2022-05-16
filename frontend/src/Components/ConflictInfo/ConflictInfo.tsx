@@ -3,6 +3,7 @@ import './ConflictInfo.css';
 interface Code {
   line: number;
   content: string;
+  function: string;
 }
 interface Blame {
   commit_id: string;
@@ -55,13 +56,25 @@ const ConflictInfo = ({ conflict }: Props) => {
     );
   };
 
+  const colorFunc = (code: Code) => {
+    const strColor = code.content.replace(
+      code.function,
+      (match) => `<span style="color: red"> ${match} </span>`,
+    );
+    return (
+      <div
+        className="colored_code"
+        dangerouslySetInnerHTML={{ __html: strColor }}
+      ></div>
+    );
+  };
   return (
     <div key={conflict.id} className="conflict">
       <div className="conflict_codeline">
         {conflict.code.map((code) => (
           <div className="codeline" key={code.line}>
             <div className="line">{code.line}</div>
-            <pre className="code">{code.content}</pre>
+            <pre className="code">{colorFunc(code)}</pre>
             <div className="blame">{renderBlame(code.line)}</div>
           </div>
         ))}

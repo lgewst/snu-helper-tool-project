@@ -4,6 +4,7 @@ import datetime
 
 from chromium.crawling import *
 from readfunc.readfunc import read_function
+from commitmsg import commitmsg
 
 # static class
 class Chromium():
@@ -116,11 +117,11 @@ class Chromium():
 
         blame = []
         prev_rev = None
-        upstream = True
         prev_struct = {}
         index = 0
         max_index = len(msgs)
         while index < max_index:
+            upstream = True
             rev = msgs[index].split(' ')[0]
             if rev == Chromium.chromium_patch:
                 # webosose patch
@@ -161,13 +162,14 @@ class Chromium():
                 c_url = commit_url(rev, path, Chromium.chromium_repo) if upstream else f"https://github.com/webosose/chromium91/commit/{rev}"
                 r_url = review_url(rev, Chromium.chromium_repo if upstream else Chromium.webosose_repo)
                 a_url = f"https://chromium-review.googlesource.com/q/owner:{author_email}"
+                commit_msg = commitmsg.Chromium_msg(rev)
                 if not upstream:
                     a_url = f"https://github.com/webosose/chromium91/commits?author={author_name.split(' ')[0]}"
+                    commit_msg = commitmsg.Webos_msg(rev)
                 prev_struct = {'commit_id': rev, 'commit_url': c_url, 'review_url': r_url, 'author_url': a_url,
                                'line_start': line_number, 'line_end': line_number, 'author_name': author_name,
-                               'author_email': author_email, 'date': date}
+                               'author_email': author_email, 'date': date, 'commit_msg':commit_msg}
                 prev_rev = rev
-                upstream = True
 
         blame.append(prev_struct)
         blame = list(filter(lambda x: x['author_name'] != 'Not Committed Yet', blame))
