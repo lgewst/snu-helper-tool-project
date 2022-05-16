@@ -89,3 +89,37 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                 conflicts.append({"id" : str(id), "code": code, "blame": blame})
 
         return Response({"conflicts": conflicts}, status=status.HTTP_200_OK)
+
+    # GET /chromium/related?path=<path>&line_num=<line_num>&commit_num=<commit_num>
+    @action(detail=False, methods=['GET'], url_path='related')
+    def repr(self, request):
+        if not Chromium.INITIALIZED:
+            raise InitializeException()
+        
+        ROOT = Chromium.chromium_repo
+        file_path = request.query_params.get('path')
+        line_num = int(request.query_params.get('line_num'))
+        commit_num = int(request.query_params.get('commit_num'))
+
+        if not file_path or not path.isfile(ROOT + file_path):
+            raise InvalidPathException()
+        
+        commit_ids = []
+
+        for id in range(0, len(Chromium.conflicts)):
+            c = Chromium.conflicts[id]
+            if c.file_path == file_path:
+                try:
+                    if len(Chromium.related_commits[id][line_num]) > commit_num:
+                        commit_ids = Chromium.related_commits[id][line_num][:commit_num]
+                    else:
+                        repr_line_number = Chromium.get_repr_line(id, line_num)
+                        commit_ids = Chromium.get_log(id, file_path, line_num, line_num, commit_num)
+                        Chromium.related_commits[id][line_num] = commit_ids
+                except KeyError:
+                    repr_line_number = Chromium.get_repr_line(id, line_num)
+                    commit_ids = Chromium.get_log(id, file_path, line_num, line_num, commit_num)
+                    Chromium.related_commits[id] = {'line_num': commit_ids}
+                break
+
+        return Response({"commit_ids": commit_ids}, status=status.HTTP_200_OK)
