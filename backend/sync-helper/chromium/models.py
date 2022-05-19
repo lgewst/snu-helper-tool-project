@@ -9,6 +9,7 @@ from commitmsg import commitmsg
 # static class
 class Chromium():
     INITIALIZED =       False
+    WEBOS, CHROM =      0, 1
     chromium_repo =     "/home/seunghan/chromium/src/"
     webosose_repo =     "/home/seunghan/chromium91/"
     current_version =   "91.0.4472.0"
@@ -125,6 +126,7 @@ class Chromium():
             rev = msgs[index].split(' ')[0]
             if rev == Chromium.chromium_patch:
                 # webosose patch
+                line_patch = Chromium.WEBOS
                 upstream = False
                 tmp = index
                 while not '\t' in msgs[tmp]:
@@ -141,6 +143,7 @@ class Chromium():
                 author_time = int(msgs1[3].split(' ')[1])
                 author_timezone = msgs1[4].split(' ')[1][1:]
             else:
+                line_patch = Chromium.CHROM
                 line_number = int(msgs[index].split(' ')[2])
                 author_name = msgs[index + 1][msgs[index + 1].find(' ') + 1:]
                 author_email = msgs[index + 2][msgs[index + 2].find('<') + 1:-1]
@@ -168,7 +171,8 @@ class Chromium():
                     commit_msg = commitmsg.Webos_msg(rev)
                 prev_struct = {'commit_id': rev, 'commit_url': c_url, 'review_url': r_url, 'author_url': a_url,
                                'line_start': line_number, 'line_end': line_number, 'author_name': author_name,
-                               'author_email': author_email, 'date': date, 'commit_msg':commit_msg}
+                               'author_email': author_email, 'date': date, 'commit_msg':commit_msg,
+                               'line_patch': line_patch}
                 prev_rev = rev
 
         blame.append(prev_struct)
@@ -178,7 +182,7 @@ class Chromium():
         return blame
 
     def get_log(id, path, line_start, line_end, commit_number):
-        msg = os.popen(f"git log -{commit_number} --pretty=format:\"%h\" -L{line_start},{line_end}:{path}").read()
+        msg = os.popen(f"git log -{commit_number} --pretty=format:\"%H\" -L{line_start},{line_end}:{path}").read()
         commit_msgs = msg.split('\ndiff --git')[:-1]
         return [commit_msg.split('\n')[-1] for commit_msg in commit_msgs]
 
@@ -197,6 +201,11 @@ class Chromium():
             if blame['line_start'] <= line_number and line_number <= blame['line_end']:
                 blame_start = blame['line_start']
                 blame_end = blame['line_end']
+                line_patch = blame['line_patch']
+                if line_patch == Chromium.WEBOS:
+                    os.chdir(Chromium.webosose_repo + "src/")
+                else:
+                    os.chdir(Chromium.chromium_repo)
                 break
 
         for l in range(blame_start + 1, blame_end + 1):
@@ -204,7 +213,7 @@ class Chromium():
                 repr_line_number = l
                 break
 
-        return repr_line_number
+        return repr_line_number, line_patch
 
 
 class Conflict():
