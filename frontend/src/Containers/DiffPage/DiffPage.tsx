@@ -1,18 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory, useLocation, Link } from 'react-router-dom';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { useHistory, useLocation, Link } from 'react-router-dom';
 import './DiffPage.css';
 
 interface Dir {
-  name: String;
-  path: String;
+  name: string;
+  path: string;
   insertion: number;
   deletion: number;
 }
 
 interface File {
-  name: String;
-  path: String;
+  name: string;
+  path: string;
   insertion: number;
   deletion: number;
 }

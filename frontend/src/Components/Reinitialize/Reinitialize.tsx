@@ -1,14 +1,5 @@
 import axios from 'axios';
 
-import { useHistory } from 'react-router-dom';
-
-interface Init {
-  chromium_repo: string;
-  webosose_repo: string;
-  current_version: string;
-  target_version: string;
-}
-
 const reinitialize = ({ setinit }: { setinit: (e: boolean) => void }) => {
   //const history = useHistory();
   if (

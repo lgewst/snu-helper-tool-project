@@ -1,22 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
 import axios from 'axios';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import { useHistory } from 'react-router-dom';
 import './InitPage.css';
 
-interface Init {
-  chromium_repo: string;
-  webosose_repo: string;
-  current_version: string;
-  target_version: string;
-}
-
-const InitPage = ({
-  initVal,
-  setinit,
-}: {
-  initVal: Init;
-  setinit: (e: boolean) => void;
-}) => {
+const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
   const history = useHistory();
   const [initState, setinitState] = useState({
     chromium_repo: '',
@@ -28,14 +15,14 @@ const InitPage = ({
   const { chromium_repo, webosose_repo, current_version, target_version } =
     initState;
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setinitState({
       ...initState,
       [name]: value,
     });
   };
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios
       .get('/chromium/init', { params: initState })

@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory, useLocation, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { useHistory, useLocation, Link } from 'react-router-dom';
+
 import PathInfo from '../../Components/PathInfo/PathInfo';
-import Reinitialize from '../../Components/Reinitialize/Reinitialize';
 import reinitialize from '../../Components/Reinitialize/Reinitialize';
 
 interface Folder {

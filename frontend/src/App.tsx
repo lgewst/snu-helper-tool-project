@@ -1,21 +1,15 @@
 import './App.css';
-import FolderPage from './Containers/FolderPage/FolderPage';
-import FilePage from './Containers/FilePage/FilePage';
-import ErrorPage from './Containers/ErrorPage/ErrorPage';
-import DiffPage from './Containers/DiffPage/DiffPage';
-
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
-import InitPage from './Containers/InitPage/InitPage';
 import { useEffect, useState } from 'react';
+import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+
+import DiffPage from './Containers/DiffPage/DiffPage';
+import ErrorPage from './Containers/ErrorPage/ErrorPage';
+import FilePage from './Containers/FilePage/FilePage';
+import FolderPage from './Containers/FolderPage/FolderPage';
+import InitPage from './Containers/InitPage/InitPage';
 
 function App() {
   const [initialized, setinit] = useState<boolean>(false);
-  const init = {
-    chromium_repo: '',
-    webosose_repo: '',
-    current_version: '',
-    target_version: '',
-  };
 
   useEffect(() => {
     const localinit = localStorage.getItem('initialized');
@@ -44,7 +38,7 @@ function App() {
             <Route
               path="/init"
               exact
-              render={() => <InitPage initVal={init} setinit={setinit} />}
+              render={() => <InitPage setinit={setinit} />}
             />
             <Redirect from="/" to="/init" />
           </Switch>

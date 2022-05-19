@@ -1,4 +1,3 @@
-import React from 'react';
 import './ConflictInfo.css';
 interface Code {
   line: number;
