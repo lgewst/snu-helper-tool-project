@@ -31,10 +31,14 @@ const ConflictInfo = ({ conflict }: Props) => {
 
     if (!blame) return null;
 
+    const copyToClipboard = () => {
+      navigator.clipboard.writeText(blame.commit_id);
+    };
+
     return (
       <div className="blame" key={blame.line_start}>
         <div className="commit_id">
-          #
+          <span onClick={copyToClipboard}>#</span>
           <span className="commit_id_hover">
             <div className="commit_id_text">{blame.commit_id}</div>
             <a className="commit_url" href={blame.commit_url}>
