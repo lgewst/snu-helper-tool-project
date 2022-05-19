@@ -1,13 +1,16 @@
 import { StrictMode } from 'react';
 import ReactDOM from 'react-dom';
+import { Toaster } from 'react-hot-toast';
 
-import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+
+import './index.css';
 
 ReactDOM.render(
   <StrictMode>
     <App />
+    <Toaster />
   </StrictMode>,
   document.getElementById('root'),
 );

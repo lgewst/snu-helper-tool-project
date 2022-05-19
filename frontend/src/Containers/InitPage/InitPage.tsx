@@ -1,5 +1,7 @@
 import axios from 'axios';
+import { get } from 'lodash';
 import { ChangeEvent, FormEvent, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useHistory } from 'react-router-dom';
 import './InitPage.css';
 
@@ -22,25 +24,32 @@ const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
       [name]: value,
     });
   };
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    axios
-      .get('/chromium/init', { params: initState })
-      .then((res) => {
-        alert(res.data.message);
-        localStorage.setItem('chromium_repo', initState.chromium_repo);
-        localStorage.setItem('webosose_repo', initState.webosose_repo);
-        localStorage.setItem('current_version', initState.current_version);
-        localStorage.setItem('target_version', initState.target_version);
-        setinit(true);
 
-        history.push('/path');
-      })
-      .catch((err) => {
-        //TODO how to let user know error
-        console.log('err', err);
-        alert(err.response.data.message);
-      });
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const { data } = await axios.get<{ message: 'initialized!' }>(
+        '/chromium/init',
+        { params: initState },
+      );
+
+      toast.success(data.message);
+      localStorage.setItem('chromium_repo', initState.chromium_repo);
+      localStorage.setItem('webosose_repo', initState.webosose_repo);
+      localStorage.setItem('current_version', initState.current_version);
+      localStorage.setItem('target_version', initState.target_version);
+      setinit(true);
+
+      history.push('/path');
+    } catch (err) {
+      const message = get(
+        err,
+        ['response', 'data', 'message'],
+        '오류가 발생했습니다.',
+      );
+      toast.error(message);
+    }
   };
 
   return (
