@@ -3,6 +3,7 @@ import os
 import datetime
 
 from chromium.crawling import *
+from readfunc.readfunc import read_function
 from commitmsg import commitmsg
 
 # static class
@@ -17,6 +18,7 @@ class Chromium():
     conflicts = []
     blames = {}
     diff_cache = {}
+    related_commits = {}
 
     def init():
         Chromium.blames = {}
@@ -174,6 +176,35 @@ class Chromium():
             
         Chromium.blames[id] = blame
         return blame
+
+    def get_log(id, path, line_start, line_end, commit_number):
+        msg = os.popen(f"git log -{commit_number} --pretty=format:\"%h\" -L{line_start},{line_end}:{path}").read()
+        commit_msgs = msg.split('\ndiff --git')[:-1]
+        return [commit_msg.split('\n')[-1] for commit_msg in commit_msgs]
+
+    def get_repr_line(id, line_number):
+        ROOT = Chromium.chromium_repo
+        conf = Chromium.conflicts[id]
+        path = os.path.relpath(conf.file_path, ROOT)
+        file_extension = path.split('.')[-1]
+        repr_line_number = line_number
+        if not(file_extension == 'h' or file_extension == 'cc'):
+            return repr_line_number
+        
+        func_for_line = read_function(path)
+
+        for blame in Chromium.blames[id]:
+            if blame['line_start'] <= line_number and line_number <= blame['line_end']:
+                blame_start = blame['line_start']
+                blame_end = blame['line_end']
+                break
+
+        for l in range(blame_start + 1, blame_end + 1):
+            if func_for_line[l] != func_for_line[l - 1]:
+                repr_line_number = l
+                break
+
+        return repr_line_number
 
 
 class Conflict():

@@ -1,6 +1,7 @@
 .codeline {
   display: flex;
   align-items: center;
+  height: 25px;
 }
 
 .line {
@@ -12,8 +13,16 @@
 .code {
   justify-content: center;
   width: 700px;
-  height: 20px;
+  height: 15px;
   overflow-x: scroll;
+}
+.author_email_box {
+  width: 230px;
+  /* border-top: 0.1px solid black; */
+}
+.date {
+  margin-left: 20px;
+  text-indent: 30px;
 }
 
 .conflict,
@@ -22,16 +31,49 @@
   white-space: nowrap;
 }
 
+.commit_id_text {
+  color: black;
+}
+
+.review_url {
+  margin-left: 10px;
+}
+
 .commit_id {
-  width: 10px;
-  overflow: hidden;
+  width: 13px;
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
 }
 
-.commit_id_hover {
-  display: none;
+.commit_id .commit_id_hover {
+  visibility: hidden;
+  width: 370px;
+  background-color: rgb(255, 255, 255);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -60px;
+  opacity: 0;
 }
 
-.commit_id:hover + .commit_id_hover {
-  display: block;
-  color: red;
+.commit_id .commit_id_hover::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 16%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: rgb(255, 255, 255) transparent transparent transparent;
+}
+
+.commit_id:hover .commit_id_hover {
+  visibility: visible;
+  opacity: 1;
 }

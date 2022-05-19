@@ -96,9 +96,8 @@ const InitPage = ({ initialized, setinit }: Props) => {
       ></input>
       <br />
       <br />
-      <input
+      <button
         type="submit"
-        value="Submit"
         disabled={
           !(
             initState.webosose_repo &&
@@ -107,7 +106,7 @@ const InitPage = ({ initialized, setinit }: Props) => {
             initState.current_version
           )
         }
-      />
+      >submit</button>
     </form>
   );
 };

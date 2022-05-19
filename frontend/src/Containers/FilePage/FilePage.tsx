@@ -65,7 +65,7 @@ const FilePage = () => {
           <div className="header code">Code</div>
           <div className="header id">commit_id</div>
           <div className="header author">author_email</div>
-          <div className="header date">date</div>
+          <div className="header_date">commit_date</div>
         </div>
 
         {conflictList.map((conflict) => (

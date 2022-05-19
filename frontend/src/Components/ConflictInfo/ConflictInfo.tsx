@@ -34,17 +34,18 @@ const ConflictInfo = ({ conflict }: Props) => {
 
     return (
       <div className="blame" key={blame.line_start}>
-        <div className="commit_id">#</div>
-        <div className="commit_id_hover">
-          <div className="commit_id_text">{blame.commit_id}</div>
-          <a className="commit_url" href={blame.commit_url}>
-            commit_url
-          </a>
-          <a className="review_url" href={blame.review_url}>
-            review_url
-          </a>
+        <div className="commit_id">#
+          <span className="commit_id_hover">
+            <div className="commit_id_text">{blame.commit_id}</div>
+              <a className="commit_url" href={blame.commit_url}>
+                commit_url
+              </a>
+            <a className="review_url" href={blame.review_url}>
+              review_url
+            </a>
+          </span>
         </div>
-        <div>
+        <div className="author_email_box">
           <a className="author_email" href={blame.author_url}>
             {blame.author_email}
           </a>
@@ -73,8 +74,7 @@ const ConflictInfo = ({ conflict }: Props) => {
         {conflict.code.map((code) => (
           <div className="codeline" key={code.line}>
             <div className="line">{code.line}</div>
-            <div className="code">{colorFunc(code)}</div>
-
+            <pre className="code">{colorFunc(code)}</pre>
             <div className="blame">{renderBlame(code.line)}</div>
           </div>
         ))}
