@@ -11,18 +11,18 @@ const PathInfo = () => {
 
   return (
     <div className="path">
-      <a href="/path/" className="path_name">
+      <Link to="/path/" className="path_name">
         home
-      </a>
+      </Link>
 
       {eachPath.map((path, i) => (
-        <a
+        <Link
           key={path + i}
-          href={'/path/' + eachPath.slice(0, i + 1).join('/')}
+          to={'/path/' + eachPath.slice(0, i + 1).join('/')}
           className="path_name"
         >
           {path}
-        </a>
+        </Link>
       ))}
     </div>
   );

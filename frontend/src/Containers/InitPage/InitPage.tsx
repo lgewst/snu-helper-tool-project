@@ -3,12 +3,20 @@ import { useHistory } from 'react-router-dom';
 import axios from 'axios';
 import './InitPage.css';
 
-interface Props {
-  initialized: boolean;
-  setinit: (e: boolean) => void;
+interface Init {
+  chromium_repo: string;
+  webosose_repo: string;
+  current_version: string;
+  target_version: string;
 }
 
-const InitPage = ({ initialized, setinit }: Props) => {
+const InitPage = ({
+  initVal,
+  setinit,
+}: {
+  initVal: Init;
+  setinit: (e: boolean) => void;
+}) => {
   const history = useHistory();
   const [initState, setinitState] = useState({
     chromium_repo: '',
@@ -27,17 +35,18 @@ const InitPage = ({ initialized, setinit }: Props) => {
       [name]: value,
     });
   };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     axios
       .get('/chromium/init', { params: initState })
       .then((res) => {
         alert(res.data.message);
+        localStorage.setItem('chromium_repo', initState.chromium_repo);
+        localStorage.setItem('webosose_repo', initState.webosose_repo);
+        localStorage.setItem('current_version', initState.current_version);
+        localStorage.setItem('target_version', initState.target_version);
         setinit(true);
-        localStorage.setItem('initialized', 'true');
-        // TODO 조ㅛ
-        // store data somewhere
+
         history.push('/path');
       })
       .catch((err) => {
@@ -46,12 +55,6 @@ const InitPage = ({ initialized, setinit }: Props) => {
         alert(err.response.data.message);
       });
   };
-
-  const init = async () => {};
-
-  useEffect(() => {
-    init();
-  }, []);
 
   return (
     <form onSubmit={handleSubmit}>

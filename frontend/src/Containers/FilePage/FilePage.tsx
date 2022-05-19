@@ -4,6 +4,7 @@ import axios from 'axios';
 import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
 import PathInfo from '../../Components/PathInfo/PathInfo';
 import './Filepage.css';
+import reinitialize from '../../Components/Reinitialize/Reinitialize';
 
 interface Code {
   line: number;
@@ -27,7 +28,7 @@ interface Conflict {
   blame: Blame[];
 }
 
-const FilePage = () => {
+const FilePage = ({ setinit }: { setinit: (e: boolean) => void }) => {
   const [conflictList, setConflictList] = useState<Conflict[]>([]);
   const location = useLocation();
   const history = useHistory();
@@ -45,7 +46,7 @@ const FilePage = () => {
       })
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          localStorage.setItem('initialized', 'false');
+          reinitialize({ setinit });
         }
         if (err.response.data.error_code === 10004) {
           alert('invalid path');

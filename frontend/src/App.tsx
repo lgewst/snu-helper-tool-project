@@ -7,26 +7,32 @@ import DiffPage from './Containers/DiffPage/DiffPage';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 import InitPage from './Containers/InitPage/InitPage';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 
 function App() {
-  const [initialized, setinit] = useState<boolean>();
+  const [initialized, setinit] = useState<boolean>(false);
+  const init = {
+    chromium_repo: '',
+    webosose_repo: '',
+    current_version: '',
+    target_version: '',
+  };
 
   useEffect(() => {
     const localinit = localStorage.getItem('initialized');
-    const init = localinit === 'true' ? true : false;
+    const init = localinit ? true : false;
     setinit(init);
   }, []);
-
-  if (initialized === undefined) return null;
 
   return (
     <div className="App">
       {initialized ? (
         <BrowserRouter>
           <Switch>
-            <Route path="/path" render={() => <FolderPage />} />
-            <Route path="/file" render={() => <FilePage />} />
+            <Route
+              path="/path"
+              render={() => <FolderPage setinit={setinit} />}
+            />
+            <Route path="/file" render={() => <FilePage setinit={setinit} />} />
             <Route path="/error" render={() => <ErrorPage />} />
             <Route path="/diff" render={() => <DiffPage />} />
             <Redirect from="/" to="/path" />
@@ -38,9 +44,7 @@ function App() {
             <Route
               path="/init"
               exact
-              render={() => (
-                <InitPage initialized={initialized} setinit={setinit} />
-              )}
+              render={() => <InitPage initVal={init} setinit={setinit} />}
             />
             <Redirect from="/" to="/init" />
           </Switch>
