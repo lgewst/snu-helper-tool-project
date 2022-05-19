@@ -12,7 +12,7 @@ function App() {
   const [initialized, setinit] = useState<boolean>(false);
 
   useEffect(() => {
-    const localinit = localStorage.getItem('initialized');
+    const localinit = localStorage.getItem('current_version');
     const init = localinit ? true : false;
     setinit(init);
   }, []);
