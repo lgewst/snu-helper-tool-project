@@ -105,7 +105,9 @@ const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
             initState.current_version
           )
         }
-      >submit</button>
+      >
+        submit
+      </button>
     </form>
   );
 };
