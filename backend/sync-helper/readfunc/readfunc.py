@@ -46,7 +46,7 @@ def read_function(path):
                         except KeyError:
                             func_for_line[i] = [current_func]
 
-            normal_func_list = normal_func_list[:-len(current_func_list)]
+            normal_func_list = normal_func_list[:-len(current_func_list)] if len(current_func_list) > 0 else normal_func_list
         elif '>>>>>>' in line:
             mode = AFTER_CONF
             after_line_index = line_index
