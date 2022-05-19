@@ -8,6 +8,7 @@ import './InitPage.css';
 
 const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
   const history = useHistory();
+  const [isLoading, setIsLoading] = useState(false);
   const [initState, setinitState] = useState({
     chromium_repo: '',
     webosose_repo: '',
@@ -30,6 +31,7 @@ const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
     e.preventDefault();
 
     try {
+      setIsLoading(true);
       const { data } = await axios.get<{ message: 'initialized!' }>(
         '/chromium/init',
         { params: initState },
@@ -50,6 +52,8 @@ const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
         '오류가 발생했습니다.',
       );
       toast.error(message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -109,10 +113,10 @@ const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
             initState.chromium_repo &&
             initState.target_version &&
             initState.current_version
-          )
+          ) || isLoading
         }
       >
-        submit
+        {!isLoading ? 'submit' : 'loading...'}
       </Button>
     </form>
   );
