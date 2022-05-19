@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory, useLocation, Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import { useState, useEffect } from 'react';
+import { useHistory, useLocation, Link } from 'react-router-dom';
+
 import PathInfo from '../../Components/PathInfo/PathInfo';
+import reinitialize from '../../Components/Reinitialize/Reinitialize';
 
 interface Folder {
   name: string;
@@ -13,7 +15,7 @@ interface File {
   path: string;
 }
 
-const FolderPage = () => {
+const FolderPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
   const [folderList, setFolderList] = useState<Folder[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
   const history = useHistory();
@@ -29,7 +31,7 @@ const FolderPage = () => {
       })
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          localStorage.setItem('initialized', 'false');
+          reinitialize({ setinit });
         }
         //TODO how to let user know error
         else history.push('/error/');

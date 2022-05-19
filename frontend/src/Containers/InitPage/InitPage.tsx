@@ -1,14 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { Button, TextField, Typography } from '@mui/material';
 import axios from 'axios';
+import { get } from 'lodash';
+import { ChangeEvent, FormEvent, useState } from 'react';
+import toast from 'react-hot-toast';
+import { useHistory } from 'react-router-dom';
 import './InitPage.css';
 
-interface Props {
-  initialized: boolean;
-  setinit: (e: boolean) => void;
-}
-
-const InitPage = ({ initialized, setinit }: Props) => {
+const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
   const history = useHistory();
   const [initState, setinitState] = useState({
     chromium_repo: '',
@@ -20,7 +18,7 @@ const InitPage = ({ initialized, setinit }: Props) => {
   const { chromium_repo, webosose_repo, current_version, target_version } =
     initState;
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
     setinitState({
       ...initState,
@@ -28,76 +26,83 @@ const InitPage = ({ initialized, setinit }: Props) => {
     });
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    axios
-      .get('/chromium/init', { params: initState })
-      .then((res) => {
-        alert(res.data.message);
-        setinit(true);
-        localStorage.setItem('initialized', 'true');
-        // TODO 조ㅛ
-        // store data somewhere
-        history.push('/path');
-      })
-      .catch((err) => {
-        //TODO how to let user know error
-        console.log('err', err);
-        alert(err.response.data.message);
-      });
+
+    try {
+      const { data } = await axios.get<{ message: 'initialized!' }>(
+        '/chromium/init',
+        { params: initState },
+      );
+
+      toast.success(data.message);
+      localStorage.setItem('chromium_repo', initState.chromium_repo);
+      localStorage.setItem('webosose_repo', initState.webosose_repo);
+      localStorage.setItem('current_version', initState.current_version);
+      localStorage.setItem('target_version', initState.target_version);
+      setinit(true);
+
+      history.push('/path');
+    } catch (err) {
+      const message = get(
+        err,
+        ['response', 'data', 'message'],
+        '오류가 발생했습니다.',
+      );
+      toast.error(message);
+    }
   };
 
-  const init = async () => {};
-
-  useEffect(() => {
-    init();
-  }, []);
-
   return (
-    <form onSubmit={handleSubmit}>
-      <label htmlFor="chromium">chromium repo path: </label>
-      <input
-        type="text"
+    <form className="form" onSubmit={handleSubmit}>
+      <Typography variant="h4">Init</Typography>
+      <TextField
+        className="input"
+        label="chromium repo path"
+        size="small"
         id="chromium"
         name="chromium_repo"
         placeholder="ex. /home/seunghan/chromium/src"
         onChange={onChange}
         value={chromium_repo}
-      ></input>
-      <br />
-      <label htmlFor="webosose">webosose repo path: </label>
-      <input
+      />
+      <TextField
+        className="input"
+        size="small"
+        label="webosose repo path"
         type="text"
         id="webosose"
         name="webosose_repo"
         placeholder="ex. /home/seunghan/chromium91"
         onChange={onChange}
         value={webosose_repo}
-      ></input>
-      <br />
-      <label htmlFor="cur_ver">current version: </label>
-      <input
+      ></TextField>
+      <TextField
+        className="input"
+        size="small"
+        label="current version"
         type="text"
         id="cur_ver"
         name="current_version"
         placeholder="ex. 91.0.4472.0"
         onChange={onChange}
         value={current_version}
-      ></input>
-      <br />
-      <label htmlFor="tar_ver">target version: </label>
-      <input
+      ></TextField>
+      <TextField
+        className="input"
+        size="small"
+        label="target version"
         type="text"
         id="tar_ver"
         name="target_version"
         placeholder="ex. 92.0.4515.0"
         onChange={onChange}
         value={target_version}
-      ></input>
-      <br />
-      <br />
-      <button
+      ></TextField>
+      <Button
+        className="button"
         type="submit"
+        variant="contained"
         disabled={
           !(
             initState.webosose_repo &&
@@ -106,7 +111,9 @@ const InitPage = ({ initialized, setinit }: Props) => {
             initState.current_version
           )
         }
-      >submit</button>
+      >
+        submit
+      </Button>
     </form>
   );
 };
