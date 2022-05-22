@@ -41,7 +41,7 @@ def read_function(path):
             mode = INCOMING
             for current_func in reversed(current_func_list):
                 if current_func != 'not_func':
-                    for i in range(line_for_func[current_func][0], line_index + 1):
+                    for i in range(line_for_func[current_func][0], line_index):
                         try:
                             func_for_line[i].append(current_func)
                         except KeyError:
