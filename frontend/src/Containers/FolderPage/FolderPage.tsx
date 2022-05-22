@@ -1,9 +1,12 @@
+import { List } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useHistory, useLocation, Link } from 'react-router-dom';
 
 import PathInfo from '../../Components/PathInfo/PathInfo';
 import reinitialize from '../../Components/Reinitialize/Reinitialize';
+
+import './FolderPage.css';
 
 interface Folder {
   name: string;
@@ -43,24 +46,20 @@ const FolderPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
 
   return (
     <div className="wrapper">
-      <div className="pathlist">
-        <div className="folderList">
-          {folderList.map((folder) => (
-            <Link className="folder" to={`/path/${folder.path}`} key={folder.name}>
-              {folder.name}
-              <br />
-            </Link>
-          ))}
-        </div>
-        <div className="fileList">
-          {fileList.map((file) => (
-            <Link className="file" to={`/file/${file.path}`} key={file.name}>
-              {file.name}
-              <br />
-            </Link>
-          ))}
-        </div>
-      </div>
+      <List className="pathlist">
+        {folderList.map((folder) => (
+          <Link className="folder" to={`/path/${folder.path}`} key={folder.name}>
+            {folder.name}
+            <br />
+          </Link>
+        ))}
+        {fileList.map((file) => (
+          <Link className="file" to={`/file/${file.path}`} key={file.name}>
+            {file.name}
+            <br />
+          </Link>
+        ))}
+      </List>
 
       <PathInfo></PathInfo>
     </div>
