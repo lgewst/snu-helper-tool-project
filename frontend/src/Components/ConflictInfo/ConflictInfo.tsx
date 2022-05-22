@@ -72,9 +72,8 @@ const ConflictInfo = ({ conflict }: Props) => {
           dangerouslySetInnerHTML={{ __html: strColor }}
         ></div>
       );
-    }
-    else {
-      return (code.content);
+    } else {
+      return code.content;
     }
   };
   return (
