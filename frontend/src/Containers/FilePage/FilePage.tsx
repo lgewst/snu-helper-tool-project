@@ -42,15 +42,10 @@ const FilePage = ({ setinit }: { setinit: (e: boolean) => void }) => {
 
   const init = () => {
     const path = location.pathname.slice(6);
-    console.log(typeof location.pathname, 'filepath', path);
 
     axios
       .get('/chromium/file/', { params: { path: path } })
-      .then((res) => {
-        //console.log(res.data);
-        //TODO let user know loading
-        setConflictList(res.data.conflicts);
-      })
+      .then((res) => setConflictList(res.data.conflicts))
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
           reinitialize({ setinit });
