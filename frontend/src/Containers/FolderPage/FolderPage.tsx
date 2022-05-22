@@ -22,7 +22,7 @@ const FolderPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
   const location = useLocation();
   const path: string = location.pathname.slice(6);
 
-  const init = async () => {
+  const init = () => {
     axios
       .get('/chromium/dir/', { params: { path: path } })
       .then((res) => {
