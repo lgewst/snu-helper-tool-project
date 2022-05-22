@@ -75,6 +75,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
         
         CODE = [''] + open(ROOT + file_path, "r").read().split("\n")
         conflicts = []
+        last_conf_line = 0
 
         for id in range(0, len(Chromium.conflicts)):
             c = Chromium.conflicts[id]
@@ -103,11 +104,16 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                             st -= 1
                         while ')' not in CODE[en]:
                             en += 1
-
-                        code = [{"line": i, "content": CODE[i], "function": fname} for i in range(st, en+1)] + [{"line": 0, "content": "", "function": ""}] + code
+                        if last_conf_line < st:
+                            code = [{"line": i, "content": CODE[i], "function": fname} for i in range(st, en+1)] + [{"line": 0, "content": "", "function": ""}] + code
+                    
                 except:
                     code = [{"line": l, "content": CODE[l], "function": ''} for l in range(line_start, line_end + 1)]
-
+                
+                if last_conf_line != 0:
+                    code = [{"line": 0, "content": "", "function": ""}] + code
+                
+                last_conf_line = line_end
                 blame = Chromium.get_blame(id)
                 conflicts.append({"id" : str(id), "code": code, "blame": blame})
 
