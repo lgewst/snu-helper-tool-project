@@ -61,16 +61,21 @@ const ConflictInfo = ({ conflict }: Props) => {
   };
 
   const colorFunc = (code: Code) => {
-    const strColor = code.content.replace(
-      code.function,
-      (match) => `<span style="color: red"> ${match} </span>`,
-    );
-    return (
-      <div
-        className="colored_code"
-        dangerouslySetInnerHTML={{ __html: strColor }}
-      ></div>
-    );
+    if (code.function != '') {
+      const strColor = code.content.replace(
+        code.function,
+        (match) => `<span style="color: red">${match}</span>`,
+      );
+      return (
+        <div
+          className="colored_code"
+          dangerouslySetInnerHTML={{ __html: strColor }}
+        ></div>
+      );
+    }
+    else {
+      return (code.content);
+    }
   };
   return (
     <div key={conflict.id} className="conflict">
