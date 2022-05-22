@@ -1,9 +1,9 @@
 import axios from 'axios';
+import { toast } from 'react-hot-toast';
 
-import { StorageKey } from '../../Utils/storageKey';
+import { StorageKey } from './storageKey';
 
 const reinitialize = ({ setinit }: { setinit: (e: boolean) => void }) => {
-  //const history = useHistory();
   if (
     localStorage.getItem(StorageKey.CHROMIUM_REPO) != null &&
     localStorage.getItem(StorageKey.CURRENT_VERSION) != null &&
@@ -20,11 +20,10 @@ const reinitialize = ({ setinit }: { setinit: (e: boolean) => void }) => {
         },
       })
       .then((res) => {
-        alert(res.data.message);
-        //history.push('/path');
+        toast.error(res.data.message);
       });
   } else {
-    alert('nothing on local storage');
+    toast.error('nothing on local storage');
     setinit(false);
   }
 };

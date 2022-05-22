@@ -5,7 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
 import PathInfo from '../../Components/PathInfo/PathInfo';
-import reinitialize from '../../Components/Reinitialize/Reinitialize';
+import reinitialize from '../../Utils/reinitialize';
 
 import './Filepage.css';
 
