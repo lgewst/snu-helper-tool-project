@@ -31,10 +31,6 @@
   white-space: nowrap;
 }
 
-.commit_id_text {
-  color: black;
-}
-
 .review_url {
   margin-left: 10px;
 }
@@ -63,7 +59,7 @@
 }
 
 .commit_id .commit_id_hover::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   left: 16%;

@@ -40,7 +40,6 @@ const ConflictInfo = ({ conflict }: Props) => {
         <div className="commit_id">
           <span onClick={copyToClipboard}>#</span>
           <span className="commit_id_hover">
-            <div className="commit_id_text">{blame.commit_id}</div>
             <a className="commit_url" href={blame.commit_url}>
               commit_url
             </a>
