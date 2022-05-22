@@ -15,6 +15,7 @@ def read_function(path):
     normal_func_list = []
     current_func_list = []
     incoming_func_list = []
+    file_extension = path.split('.')[-1]
     mode = NORMAL
     
     line_index = 1
@@ -80,13 +81,16 @@ def read_function(path):
                 else:
                     try:
                         func_names = detect_line[:detect_line.find('(')].split(' ')
-                        func_name = [x for x in func_names if x not in other_symbol][1]
-                        if func_name == '':
-                            func_name = [x for x in func_names if x not in other_symbol][0]
+                        if 'case' in func_names:
+                            func_name = 'if'
+                        else:
+                            func_name = [x for x in func_names if x not in other_symbol][1]
+                            if func_name == '':
+                                func_name = [x for x in func_names if x not in other_symbol][0]
                     except IndexError:
                         func_name = detect_line[:detect_line.find('(')]
 
-                if not is_namespace and '_' in func_name:
+                if not is_namespace and '_' in func_name and not (file_extension == 'gn' or file_extension == 'gni'):
                     eject = False
 
                 else:
@@ -120,7 +124,7 @@ def read_function(path):
                         eject = True
 
                     else:
-                        line_for_func[func_name] = [line_index, 0]
+                        line_for_func[func_name] = [detect_index, 0]
                         normal_func_list.append(func_name)
                         if mode == CURRENT:
                             current_func_list.append(func_name)
@@ -139,8 +143,6 @@ def read_function(path):
                 else:
                     line_for_func[closed_func][1] = line_index
                     closed_func_copy = closed_func
-                    if closed_func in incoming_func_list:
-                        closed_func += '(incoming)'
                     for j in range(line_for_func[closed_func_copy][0], line_for_func[closed_func_copy][1] + 1):
                         try:
                             func_for_line[j].append(closed_func)
@@ -157,9 +159,9 @@ def read_function(path):
                         line_for_func[after_closed_func][1] = line_index
                         for j in range(after_line_index, line_index + 1):
                             try:
-                                func_for_line[j].append(after_closed_func + '(current)')
+                                func_for_line[j].append(after_closed_func)
                             except KeyError:
-                                func_for_line[j] = [after_closed_func + '(current)']
+                                func_for_line[j] = [after_closed_func]
 
         line_index += 1
 
