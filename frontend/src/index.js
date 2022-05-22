@@ -3,14 +3,17 @@ import ReactDOM from 'react-dom';
 import { Toaster } from 'react-hot-toast';
 
 import App from './App';
+import { InitContextProvider } from './Contexts/initContext';
 import reportWebVitals from './reportWebVitals';
 
 import './index.css';
 
 ReactDOM.render(
   <StrictMode>
-    <App />
-    <Toaster />
+    <InitContextProvider>
+      <App />
+      <Toaster />
+    </InitContextProvider>
   </StrictMode>,
   document.getElementById('root'),
 );
