@@ -1,11 +1,13 @@
+import { CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
 import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
 import PathInfo from '../../Components/PathInfo/PathInfo';
-import './Filepage.css';
 import reinitialize from '../../Components/Reinitialize/Reinitialize';
+
+import './Filepage.css';
 
 interface Code {
   line: number;
@@ -34,21 +36,16 @@ interface Conflict {
 }
 
 const FilePage = ({ setinit }: { setinit: (e: boolean) => void }) => {
-  const [conflictList, setConflictList] = useState<Conflict[]>([]);
+  const [conflictList, setConflictList] = useState<Conflict[]>();
   const location = useLocation();
   const history = useHistory();
 
   const init = () => {
     const path = location.pathname.slice(6);
-    console.log(typeof location.pathname, 'filepath', path);
 
     axios
       .get('/chromium/file/', { params: { path: path } })
-      .then((res) => {
-        //console.log(res.data);
-        //TODO let user know loading
-        setConflictList(res.data.conflicts);
-      })
+      .then((res) => setConflictList(res.data.conflicts))
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
           reinitialize({ setinit });
@@ -59,6 +56,7 @@ const FilePage = ({ setinit }: { setinit: (e: boolean) => void }) => {
         }
       });
   };
+
   useEffect(() => {
     init();
   }, []);
@@ -75,9 +73,9 @@ const FilePage = ({ setinit }: { setinit: (e: boolean) => void }) => {
           <div className="header msg"> commit_msg</div>
         </div>
 
-        {conflictList.map((conflict) => (
+        {conflictList?.map((conflict) => (
           <ConflictInfo conflict={conflict} key={conflict.id} />
-        ))}
+        )) ?? <CircularProgress sx={{ position: 'fixed', left: 'calc(50vw - 30px)', top: 100 }} />}
       </div>
       <PathInfo></PathInfo>
     </div>
