@@ -53,51 +53,48 @@ const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
     }
   };
 
+  const textFieldProps = {
+    className: 'input',
+    size: 'small',
+    variant: 'outlined',
+    type: 'text',
+    onChange,
+  } as const;
+
   return (
     <form className="form" onSubmit={handleSubmit}>
       <Typography variant="h4">Init</Typography>
       <TextField
-        className="input"
         label="chromium repo path"
-        size="small"
         id="chromium"
         name="chromium_repo"
         placeholder="ex. /home/seunghan/chromium/src"
-        onChange={onChange}
         value={chromium_repo}
+        {...textFieldProps}
       />
       <TextField
-        className="input"
-        size="small"
         label="webosose repo path"
-        type="text"
         id="webosose"
         name="webosose_repo"
         placeholder="ex. /home/seunghan/chromium91"
-        onChange={onChange}
         value={webosose_repo}
+        {...textFieldProps}
       ></TextField>
       <TextField
-        className="input"
-        size="small"
         label="current version"
-        type="text"
         id="cur_ver"
         name="current_version"
         placeholder="ex. 91.0.4472.0"
-        onChange={onChange}
         value={current_version}
+        {...textFieldProps}
       ></TextField>
       <TextField
-        className="input"
-        size="small"
         label="target version"
-        type="text"
         id="tar_ver"
         name="target_version"
         placeholder="ex. 92.0.4515.0"
-        onChange={onChange}
         value={target_version}
+        {...textFieldProps}
       ></TextField>
       <Button
         className="button"
