@@ -1,7 +1,9 @@
-import { List } from '@mui/material';
+import { InsertDriveFile } from '@mui/icons-material';
+import FolderIcon from '@mui/icons-material/Folder';
+import { List, ListItem, ListItemAvatar, ListItemText, ListSubheader } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useHistory, useLocation, Link } from 'react-router-dom';
+import { useHistory, useLocation, NavLink } from 'react-router-dom';
 
 import PathInfo from '../../Components/PathInfo/PathInfo';
 import reinitialize from '../../Components/Reinitialize/Reinitialize';
@@ -44,20 +46,50 @@ const FolderPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
     init();
   }, [location.pathname]);
 
+  const listItemStyle = {
+    padding: 0,
+    paddingLeft: '20px',
+    transition: '0.2s',
+
+    ':hover': {
+      backgroundColor: '#f0f0f0',
+    },
+  };
+
   return (
     <div className="wrapper">
-      <List className="pathlist">
+      <List
+        className="pathlist"
+        subheader={
+          <ListSubheader component="div">
+            {folderList?.length} folders / {fileList?.length} files
+          </ListSubheader>
+        }
+        sx={{ bgcolor: 'background.paper' }}
+      >
         {folderList.map((folder) => (
-          <Link className="folder" to={`/path/${folder.path}`} key={folder.name}>
-            {folder.name}
-            <br />
-          </Link>
+          <ListItem key={folder.name} sx={listItemStyle}>
+            <ListItemAvatar>
+              <FolderIcon />
+            </ListItemAvatar>
+            <ListItemText>
+              <NavLink className="list_item_link folder" to={`/path/${folder.path}`}>
+                {folder.name}
+              </NavLink>
+            </ListItemText>
+          </ListItem>
         ))}
         {fileList.map((file) => (
-          <Link className="file" to={`/file/${file.path}`} key={file.name}>
-            {file.name}
-            <br />
-          </Link>
+          <ListItem key={file.name} sx={listItemStyle}>
+            <ListItemAvatar>
+              <InsertDriveFile />
+            </ListItemAvatar>
+            <ListItemText>
+              <NavLink className="list_item_link file" to={`/file/${file.path}`}>
+                {file.name}
+              </NavLink>
+            </ListItemText>
+          </ListItem>
         ))}
       </List>
 

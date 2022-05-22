@@ -1,3 +1,13 @@
 .pathlist {
   padding-bottom: 50px;
 }
+
+.list_item_link {
+  text-decoration: none;
+  color: black;
+}
+
+.list_item_link:hover {
+  text-decoration: underline;
+  color: #1565c0;
+}
