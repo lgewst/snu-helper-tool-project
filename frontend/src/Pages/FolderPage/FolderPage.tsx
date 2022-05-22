@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import { useHistory, useLocation, NavLink } from 'react-router-dom';
 
 import PathInfo from '../../Components/PathInfo/PathInfo';
-import reinitialize from '../../Components/Reinitialize/Reinitialize';
+import reinitialize from '../../Utils/reinitialize';
 
 import './FolderPage.css';
 

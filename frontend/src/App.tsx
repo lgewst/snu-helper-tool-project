@@ -2,11 +2,11 @@ import './App.css';
 import { useState } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
-import DiffPage from './Containers/DiffPage/DiffPage';
-import ErrorPage from './Containers/ErrorPage/ErrorPage';
-import FilePage from './Containers/FilePage/FilePage';
-import FolderPage from './Containers/FolderPage/FolderPage';
-import InitPage from './Containers/InitPage/InitPage';
+import DiffPage from './Pages/DiffPage/DiffPage';
+import ErrorPage from './Pages/ErrorPage/ErrorPage';
+import FilePage from './Pages/FilePage/FilePage';
+import FolderPage from './Pages/FolderPage/FolderPage';
+import InitPage from './Pages/InitPage/InitPage';
 import { StorageKey } from './Utils/storageKey';
 
 function App() {
