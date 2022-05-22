@@ -70,7 +70,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             raise InvalidPathException()
 
         file_extension = file_path.split('.')[-1]
-        if file_extension == 'cc' or file_extension == 'h' or file_extension == 'gn' or file_extension == 'gni':
+        if file_extension in ['gn', 'gni', 'h', 'cc']:
             func_for_line = read_function(file_path)
         
         CODE = open(ROOT + file_path, "r").read().split("\n")

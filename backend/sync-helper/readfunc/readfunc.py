@@ -124,7 +124,7 @@ def read_function(path):
                         eject = True
 
                     else:
-                        line_for_func[func_name] = [detect_index, 0]
+                        line_for_func[func_name] = [detect_index + 1, 0]
                         normal_func_list.append(func_name)
                         if mode == CURRENT:
                             current_func_list.append(func_name)
