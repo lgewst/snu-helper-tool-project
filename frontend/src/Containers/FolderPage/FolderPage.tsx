@@ -46,11 +46,7 @@ const FolderPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
       <div className="pathlist">
         <div className="folderList">
           {folderList.map((folder) => (
-            <Link
-              className="folder"
-              to={`/path/${folder.path}`}
-              key={folder.name}
-            >
+            <Link className="folder" to={`/path/${folder.path}`} key={folder.name}>
               {folder.name}
               <br />
             </Link>

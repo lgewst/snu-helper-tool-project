@@ -4,6 +4,8 @@ import { get } from 'lodash';
 import { ChangeEvent, FormEvent, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useHistory } from 'react-router-dom';
+
+import { StorageKey } from '../../Utils/storageKey';
 import './InitPage.css';
 
 const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
@@ -16,8 +18,7 @@ const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
     target_version: '',
   });
 
-  const { chromium_repo, webosose_repo, current_version, target_version } =
-    initState;
+  const { chromium_repo, webosose_repo, current_version, target_version } = initState;
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -32,25 +33,20 @@ const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
 
     try {
       setIsLoading(true);
-      const { data } = await axios.get<{ message: 'initialized!' }>(
-        '/chromium/init',
-        { params: initState },
-      );
+      const { data } = await axios.get<{ message: 'initialized!' }>('/chromium/init', {
+        params: initState,
+      });
 
       toast.success(data.message);
-      localStorage.setItem('chromium_repo', initState.chromium_repo);
-      localStorage.setItem('webosose_repo', initState.webosose_repo);
-      localStorage.setItem('current_version', initState.current_version);
-      localStorage.setItem('target_version', initState.target_version);
+      localStorage.setItem(StorageKey.CHROMIUM_REPO, initState.chromium_repo);
+      localStorage.setItem(StorageKey.WEBOSOSE_REPO, initState.webosose_repo);
+      localStorage.setItem(StorageKey.CURRENT_VERSION, initState.current_version);
+      localStorage.setItem(StorageKey.TARGET_VERSION, initState.target_version);
       setinit(true);
 
       history.push('/path');
     } catch (err) {
-      const message = get(
-        err,
-        ['response', 'data', 'message'],
-        '오류가 발생했습니다.',
-      );
+      const message = get(err, ['response', 'data', 'message'], '오류가 발생했습니다.');
       toast.error(message);
     } finally {
       setIsLoading(false);

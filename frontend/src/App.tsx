@@ -7,10 +7,11 @@ import ErrorPage from './Containers/ErrorPage/ErrorPage';
 import FilePage from './Containers/FilePage/FilePage';
 import FolderPage from './Containers/FolderPage/FolderPage';
 import InitPage from './Containers/InitPage/InitPage';
+import { StorageKey } from './Utils/storageKey';
 
 function App() {
   const [initialized, setinit] = useState<boolean>(
-    !!localStorage.getItem('current_version'),
+    !!localStorage.getItem(StorageKey.CURRENT_VERSION),
   );
 
   return (
@@ -18,10 +19,7 @@ function App() {
       {initialized ? (
         <BrowserRouter>
           <Switch>
-            <Route
-              path="/path"
-              render={() => <FolderPage setinit={setinit} />}
-            />
+            <Route path="/path" render={() => <FolderPage setinit={setinit} />} />
             <Route path="/file" render={() => <FilePage setinit={setinit} />} />
             <Route path="/error" render={() => <ErrorPage />} />
             <Route path="/diff" render={() => <DiffPage />} />
@@ -31,11 +29,7 @@ function App() {
       ) : (
         <BrowserRouter>
           <Switch>
-            <Route
-              path="/init"
-              exact
-              render={() => <InitPage setinit={setinit} />}
-            />
+            <Route path="/init" exact render={() => <InitPage setinit={setinit} />} />
             <Redirect from="/" to="/init" />
           </Switch>
         </BrowserRouter>

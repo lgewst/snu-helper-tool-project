@@ -76,12 +76,7 @@ const ConflictInfo = ({ conflict }: Props) => {
         code.function,
         (match) => `<span style="color: red">${match}</span>`,
       );
-      return (
-        <div
-          className="colored_code"
-          dangerouslySetInnerHTML={{ __html: strColor }}
-        ></div>
-      );
+      return <div className="colored_code" dangerouslySetInnerHTML={{ __html: strColor }}></div>;
     } else {
       return code.content;
     }
