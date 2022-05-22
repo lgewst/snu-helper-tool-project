@@ -82,7 +82,14 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                 line_start = c.conflict_mark[0]
                 line_end = c.conflict_mark[2]
                 try:
-                    code = [{"line": l, "content": CODE[l-1], "function": func_for_line[l][0]} for l in range(line_start, line_end + 1)]
+                    l = line_start
+                    code = []
+                    while l <= line_end:
+                        nxt = l
+                        while nxt+1 <= line_end and func_for_line[l][0] == func_for_line[nxt+1][0]:
+                            nxt += 1
+                        code += [{"line": i, "content": CODE[i-1], "function": func_for_line[i][0] if i == l else ''} for i in range(l, nxt + 1)]
+                        l = nxt+1
                 except:
                     code = [{"line": l, "content": CODE[l-1], "function": ''} for l in range(line_start, line_end + 1)]
 
