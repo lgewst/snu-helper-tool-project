@@ -168,5 +168,7 @@ def read_function(path):
     for line_num in range(1, line_index):
         if not line_num in func_for_line.keys():
             func_for_line[line_num] = ['']
+        else:
+            func_for_line[line_num].append('')
 
     return func_for_line

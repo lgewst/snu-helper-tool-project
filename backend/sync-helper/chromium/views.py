@@ -85,25 +85,25 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                 try:
                     l = line_start
                     code = []
-                    while l <= line_end:
-                        nxt = l
-                        while nxt+1 <= line_end and func_for_line[l][0] == func_for_line[nxt+1][0]:
-                            nxt += 1
-                        code += [{"line": i, "content": CODE[i], "function": func_for_line[i][0] if i == l else ''} for i in range(l, nxt + 1)]
-                        l = nxt+1
-                    if code[0]["function"] != '':
-                        fname = code[0]["function"]
-                        code[0]["function"] = ''
-                        l = code[0]["line"]
-                        
-                        while l - 1 >= 1 and func_for_line[l-1][0] == fname:
-                            l -= 1
-                        
-                        st = en = l
-                        while '(' not in CODE[st]:
+                    for l in range(line_start, line_end+1):
+                        tmp = {"line": l, "content": CODE[l], "function": ''}
+                        if (l >= 2 and len(func_for_line[l]) == len(func_for_line[l-1]) + 1) or (l == 1 and len(func_for_line[l] > 1)):
+                            # function declare
+                            tmp["function"] = func_for_line[l][0]
+                        code.append(tmp)
+                    
+                    if len(func_for_line[line_start + 1]) > 1 and code[1]["function"] == '':
+                        fname = func_for_line[line_start + 1][0]
+                        cnt = len(func_for_line[line_start + 1])
+
+                        st = line_start
+                        while st - 1 >= 1 and len(func_for_line[st - 1]) == cnt:
                             st -= 1
+                        
+                        en = st
                         while ')' not in CODE[en]:
                             en += 1
+                        
                         if last_conf_line < st:
                             code = [{"line": i, "content": CODE[i], "function": fname} for i in range(st, en+1)] + [{"line": 0, "content": "", "function": ""}] + code
                     
