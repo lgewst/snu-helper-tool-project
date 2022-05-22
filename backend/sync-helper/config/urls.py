@@ -20,4 +20,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('chromium.urls')),
     path('', include('diff.urls')),
+    path('', include('function.urls')),
 ]

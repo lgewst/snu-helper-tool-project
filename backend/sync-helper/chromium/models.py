@@ -192,7 +192,7 @@ class Chromium():
         path = os.path.relpath(conf.file_path, ROOT)
         file_extension = path.split('.')[-1]
         repr_line_number = line_number
-        func_for_line = read_function(path)
+        func_for_line = read_function(ROOT + path)
 
         for blame in Chromium.blames[id]:
             if blame['line_start'] <= line_number and line_number <= blame['line_end']:
