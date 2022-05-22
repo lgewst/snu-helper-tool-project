@@ -70,9 +70,10 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             raise InvalidPathException()
 
         file_extension = file_path.split('.')[-1]
-        func_for_line = read_function(file_path)
+        if file_extension == 'cc' or file_extension == 'h' or file_extension == 'gn' or file_extension == 'gni':
+            func_for_line = read_function(file_path)
         
-        CODE = [''] + open(ROOT + file_path, "r").read().split("\n")
+        CODE = open(ROOT + file_path, "r").read().split("\n")
         conflicts = []
 
         for id in range(0, len(Chromium.conflicts)):
@@ -81,31 +82,9 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                 line_start = c.conflict_mark[0]
                 line_end = c.conflict_mark[2]
                 try:
-                    l = line_start
-                    code = []
-                    while l <= line_end:
-                        nxt = l
-                        while nxt+1 <= line_end and func_for_line[l][0] == func_for_line[nxt+1][0]:
-                            nxt += 1
-                        code += [{"line": i, "content": CODE[i], "function": func_for_line[i][0] if i == l else ''} for i in range(l, nxt + 1)]
-                        l = nxt+1
-                    if code[0]["function"] != '':
-                        fname = code[0]["function"]
-                        code[0]["function"] = ''
-                        l = code[0]["line"]
-                        
-                        while l - 1 >= 1 and func_for_line[l-1][0] == fname:
-                            l -= 1
-                        
-                        st = en = l
-                        while '(' not in CODE[st]:
-                            st -= 1
-                        while ')' not in CODE[en]:
-                            en += 1
-
-                        code = [{"line": i, "content": CODE[i], "function": fname} for i in range(st, en+1)] + [{"line": 0, "content": "", "function": ""}] + code
+                    code = [{"line": l, "content": CODE[l-1], "function": func_for_line[l][0]} for l in range(line_start, line_end + 1)]
                 except:
-                    code = [{"line": l, "content": CODE[l], "function": ''} for l in range(line_start, line_end + 1)]
+                    code = [{"line": l, "content": CODE[l-1], "function": ''} for l in range(line_start, line_end + 1)]
 
                 blame = Chromium.get_blame(id)
                 conflicts.append({"id" : str(id), "code": code, "blame": blame})
