@@ -17,7 +17,7 @@
   overflow-x: scroll;
 }
 .author_email_box {
-  width: 230px;
+  width: 200px;
   /* border-top: 0.1px solid black; */
 }
 .date {
@@ -39,6 +39,9 @@
   width: 13px;
   position: relative;
   display: inline-block;
+  cursor: pointer;
+}
+.commit_msg {
   cursor: pointer;
 }
 

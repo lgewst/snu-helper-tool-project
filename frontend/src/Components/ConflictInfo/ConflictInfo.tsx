@@ -1,3 +1,5 @@
+import { HTMLTooltip } from './ConflictInfo.style';
+
 import './ConflictInfo.css';
 interface Code {
   line: number;
@@ -14,6 +16,10 @@ interface Blame {
   author_name: string;
   author_email: string;
   date: string;
+  commit_msg: {
+    detail: string;
+    release: string;
+  };
 }
 interface Conflict {
   id: string;
@@ -55,6 +61,11 @@ const ConflictInfo = ({ conflict }: Props) => {
         </div>
 
         <div className="date">{blame.date}</div>
+        <div className="commit_msg">
+          <HTMLTooltip title={blame.commit_msg.detail}>
+            <div className="commit_msg_release">{blame.commit_msg.release}</div>
+          </HTMLTooltip>
+        </div>
       </div>
     );
   };
