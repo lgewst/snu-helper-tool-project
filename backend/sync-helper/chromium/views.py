@@ -71,7 +71,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
 
         file_extension = file_path.split('.')[-1]
         if file_extension in ['gn', 'gni', 'h', 'cc']:
-            func_for_line = read_function(file_path)
+            func_for_line = read_function(ROOT + file_path)
         
         CODE = [''] + open(ROOT + file_path, "r").read().split("\n")
         conflicts = []
@@ -101,7 +101,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                             st -= 1
                         
                         en = st
-                        while ')' not in CODE[en]:
+                        while '{' not in CODE[en]:
                             en += 1
                         
                         if last_conf_line < st:

@@ -7,7 +7,7 @@ AFTER_CONF = 3
 not_func_name = ['if', 'else if', 'else', 'for', 'while', 'switch', 'do', '{']
 other_symbol = ['private', 'public', 'const', 'static', 'ALWAYS_INLINE']
 
-def read_function(path):
+def read_function_code(CODE, file_extension):
     # line_for_func : line range for each function (e.g. {'foo': [12, 27]})
     # func_for_line : functions for each line (e.g. {1: ['foo1', 'foo2'], 2: ['foo1']})
     line_for_func = {}
@@ -15,15 +15,12 @@ def read_function(path):
     normal_func_list = []
     current_func_list = []
     incoming_func_list = []
-    file_extension = path.split('.')[-1]
     mode = NORMAL
     
     line_index = 1
-    while True:
-        line = linecache.getline(path, line_index)
-        if line == '':
-            break
-        elif '{' in line and '}' in line:
+    while line_index < len(CODE):
+        line = CODE[line_index]
+        if '{' in line and '}' in line:
             line_index += 1
             continue
         elif '//' in line and line.split('//')[0].count(' ') == len(line.split('//')[0]):
@@ -58,7 +55,7 @@ def read_function(path):
             while not eject:
                 left_bra, right_bra = 0, 0
                 while True:
-                    detect_line = linecache.getline(path, detect_index)
+                    detect_line = CODE[detect_index]
                     detect_index -= 1
                     left_bra += detect_line.count('(')
                     right_bra += detect_line.count(')')
@@ -98,7 +95,7 @@ def read_function(path):
                         is_destructor = False
                         iter_num = 0
                         while True:
-                            detect_line = linecache.getline(path, detect_index)
+                            detect_line = CODE[detect_index]
                             detect_index -= 1
                             add_name = detect_line[:detect_line.find('::') + 2]
                             if ' ' in add_name:
@@ -172,3 +169,8 @@ def read_function(path):
             func_for_line[line_num].append('')
 
     return func_for_line
+
+def read_function(path):
+    file_extension = path.split('.')[-1]
+    CODE = [''] + open(path, "r").read().split("\n")
+    return read_function_code(CODE, file_extension)
