@@ -1,5 +1,5 @@
 import './App.css';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
 
 import DiffPage from './Containers/DiffPage/DiffPage';
@@ -9,13 +9,9 @@ import FolderPage from './Containers/FolderPage/FolderPage';
 import InitPage from './Containers/InitPage/InitPage';
 
 function App() {
-  const [initialized, setinit] = useState<boolean>(false);
-
-  useEffect(() => {
-    const localinit = localStorage.getItem('current_version');
-    const init = localinit ? true : false;
-    setinit(init);
-  }, []);
+  const [initialized, setinit] = useState<boolean>(
+    !!localStorage.getItem('current_version'),
+  );
 
   return (
     <div className="App">
