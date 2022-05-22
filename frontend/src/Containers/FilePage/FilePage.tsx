@@ -22,6 +22,10 @@ interface Blame {
   author_name: string;
   author_email: string;
   date: string;
+  commit_msg: {
+    detail: string;
+    release: string;
+  };
 }
 interface Conflict {
   id: string;
@@ -65,9 +69,10 @@ const FilePage = ({ setinit }: { setinit: (e: boolean) => void }) => {
         <div className="header">
           <div className="header line">Line</div>
           <div className="header code">Code</div>
-          <div className="header id">commit_id</div>
+          <div className="header id"> </div>
           <div className="header author">author_email</div>
-          <div className="header_date">commit_date</div>
+          <div className="header date">commit_date</div>
+          <div className="header msg"> commit_msg</div>
         </div>
 
         {conflictList.map((conflict) => (
