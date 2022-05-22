@@ -3,7 +3,7 @@ import { toast } from 'react-hot-toast';
 
 import { StorageKey } from './storageKey';
 
-const reinitialize = ({ setinit }: { setinit: (e: boolean) => void }) => {
+const reinitialize = ({ setInit }: { setInit: (e: boolean) => void }) => {
   if (
     localStorage.getItem(StorageKey.CHROMIUM_REPO) != null &&
     localStorage.getItem(StorageKey.CURRENT_VERSION) != null &&
@@ -24,7 +24,7 @@ const reinitialize = ({ setinit }: { setinit: (e: boolean) => void }) => {
       });
   } else {
     toast.error('nothing on local storage');
-    setinit(false);
+    setInit(false);
   }
 };
 

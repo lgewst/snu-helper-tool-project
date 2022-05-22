@@ -5,6 +5,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
 import PathInfo from '../../Components/PathInfo/PathInfo';
+import { useInitContext } from '../../Contexts/initContext';
 import reinitialize from '../../Utils/reinitialize';
 
 import './Filepage.css';
@@ -35,7 +36,8 @@ interface Conflict {
   blame: Blame[];
 }
 
-const FilePage = ({ setinit }: { setinit: (e: boolean) => void }) => {
+const FilePage = () => {
+  const { setInit } = useInitContext();
   const [conflictList, setConflictList] = useState<Conflict[]>();
   const location = useLocation();
   const history = useHistory();
@@ -48,7 +50,7 @@ const FilePage = ({ setinit }: { setinit: (e: boolean) => void }) => {
       .then((res) => setConflictList(res.data.conflicts))
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          reinitialize({ setinit });
+          reinitialize({ setInit });
         }
         if (err.response.data.error_code === 10004) {
           alert('invalid path');

@@ -6,6 +6,7 @@ import { useState, useEffect } from 'react';
 import { useHistory, useLocation, NavLink } from 'react-router-dom';
 
 import PathInfo from '../../Components/PathInfo/PathInfo';
+import { useInitContext } from '../../Contexts/initContext';
 import reinitialize from '../../Utils/reinitialize';
 
 import './FolderPage.css';
@@ -20,7 +21,8 @@ interface File {
   path: string;
 }
 
-const FolderPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
+const FolderPage = () => {
+  const { setInit } = useInitContext();
   const [folderList, setFolderList] = useState<Folder[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
   const history = useHistory();
@@ -36,7 +38,7 @@ const FolderPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
       })
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          reinitialize({ setinit });
+          reinitialize({ setInit });
         }
         //TODO how to let user know error
         else history.push('/error/');

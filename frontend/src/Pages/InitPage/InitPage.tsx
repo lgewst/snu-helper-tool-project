@@ -5,11 +5,13 @@ import { ChangeEvent, FormEvent, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useHistory } from 'react-router-dom';
 
+import { useInitContext } from '../../Contexts/initContext';
 import { StorageKey } from '../../Utils/storageKey';
 import './InitPage.css';
 
-const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
+const InitPage = () => {
   const history = useHistory();
+  const { setInit } = useInitContext();
   const [isLoading, setIsLoading] = useState(false);
   const [initState, setinitState] = useState({
     chromium_repo: '',
@@ -42,7 +44,7 @@ const InitPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
       localStorage.setItem(StorageKey.WEBOSOSE_REPO, initState.webosose_repo);
       localStorage.setItem(StorageKey.CURRENT_VERSION, initState.current_version);
       localStorage.setItem(StorageKey.TARGET_VERSION, initState.target_version);
-      setinit(true);
+      setInit(true);
 
       history.push('/path');
     } catch (err) {
