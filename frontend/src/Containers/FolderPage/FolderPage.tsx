@@ -1,9 +1,14 @@
+import { InsertDriveFile } from '@mui/icons-material';
+import FolderIcon from '@mui/icons-material/Folder';
+import { List, ListItem, ListItemAvatar, ListItemText, ListSubheader } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useHistory, useLocation, Link } from 'react-router-dom';
+import { useHistory, useLocation, NavLink } from 'react-router-dom';
 
 import PathInfo from '../../Components/PathInfo/PathInfo';
 import reinitialize from '../../Components/Reinitialize/Reinitialize';
+
+import './FolderPage.css';
 
 interface Folder {
   name: string;
@@ -22,7 +27,7 @@ const FolderPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
   const location = useLocation();
   const path: string = location.pathname.slice(6);
 
-  const init = async () => {
+  const init = () => {
     axios
       .get('/chromium/dir/', { params: { path: path } })
       .then((res) => {
@@ -41,30 +46,52 @@ const FolderPage = ({ setinit }: { setinit: (e: boolean) => void }) => {
     init();
   }, [location.pathname]);
 
+  const listItemStyle = {
+    padding: 0,
+    paddingLeft: '20px',
+    transition: '0.2s',
+
+    ':hover': {
+      backgroundColor: '#f0f0f0',
+    },
+  };
+
   return (
     <div className="wrapper">
-      <div className="pathlist">
-        <div className="folderList">
-          {folderList.map((folder) => (
-            <Link
-              className="folder"
-              to={`/path/${folder.path}`}
-              key={folder.name}
-            >
-              {folder.name}
-              <br />
-            </Link>
-          ))}
-        </div>
-        <div className="fileList">
-          {fileList.map((file) => (
-            <Link className="file" to={`/file/${file.path}`} key={file.name}>
-              {file.name}
-              <br />
-            </Link>
-          ))}
-        </div>
-      </div>
+      <List
+        className="pathlist"
+        subheader={
+          <ListSubheader component="div">
+            {folderList?.length} folders / {fileList?.length} files
+          </ListSubheader>
+        }
+        sx={{ bgcolor: 'background.paper' }}
+      >
+        {folderList.map((folder) => (
+          <ListItem key={folder.name} sx={listItemStyle}>
+            <ListItemAvatar>
+              <FolderIcon />
+            </ListItemAvatar>
+            <ListItemText>
+              <NavLink className="list_item_link folder" to={`/path/${folder.path}`}>
+                {folder.name}
+              </NavLink>
+            </ListItemText>
+          </ListItem>
+        ))}
+        {fileList.map((file) => (
+          <ListItem key={file.name} sx={listItemStyle}>
+            <ListItemAvatar>
+              <InsertDriveFile />
+            </ListItemAvatar>
+            <ListItemText>
+              <NavLink className="list_item_link file" to={`/file/${file.path}`}>
+                {file.name}
+              </NavLink>
+            </ListItemText>
+          </ListItem>
+        ))}
+      </List>
 
       <PathInfo></PathInfo>
     </div>

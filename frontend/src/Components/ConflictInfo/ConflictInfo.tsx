@@ -1,3 +1,5 @@
+import { HTMLTooltip } from './ConflictInfo.style';
+
 import './ConflictInfo.css';
 interface Code {
   line: number;
@@ -14,6 +16,10 @@ interface Blame {
   author_name: string;
   author_email: string;
   date: string;
+  commit_msg: {
+    detail: string;
+    release: string;
+  };
 }
 interface Conflict {
   id: string;
@@ -40,7 +46,6 @@ const ConflictInfo = ({ conflict }: Props) => {
         <div className="commit_id">
           <span onClick={copyToClipboard}>#</span>
           <span className="commit_id_hover">
-            <div className="commit_id_text">{blame.commit_id}</div>
             <a className="commit_url" href={blame.commit_url}>
               commit_url
             </a>
@@ -56,6 +61,11 @@ const ConflictInfo = ({ conflict }: Props) => {
         </div>
 
         <div className="date">{blame.date}</div>
+        <div className="commit_msg">
+          <HTMLTooltip title={blame.commit_msg.detail}>
+            <div className="commit_msg_release">{blame.commit_msg.release}</div>
+          </HTMLTooltip>
+        </div>
       </div>
     );
   };
@@ -66,15 +76,9 @@ const ConflictInfo = ({ conflict }: Props) => {
         code.function,
         (match) => `<span style="color: red">${match}</span>`,
       );
-      return (
-        <div
-          className="colored_code"
-          dangerouslySetInnerHTML={{ __html: strColor }}
-        ></div>
-      );
-    }
-    else {
-      return (code.content);
+      return <div className="colored_code" dangerouslySetInnerHTML={{ __html: strColor }}></div>;
+    } else {
+      return code.content;
     }
   };
   return (

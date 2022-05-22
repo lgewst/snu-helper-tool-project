@@ -17,7 +17,7 @@
   overflow-x: scroll;
 }
 .author_email_box {
-  width: 230px;
+  width: 200px;
   /* border-top: 0.1px solid black; */
 }
 .date {
@@ -31,10 +31,6 @@
   white-space: nowrap;
 }
 
-.commit_id_text {
-  color: black;
-}
-
 .review_url {
   margin-left: 10px;
 }
@@ -43,6 +39,9 @@
   width: 13px;
   position: relative;
   display: inline-block;
+  cursor: pointer;
+}
+.commit_msg {
   cursor: pointer;
 }
 
@@ -63,7 +62,7 @@
 }
 
 .commit_id .commit_id_hover::after {
-  content: "";
+  content: '';
   position: absolute;
   top: 100%;
   left: 16%;
