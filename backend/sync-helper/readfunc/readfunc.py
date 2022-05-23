@@ -112,7 +112,7 @@ def read_function_code(CODE, file_extension):
                     if '<' in func_name:
                         func_name = func_name[:func_name.find('<')]
 
-                    if any(x in func_name for x in not_func_name):
+                    if any(x == func_name for x in not_func_name):
                         normal_func_list.append('not_func')
                         if mode == CURRENT:
                             current_func_list.append('not_func')
