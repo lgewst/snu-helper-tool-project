@@ -114,8 +114,28 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                     code = [{"line": 0, "content": "", "function": ""}] + code
                 
                 last_conf_line = line_end
+                conflicts.append({"id" : str(id), "code": code})
+
+        return Response({"conflicts": conflicts}, status=status.HTTP_200_OK)
+
+    # GET /chromium/file?path=<path>
+    @action(detail=False, methods=['GET'], url_path='blame')
+    def blame(self, request):
+        if not Chromium.INITIALIZED:
+            raise InitializeException()
+        
+        ROOT = Chromium.chromium_repo
+        file_path = request.query_params.get('path')
+
+        if not file_path or not path.isfile(ROOT + file_path):
+            raise InvalidPathException()
+        
+        conflicts = []
+        for id in range(0, len(Chromium.conflicts)):
+            c = Chromium.conflicts[id]
+            if c.file_path == file_path:
                 blame = Chromium.get_blame(id)
-                conflicts.append({"id" : str(id), "code": code, "blame": blame})
+                conflicts.append({"id" : str(id), "blame": blame})
 
         return Response({"conflicts": conflicts}, status=status.HTTP_200_OK)
 
