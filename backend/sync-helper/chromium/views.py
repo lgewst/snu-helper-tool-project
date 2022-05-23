@@ -97,7 +97,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                         cnt = len(func_for_line[line_start + 1])
 
                         st = line_start
-                        while st - 1 >= 1 and len(func_for_line[st - 1]) == cnt:
+                        while st - 1 >= 1 and len(func_for_line[st - 1]) >= cnt:
                             st -= 1
                         
                         en = st
@@ -118,7 +118,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
 
         return Response({"conflicts": conflicts}, status=status.HTTP_200_OK)
 
-    # GET /chromium/file?path=<path>
+    # GET /chromium/blame?path=<path>
     @action(detail=False, methods=['GET'], url_path='blame')
     def blame(self, request):
         if not Chromium.INITIALIZED:
