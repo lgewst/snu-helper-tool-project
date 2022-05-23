@@ -1,13 +1,16 @@
+from datetime import datetime
 from django.shortcuts import render
 from rest_framework import status, viewsets
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from os import scandir, path, sep
+from subprocess import PIPE, Popen
 
 from chromium.models import *
 from config.error import *
 
 from readfunc.readfunc import read_function_code
+from commitmsg.commitmsg import Chromium_msg
 
 def comp(code, i, e, CODE):
     while i < e:
@@ -22,6 +25,9 @@ class FunctionViewSet(viewsets.GenericViewSet):
     # GET /functions/{function_name}/later
     @action(detail=True, methods=['GET'], url_path='later')
     def later(self, request, pk):
+        if not Chromium.INITIALIZED:
+            raise InitializeException()
+
         fname = pk.split("::")[-1]
         path = request.query_params.get('path')
         file_extension = path.split('.')[-1]
@@ -30,7 +36,14 @@ class FunctionViewSet(viewsets.GenericViewSet):
         ROOT = Chromium.chromium_repo
 
         os.chdir(ROOT)
-        msg = os.popen(f"git log {target_version}..{later_version} -L:{fname}:{path}").read()
+        p = Popen(f"git log {target_version}..{later_version} -L:{fname}:{path}", shell=True, stdout=PIPE, stderr=PIPE)
+        stdout, stderr = p.communicate()
+        msg = str(stdout, 'utf-8')
+        error = str(stderr, 'utf-8')
+
+        if error != '':
+            return Response({"message": f"function '{fname}': no match"}, status=status.HTTP_400_BAD_REQUEST)
+        
         CODE_T = [''] + os.popen(f"git show {target_version}:{path}").read().split('\n')
         CODE_L = [''] + os.popen(f"git show {later_version}:{path}").read().split('\n')
 
@@ -95,6 +108,7 @@ class FunctionViewSet(viewsets.GenericViewSet):
 
         data["target_version_code"] = target_version_code
         data["later_version_code"] = later_version_code
+        logs = []
 
         if msg == "":
             # no change
@@ -104,6 +118,25 @@ class FunctionViewSet(viewsets.GenericViewSet):
             commits = msg.split("\n\ncommit ")
             
             for cmsg in commits:
-                commit_id = cmsg.split("\n")[0].replace("commit ", "")
+                msg1 = cmsg.split("\n")
+                commit_id = msg1[0].replace("commit ", "")
+                author_name = msg1[1][msg1[1].find(' ') + 1:msg1[1].find('<') - 1]
+                author_email = msg1[1][msg1[1].find('<') + 1:-1]
+                date = msg1[2].split(' ')[3:]
+                month = int(datetime.datetime.strptime(date[1], "%b").month)
+                day = int(date[2])
+                time = date[3]
+                year = date[4]
+                
+                date = f"{year}-{month:02d}-{day:02d} {time}"
 
+                c_url = commit_url(commit_id, path, Chromium.chromium_repo)
+                r_url = review_url(commit_id, Chromium.chromium_repo)
+                a_url = f"https://chromium-review.googlesource.com/q/owner:{author_email}"
+                commit_msg = Chromium_msg(commit_id)
+                logs.append({'commit_id': commit_id, 'commit_url': c_url, 'review_url': r_url, 'author_url': a_url,
+                               'author_name': author_name, 'author_email': author_email, 'date': date,
+                               'commit_msg': commit_msg})
+        
+        data["logs"] = logs
         return Response(data, status=status.HTTP_200_OK)
