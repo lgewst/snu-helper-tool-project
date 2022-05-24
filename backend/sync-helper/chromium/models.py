@@ -150,6 +150,12 @@ class Chromium():
                 author_time = int(msgs[index + 3].split(' ')[1])
                 author_timezone = msgs[index + 4].split(' ')[1][1:]
             
+            if author_name.find('@') >= 1:
+                author_name = author_name[:author_name.find('@')]
+            if author_email.find('@') >= 2:
+                tmp = author_email.split('@')
+                author_email = tmp[0] + '@' + tmp[1]
+
             author_tzdelta = int(author_timezone[0:2]) * 3600 + int(author_timezone[2:]) * 60
             date = datetime.datetime(1970, 1, 1, 0, 0, 0) + datetime.timedelta(seconds=author_time + author_tzdelta)
             date = date.strftime("%Y-%m-%d %H:%M:%S")
