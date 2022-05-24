@@ -89,7 +89,9 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
         {conflict.code.map((code) => (
           <div key={code.line + code.content}>
             {code.line === 0 ? (
-              <div className="dots">...</div>
+              <div className="dots_back">
+                <div className="dots">...</div>
+              </div>
             ) : (
               <div className="codeline">
                 <div className="line">{code.line}</div>

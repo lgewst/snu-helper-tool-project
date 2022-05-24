@@ -76,8 +76,15 @@
   visibility: visible;
   opacity: 1;
 }
+
+.dots_back {
+  background-color: rgb(254, 248, 223);
+  position: relative;
+  right: 56%;
+}
+
 .dots {
   position: relative;
-  left: 20%;
+  left: 79%;
   font-weight: bold;
 }
