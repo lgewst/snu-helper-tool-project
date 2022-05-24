@@ -1,3 +1,5 @@
+import { CircularProgress } from '@mui/material';
+
 import { HTMLTooltip } from './ConflictInfo.style';
 
 import './ConflictInfo.css';
@@ -24,46 +26,47 @@ interface Blame {
 interface Conflict {
   id: string;
   code: Code[];
-  blame: Blame[];
 }
 
 interface Props {
   conflict: Conflict;
+  blame: Blame[];
 }
 
-const ConflictInfo = ({ conflict }: Props) => {
+const ConflictInfo = ({ conflict, blame }: Props) => {
+  console.log(blame);
   const renderBlame = (line: number) => {
-    const blame = conflict.blame.find((bi) => bi.line_start === line);
+    const blameline = blame.find((bi) => bi.line_start === line);
 
-    if (!blame) return null;
+    if (!blameline) return null;
 
     const copyToClipboard = () => {
-      navigator.clipboard.writeText(blame.commit_id);
+      navigator.clipboard.writeText(blameline.commit_id);
     };
 
     return (
-      <div className="blame" key={blame.line_start}>
+      <div className="blame" key={blameline.line_start}>
         <div className="commit_id">
           <span onClick={copyToClipboard}>#</span>
           <span className="commit_id_hover">
-            <a className="commit_url" href={blame.commit_url}>
+            <a className="commit_url" href={blameline.commit_url}>
               commit_url
             </a>
-            <a className="review_url" href={blame.review_url}>
+            <a className="review_url" href={blameline.review_url}>
               review_url
             </a>
           </span>
         </div>
         <div className="author_email_box">
-          <a className="author_email" href={blame.author_url}>
-            {blame.author_email}
+          <a className="author_email" href={blameline.author_url}>
+            {blameline.author_email}
           </a>
         </div>
 
-        <div className="date">{blame.date}</div>
+        <div className="date">{blameline.date}</div>
         <div className="commit_msg">
-          <HTMLTooltip title={blame.commit_msg.detail}>
-            <div className="commit_msg_release">{blame.commit_msg.release}</div>
+          <HTMLTooltip title={blameline.commit_msg.detail}>
+            <div className="commit_msg_release">{blameline.commit_msg.release}</div>
           </HTMLTooltip>
         </div>
       </div>
@@ -88,7 +91,11 @@ const ConflictInfo = ({ conflict }: Props) => {
           <div className="codeline" key={code.line}>
             <div className="line">{code.line}</div>
             <pre className="code">{colorFunc(code)}</pre>
-            <div className="blame">{renderBlame(code.line)}</div>
+            {blame.length != 0 ? (
+              <div className="blame">{renderBlame(code.line)}</div>
+            ) : (
+              <CircularProgress sx={{ position: 'fixed', left: 'calc(70vw - 30px)', top: 100 }} />
+            )}
           </div>
         ))}
       </div>
