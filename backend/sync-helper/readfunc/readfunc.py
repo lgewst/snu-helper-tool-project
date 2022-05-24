@@ -172,5 +172,5 @@ def read_function_code(CODE, file_extension):
 
 def read_function(path):
     file_extension = path.split('.')[-1]
-    CODE = [''] + open(path, "r").read().split("\n")
+    CODE = [''] + open(path, "r").readlines()
     return read_function_code(CODE, file_extension)
