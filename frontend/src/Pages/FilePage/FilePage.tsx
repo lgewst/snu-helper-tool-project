@@ -33,12 +33,17 @@ interface Blame {
 interface Conflict {
   id: string;
   code: Code[];
+}
+
+interface BlameConflict {
+  id: string;
   blame: Blame[];
 }
 
 const FilePage = () => {
   const { setInit } = useInitContext();
   const [conflictList, setConflictList] = useState<Conflict[]>();
+  const [blameList, setBlameList] = useState<BlameConflict[]>();
   const location = useLocation();
   const history = useHistory();
 
@@ -57,11 +62,28 @@ const FilePage = () => {
           history.push('/error/');
         }
       });
+
+    axios
+      .get<{ conflicts: BlameConflict[] }>('/chromium/blame/', { params: { path: path } })
+      .then((res) => setBlameList(res.data.conflicts))
+      .catch((err) => {
+        if (err.response.data.error_code === 10000) {
+          reinitialize({ setInit });
+        }
+        if (err.response.data.error_code === 10004) {
+          alert('invalid path');
+          history.push('/error/');
+        }
+      });
   };
 
   useEffect(() => {
     init();
   }, []);
+
+  const renderBlame = (index: number) => {
+    return blameList ? blameList[index].blame : [];
+  };
 
   return (
     <div className="wrapper">
@@ -75,8 +97,8 @@ const FilePage = () => {
           <div className="header msg"> commit_msg</div>
         </div>
 
-        {conflictList?.map((conflict) => (
-          <ConflictInfo conflict={conflict} key={conflict.id} />
+        {conflictList?.map((conflict, i) => (
+          <ConflictInfo conflict={conflict} blame={renderBlame(i)} key={conflict.id} />
         )) ?? <CircularProgress sx={{ position: 'fixed', left: 'calc(50vw - 30px)', top: 100 }} />}
       </div>
       <PathInfo></PathInfo>
