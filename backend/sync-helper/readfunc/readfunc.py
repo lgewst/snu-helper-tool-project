@@ -78,7 +78,7 @@ def read_function_code(CODE, file_extension):
                 else:
                     try:
                         func_names = detect_line[:detect_line.find('(')].split(' ')
-                        if 'case' in func_names:
+                        if left_bra == 0 or 'case' in func_names:
                             func_name = 'if'
                         else:
                             func_name = [x for x in func_names if x not in other_symbol][1]
@@ -112,7 +112,7 @@ def read_function_code(CODE, file_extension):
                     if '<' in func_name:
                         func_name = func_name[:func_name.find('<')]
 
-                    if any(x == func_name for x in not_func_name):
+                    if left_bra == 0  or any(x == func_name for x in not_func_name):
                         normal_func_list.append('not_func')
                         if mode == CURRENT:
                             current_func_list.append('not_func')
