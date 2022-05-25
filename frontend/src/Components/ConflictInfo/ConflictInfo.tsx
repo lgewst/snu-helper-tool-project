@@ -1,3 +1,4 @@
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { CircularProgress } from '@mui/material';
 
 import { HTMLTooltip } from './ConflictInfo.style';
@@ -46,7 +47,9 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
     return (
       <div className="blame" key={blameline.line_start}>
         <div className="commit_id">
-          <span onClick={copyToClipboard}>#</span>
+          <span onClick={copyToClipboard}>
+            <ContentCopyIcon fontSize="small" padding-right="10px" />
+          </span>
           <span className="commit_id_hover">
             <a className="commit_url" href={blameline.commit_url}>
               commit_url
