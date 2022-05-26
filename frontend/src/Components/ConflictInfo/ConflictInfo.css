@@ -18,6 +18,7 @@
 }
 .author_email_box {
   width: 200px;
+  margin-left: 10px;
   /* border-top: 0.1px solid black; */
 }
 .date {
@@ -75,4 +76,16 @@
 .commit_id:hover .commit_id_hover {
   visibility: visible;
   opacity: 1;
+}
+
+.dots_back {
+  background-color: rgb(254, 248, 223);
+  position: relative;
+  right: 56%;
+}
+
+.dots {
+  position: relative;
+  left: 79%;
+  font-weight: bold;
 }

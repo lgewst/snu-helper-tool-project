@@ -1,7 +1,7 @@
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { CircularProgress } from '@mui/material';
 
 import { HTMLTooltip } from './ConflictInfo.style';
-
 import './ConflictInfo.css';
 interface Code {
   line: number;
@@ -47,7 +47,9 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
     return (
       <div className="blame" key={blameline.line_start}>
         <div className="commit_id">
-          <span onClick={copyToClipboard}>#</span>
+          <span onClick={copyToClipboard}>
+            <ContentCopyIcon fontSize="small" padding-right="10px" />
+          </span>
           <span className="commit_id_hover">
             <a className="commit_url" href={blameline.commit_url}>
               commit_url
@@ -88,13 +90,23 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
     <div key={conflict.id} className="conflict">
       <div className="conflict_codeline">
         {conflict.code.map((code) => (
-          <div className="codeline" key={code.line}>
-            <div className="line">{code.line}</div>
-            <pre className="code">{colorFunc(code)}</pre>
-            {blame.length != 0 ? (
-              <div className="blame">{renderBlame(code.line)}</div>
+          <div key={code.line + code.content}>
+            {code.line === 0 ? (
+              <div className="dots_back">
+                <div className="dots">...</div>
+              </div>
             ) : (
-              <CircularProgress sx={{ position: 'fixed', left: 'calc(70vw - 30px)', top: 100 }} />
+              <div className="codeline">
+                <div className="line">{code.line}</div>
+                <pre className="code">{colorFunc(code)}</pre>
+                {blame.length != 0 ? (
+                  <div className="blame">{renderBlame(code.line)}</div>
+                ) : (
+                  <CircularProgress
+                    sx={{ position: 'fixed', left: 'calc(70vw - 30px)', top: 100 }}
+                  />
+                )}
+              </div>
             )}
           </div>
         ))}

@@ -14,7 +14,7 @@ def Chromium_msg(commitId):
         return ''
     commitMessage =  commitMessage.text
     commitMessages = commitMessage.splitlines()
-    return {'release': commitMessages[0], 'detail': commitMessages[2]}
+    return {'release': commitMessages[0], 'detail': commitMessages[2]+'\n'+commitMessages[3]}
 
 #LG용
 def Webos_msg(commitId):
@@ -23,9 +23,10 @@ def Webos_msg(commitId):
     soup = BeautifulSoup(html, 'html.parser')
 
     commitMessage = soup.find("div", "full-commit")
-
-    commitDetail = commitMessage.find('pre')
     if commitMessage == None: 
+            return ''
+    commitDetail = commitMessage.find('pre')
+    if commitDetail == None: 
         return ''
     commitDetail =  commitDetail.text
     RELEASE = ':Release Notes:'
