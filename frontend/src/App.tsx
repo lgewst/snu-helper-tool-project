@@ -6,6 +6,7 @@ import DiffPage from './Pages/DiffPage/DiffPage';
 import ErrorPage from './Pages/ErrorPage/ErrorPage';
 import FilePage from './Pages/FilePage/FilePage';
 import FolderPage from './Pages/FolderPage/FolderPage';
+import HistoryPage from './Pages/HistoryPage/HistoryPage';
 import InitPage from './Pages/InitPage/InitPage';
 
 function App() {
@@ -20,6 +21,10 @@ function App() {
             <Route path="/file" render={() => <FilePage />} />
             <Route path="/error" render={() => <ErrorPage />} />
             <Route path="/diff" render={() => <DiffPage />} />
+            <Route
+              path="/func"
+              render={() => <HistoryPage funcName="" later_version="" path="" />}
+            />
             <Redirect from="/" to="/path" />
           </Switch>
         </BrowserRouter>
