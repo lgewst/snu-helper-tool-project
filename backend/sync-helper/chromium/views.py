@@ -9,6 +9,7 @@ from config.error import *
 from chromium.crawling import *
 
 from readfunc.readfunc import read_function
+from commitmsg import commitmsg
 
 # Create your views here.
 class ChromiumViewSet(viewsets.GenericViewSet):
@@ -172,8 +173,11 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             commit_ids = Chromium.get_log(id, file_path, line_num, line_num, commit_num)
             if line_patch == Chromium.WEBOS:
                 commit_urls = [f"https://github.com/webosose/chromium91/commit/{commit_id}" for commit_id in commit_ids]
+                commit_msgs = [commitmsg.Webos_msg(commit_id) for commit_id in commit_ids]
             else:
                 commit_urls = [commit_url(commit_id, file_path, Chromium.chromium_repo) for commit_id in commit_ids]
+                commit_msgs = [commitmsg.Chromium_msg(commit_id) for commit_id in commit_ids]
+            print(commit_msgs)
             Chromium.related_commits[id] = {'commit_urls': commit_urls}
 
         return Response({"commit_urls": commit_urls}, status=status.HTTP_200_OK)
