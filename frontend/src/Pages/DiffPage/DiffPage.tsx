@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useHistory, useLocation, Link } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { useLocation, Link } from 'react-router-dom';
 import './DiffPage.css';
 
 interface Dir {
@@ -29,7 +30,6 @@ interface Diff {
 const DiffPage = () => {
   const [diffList, setDiffList] = useState<Diff>();
   const location = useLocation();
-  const history = useHistory();
 
   const init = () => {
     const path = location.pathname.slice(6);
@@ -42,8 +42,7 @@ const DiffPage = () => {
       })
       .catch((err) => {
         if (err.response.data.error_code === 10004) {
-          alert('invalid path');
-          history.push('/error/');
+          toast.error('invalid path');
         }
       });
   };

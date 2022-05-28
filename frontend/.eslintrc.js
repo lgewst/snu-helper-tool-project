@@ -29,6 +29,7 @@ module.exports = {
   },
   plugins: ['react', '@typescript-eslint'],
   rules: {
+    'react/self-closing-comp': 'error',
     'react/react-in-jsx-scope': 0,
     'import/no-named-as-default': 0,
     'react/prop-types': 'off',

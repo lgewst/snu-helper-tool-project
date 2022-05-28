@@ -3,11 +3,11 @@ import FolderIcon from '@mui/icons-material/Folder';
 import { List, ListItem, ListItemAvatar, ListItemText, ListSubheader } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useHistory, useLocation, NavLink } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { useLocation, NavLink } from 'react-router-dom';
 
 import PathInfo from '../../Components/PathInfo/PathInfo';
 import { useInitContext } from '../../Contexts/initContext';
-import reinitialize from '../../Utils/reinitialize';
 
 import './FolderPage.css';
 
@@ -22,10 +22,9 @@ interface File {
 }
 
 const FolderPage = () => {
-  const { setInit } = useInitContext();
+  const { reinitialize } = useInitContext();
   const [folderList, setFolderList] = useState<Folder[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
-  const history = useHistory();
   const location = useLocation();
   const path: string = location.pathname.slice(6);
 
@@ -38,10 +37,12 @@ const FolderPage = () => {
       })
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          reinitialize({ setInit });
+          reinitialize();
         }
         //TODO how to let user know error
-        else history.push('/error/');
+        else {
+          toast.error('error');
+        }
       });
   };
   useEffect(() => {
@@ -95,7 +96,7 @@ const FolderPage = () => {
         ))}
       </List>
 
-      <PathInfo></PathInfo>
+      <PathInfo />
     </div>
   );
 };

@@ -12,25 +12,16 @@ const PathInfo = () => {
         home
       </Link>
 
-      {eachPath.map((path, i) =>
-        i != eachPath.length - 1 ? (
-          <Link
-            key={path + i}
-            to={'/path/' + eachPath.slice(0, i + 1).join('/')}
-            className="path_name"
-          >
+      {eachPath.map((path, i) => {
+        const isFolder = i !== eachPath.length - 1;
+        const to = (isFolder ? '/path/' : '/file/') + eachPath.slice(0, i + 1).join('/');
+
+        return (
+          <Link key={to} to={to} className="path_name">
             {path}
           </Link>
-        ) : (
-          <Link
-            key={path + i}
-            to={'/file/' + eachPath.slice(0, i + 1).join('/')}
-            className="path_name"
-          >
-            {path}
-          </Link>
-        ),
-      )}
+        );
+      })}
     </div>
   );
 };
