@@ -51,7 +51,7 @@ const FilePage = () => {
     const path = location.pathname.slice(6);
 
     axios
-      .get('/chromium/file/', { params: { path: path } })
+      .get<{ conflicts: Conflict[] }>('/chromium/file/', { params: { path: path } })
       .then((res) => setConflictList(res.data.conflicts))
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
