@@ -43,10 +43,14 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
   };
 
   const onClickSubmit = () => {
+    const params = new URLSearchParams();
+    params.set('path', path);
+    params.set('func', func);
+    params.set('version', version);
+
     history.push({
       pathname: '/func/',
-      search: `?path=${path}&?func=${func}&?version=${version}`,
-      state: { path: path, func: func, version: version },
+      search: `${params}`,
     });
   };
 

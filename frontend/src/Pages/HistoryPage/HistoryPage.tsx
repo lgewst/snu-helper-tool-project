@@ -15,10 +15,16 @@ interface LocationState {
 const HistoryPage = () => {
   const location = useLocation<LocationState>();
 
+  const params = new URLSearchParams(location.search);
+
+  console.log(params.toString());
+
+  console.log(params.get('func'));
+
   const init = () => {
     axios
-      .get<Response>(`/functions/${location.state.func}/later`, {
-        params: { path: location.state.path, later_version: location.state.version },
+      .get<Response>(`/functions/${params.get('func')}/later`, {
+        params: { path: params.get('path'), later_version: params.get('version') },
       })
       .then((res) => {
         console.log(res.data.later_version);
