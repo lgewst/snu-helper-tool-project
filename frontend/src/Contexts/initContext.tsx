@@ -38,7 +38,7 @@ export const InitContextProvider = ({ children }: PropsWithChildren<never>) => {
           },
         })
         .then((res) => {
-          toast.error(res.data.message);
+          toast.success(res.data.message);
         });
     } else {
       toast.error('nothing on local storage');
