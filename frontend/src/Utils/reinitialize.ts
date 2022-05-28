@@ -3,7 +3,10 @@ import { toast } from 'react-hot-toast';
 
 import { StorageKey } from './storageKey';
 
-const reinitialize = ({ setInit }: { setInit: (e: boolean) => void }) => {
+/**
+ * @param setInit setter function of init state
+ */
+const reinitialize = (setInit: (e: boolean) => void) => {
   if (
     localStorage.getItem(StorageKey.CHROMIUM_REPO) != null &&
     localStorage.getItem(StorageKey.CURRENT_VERSION) != null &&

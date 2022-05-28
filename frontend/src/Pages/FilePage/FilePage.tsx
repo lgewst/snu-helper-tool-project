@@ -55,7 +55,7 @@ const FilePage = () => {
       .then((res) => setConflictList(res.data.conflicts))
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          reinitialize({ setInit });
+          reinitialize(setInit);
         }
         if (err.response.data.error_code === 10004) {
           alert('invalid path');
@@ -68,7 +68,7 @@ const FilePage = () => {
       .then((res) => setBlameList(res.data.conflicts))
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          reinitialize({ setInit });
+          reinitialize(setInit);
         }
         if (err.response.data.error_code === 10004) {
           alert('invalid path');

@@ -38,7 +38,7 @@ const FolderPage = () => {
       })
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          reinitialize({ setInit });
+          reinitialize(setInit);
         }
         //TODO how to let user know error
         else history.push('/error/');
