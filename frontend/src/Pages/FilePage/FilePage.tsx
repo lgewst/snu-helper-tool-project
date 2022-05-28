@@ -101,7 +101,7 @@ const FilePage = () => {
           <ConflictInfo conflict={conflict} blame={renderBlame(i)} key={conflict.id} />
         )) ?? <CircularProgress sx={{ position: 'fixed', left: 'calc(50vw - 30px)', top: 100 }} />}
       </div>
-      <PathInfo></PathInfo>
+      <PathInfo />
     </div>
   );
 };

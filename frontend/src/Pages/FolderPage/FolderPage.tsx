@@ -95,7 +95,7 @@ const FolderPage = () => {
         ))}
       </List>
 
-      <PathInfo></PathInfo>
+      <PathInfo />
     </div>
   );
 };

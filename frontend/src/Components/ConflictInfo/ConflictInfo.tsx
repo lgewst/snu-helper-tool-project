@@ -65,7 +65,7 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
           className="colored_code"
           onClick={() => onClickFunction(code.function)}
           dangerouslySetInnerHTML={{ __html: strColor }}
-        ></div>
+        />
       );
     } else {
       return code.content;
