@@ -12,3 +12,5 @@ export const HTMLTooltip = styled(({ className, ...props }: TooltipProps) => (
     border: '1px solid #dadde9',
   },
 }));
+
+export const ConflictWrapper = styled.div``;

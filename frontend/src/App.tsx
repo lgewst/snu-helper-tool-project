@@ -21,10 +21,7 @@ function App() {
             <Route path="/file" render={() => <FilePage />} />
             <Route path="/error" render={() => <ErrorPage />} />
             <Route path="/diff" render={() => <DiffPage />} />
-            <Route
-              path="/func"
-              render={() => <HistoryPage funcName="" later_version="" path="" />}
-            />
+            <Route path="/func" render={() => <HistoryPage />} />
             <Redirect from="/" to="/path" />
           </Switch>
         </BrowserRouter>

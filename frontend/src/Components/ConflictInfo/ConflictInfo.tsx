@@ -1,8 +1,9 @@
-import { CircularProgress } from '@mui/material';
+import { Button, CircularProgress, Fade, TextField } from '@mui/material';
 import Modal from '@mui/material/Modal';
-import { useHistory } from 'react-router-dom';
+import { ChangeEvent, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import Blame from '../../Utils/interface';
+import { Blame } from '../../Utils/interface';
 
 import './ConflictInfo.css';
 import renderBlame from './renderBlame';
@@ -24,11 +25,28 @@ interface Props {
 
 const ConflictInfo = ({ conflict, blame }: Props) => {
   const history = useHistory();
+  const [func, setfunc] = useState('');
+  const [open, setOpen] = useState(false);
+  const [version, setVersion] = useState('');
+  const location = useLocation();
+
+  const path = location.pathname.slice(6);
+
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setVersion(value);
+  };
 
   const onClickFunction = (funcName: string) => {
+    setOpen(true);
+    setfunc(funcName);
+  };
+
+  const onClickSubmit = () => {
     history.push({
-      pathname: '/func',
-      state: { funcName: funcName },
+      pathname: '/func/',
+      search: `?path=${path}&?func=${func}&?version=${version}`,
+      state: { path: path, func: func, version: version },
     });
   };
 
@@ -74,6 +92,22 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
           </div>
         ))}
       </div>
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <Fade in={open}>
+          <div>
+            <TextField type="text" onChange={onChange} placeholder="ex)94.0.4606.0" />
+            <Button
+              className="button"
+              type="submit"
+              onClick={() => {
+                onClickSubmit();
+              }}
+            >
+              submit
+            </Button>
+          </div>
+        </Fade>
+      </Modal>
     </div>
   );
 };

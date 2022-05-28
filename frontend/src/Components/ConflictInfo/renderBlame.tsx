@@ -1,6 +1,6 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
-import Blame from '../../Utils/interface';
+import { Blame } from '../../Utils/interface';
 
 import { HTMLTooltip } from './ConflictInfo.style';
 
