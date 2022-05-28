@@ -26,7 +26,7 @@ const FolderPage = () => {
   const [folderList, setFolderList] = useState<Folder[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
   const location = useLocation();
-  const path: string = location.pathname.slice(6);
+  const path = location.pathname.slice(6);
 
   const init = () => {
     axios
