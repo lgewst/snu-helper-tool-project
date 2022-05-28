@@ -19,6 +19,20 @@ def comp(code, i, e, CODE):
         i += 1
     return None
 
+def get_code(path, version):
+    p = Popen(f"git show {version}:{path}", shell=True, stdout=PIPE, stderr=PIPE)
+    stdout, stderr = p.communicate()
+    error = str(stderr, 'utf-8')
+    
+    if "Invalid object name" in error:
+        return {"message": f"Invalid version '{version}'"}
+    elif "Path" in error:
+        return {"message": f"Path '{path}' dose not exist in '{version}'"}
+    elif error != '':
+        return {"message": error.replace("fatal: ", "")}
+    
+    return [''] + str(stdout, 'utf-8').split("\n")
+
 # Create your views here.
 class FunctionViewSet(viewsets.GenericViewSet):
 
@@ -36,6 +50,14 @@ class FunctionViewSet(viewsets.GenericViewSet):
         ROOT = Chromium.chromium_repo
 
         os.chdir(ROOT)
+        CODE_T = get_code(path, target_version)
+        if type(CODE_T) == dict:
+            return Response(CODE_T, status=status.HTTP_400_BAD_REQUEST)
+
+        CODE_L = get_code(path, later_version)
+        if type(CODE_L) == dict:
+            return Response(CODE_L, status=status.HTTP_400_BAD_REQUEST)
+
         p = Popen(f"git log {target_version}..{later_version} -L:{fname}:{path}", shell=True, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
         msg = str(stdout, 'utf-8')
@@ -43,9 +65,6 @@ class FunctionViewSet(viewsets.GenericViewSet):
 
         if error != '':
             return Response({"message": f"function '{fname}': no match"}, status=status.HTTP_400_BAD_REQUEST)
-        
-        CODE_T = [''] + os.popen(f"git show {target_version}:{path}").read().split('\n')
-        CODE_L = [''] + os.popen(f"git show {later_version}:{path}").read().split('\n')
 
         F2L_T = read_function_code(CODE_T, file_extension)
         F2L_L = read_function_code(CODE_L, file_extension)
