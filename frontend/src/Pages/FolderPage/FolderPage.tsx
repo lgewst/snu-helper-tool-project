@@ -8,7 +8,6 @@ import { useLocation, NavLink } from 'react-router-dom';
 
 import PathInfo from '../../Components/PathInfo/PathInfo';
 import { useInitContext } from '../../Contexts/initContext';
-import reinitialize from '../../Utils/reinitialize';
 
 import './FolderPage.css';
 
@@ -23,7 +22,7 @@ interface File {
 }
 
 const FolderPage = () => {
-  const { setInit } = useInitContext();
+  const { reinitialize } = useInitContext();
   const [folderList, setFolderList] = useState<Folder[]>([]);
   const [fileList, setFileList] = useState<File[]>([]);
   const location = useLocation();
@@ -38,7 +37,7 @@ const FolderPage = () => {
       })
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          reinitialize(setInit);
+          reinitialize();
         }
         //TODO how to let user know error
         else {

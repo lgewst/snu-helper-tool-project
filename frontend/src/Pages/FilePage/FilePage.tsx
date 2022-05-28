@@ -7,7 +7,6 @@ import { useLocation } from 'react-router-dom';
 import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
 import PathInfo from '../../Components/PathInfo/PathInfo';
 import { useInitContext } from '../../Contexts/initContext';
-import reinitialize from '../../Utils/reinitialize';
 
 import './Filepage.css';
 
@@ -42,7 +41,7 @@ interface BlameConflict {
 }
 
 const FilePage = () => {
-  const { setInit } = useInitContext();
+  const { reinitialize } = useInitContext();
   const [conflictList, setConflictList] = useState<Conflict[]>();
   const [blameList, setBlameList] = useState<BlameConflict[]>();
   const location = useLocation();
@@ -55,7 +54,7 @@ const FilePage = () => {
       .then((res) => setConflictList(res.data.conflicts))
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          reinitialize(setInit);
+          reinitialize();
         }
         if (err.response.data.error_code === 10004) {
           toast.error('invalid path');
@@ -67,7 +66,7 @@ const FilePage = () => {
       .then((res) => setBlameList(res.data.conflicts))
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          reinitialize(setInit);
+          reinitialize();
         }
         if (err.response.data.error_code === 10004) {
           toast.error('invalid path');
