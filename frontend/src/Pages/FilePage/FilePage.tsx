@@ -1,7 +1,8 @@
 import { CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import toast from 'react-hot-toast';
+import { useLocation } from 'react-router-dom';
 
 import ConflictInfo from '../../Components/ConflictInfo/ConflictInfo';
 import PathInfo from '../../Components/PathInfo/PathInfo';
@@ -45,7 +46,6 @@ const FilePage = () => {
   const [conflictList, setConflictList] = useState<Conflict[]>();
   const [blameList, setBlameList] = useState<BlameConflict[]>();
   const location = useLocation();
-  const history = useHistory();
 
   const init = () => {
     const path = location.pathname.slice(6);
@@ -58,8 +58,7 @@ const FilePage = () => {
           reinitialize(setInit);
         }
         if (err.response.data.error_code === 10004) {
-          alert('invalid path');
-          history.push('/error/');
+          toast.error('invalid path');
         }
       });
 
@@ -71,8 +70,7 @@ const FilePage = () => {
           reinitialize(setInit);
         }
         if (err.response.data.error_code === 10004) {
-          alert('invalid path');
-          history.push('/error/');
+          toast.error('invalid path');
         }
       });
   };
