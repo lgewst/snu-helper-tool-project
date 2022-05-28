@@ -29,5 +29,5 @@ def review_url(id, ROOT):
     if msg.find("Reviewed-on: ") == -1:
         return ""
 
-    url = msg[msg.find("Reviewed-on: "):].split('\n')[0].split(" ")[1];
+    url = msg[msg.find("Reviewed-on: "):].split('\n')[0].split(" ")[1]
     return url
