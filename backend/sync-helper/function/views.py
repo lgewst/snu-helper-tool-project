@@ -36,16 +36,23 @@ def get_code(path, version):
 # Create your views here.
 class FunctionViewSet(viewsets.GenericViewSet):
 
-    # GET /functions/{function_name}/later
-    @action(detail=True, methods=['GET'], url_path='later')
-    def later(self, request, pk):
+    # GET /functions/later
+    @action(detail=False, methods=['GET'], url_path='later')
+    def later(self, request):
         if not Chromium.INITIALIZED:
             raise InitializeException()
 
-        fname = pk.split("::")[-1]
+        fname = request.query_params.get('func')
+        if fname is None:
+            return Response({"message": "Send 'func'"}, status=status.HTTP_400_BAD_REQUEST)
+        fname = fname.split("::")[-1]
         path = request.query_params.get('path')
+        if path is None:
+            return Response({"message": "Send 'path'"}, status=status.HTTP_400_BAD_REQUEST)
         file_extension = path.split('.')[-1]
         later_version = request.query_params.get('later_version')
+        if later_version is None:
+            return Response({"message": "Send 'later_version'"}, status=status.HTTP_400_BAD_REQUEST)
         target_version = Chromium.target_version
         ROOT = Chromium.chromium_repo
 
