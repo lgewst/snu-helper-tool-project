@@ -1,4 +1,4 @@
-import { Button, CircularProgress, Fade, TextField } from '@mui/material';
+import { CircularProgress } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import { ChangeEvent, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
@@ -6,6 +6,7 @@ import { useHistory, useLocation } from 'react-router-dom';
 import { Blame } from '../../Utils/interface';
 
 import './ConflictInfo.css';
+import { VersionInput, VersionInputModalContent, VersionSubmitButton } from './ConflictInfo.style';
 import renderBlame from './renderBlame';
 
 interface Code {
@@ -71,6 +72,7 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
       return code.content;
     }
   };
+
   return (
     <div key={conflict.id} className="conflict">
       <div className="conflict_codeline">
@@ -97,20 +99,23 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
         ))}
       </div>
       <Modal open={open} onClose={() => setOpen(false)}>
-        <Fade in={open}>
-          <div>
-            <TextField type="text" onChange={onChange} placeholder="ex)94.0.4606.0" />
-            <Button
-              className="button"
-              type="submit"
-              onClick={() => {
-                onClickSubmit();
-              }}
-            >
-              submit
-            </Button>
-          </div>
-        </Fade>
+        <VersionInputModalContent
+          onSubmit={(e) => {
+            e.preventDefault();
+            onClickSubmit();
+          }}
+        >
+          <VersionInput
+            label="version"
+            name="version"
+            value={version}
+            onChange={onChange}
+            placeholder="ex) 94.0.4606.0"
+          />
+          <VersionSubmitButton type="submit" variant="contained">
+            submit
+          </VersionSubmitButton>
+        </VersionInputModalContent>
       </Modal>
     </div>
   );
