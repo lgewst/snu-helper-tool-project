@@ -2,7 +2,7 @@ from django.db import models
 import os
 import datetime
 
-from chromium.crawling import *
+from chromium.parse_url import *
 from readfunc.readfunc import read_function
 from commitmsg import commitmsg
 
