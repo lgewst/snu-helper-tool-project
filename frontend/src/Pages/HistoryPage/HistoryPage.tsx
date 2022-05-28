@@ -17,10 +17,6 @@ const HistoryPage = () => {
 
   const params = new URLSearchParams(location.search);
 
-  console.log(params.toString());
-
-  console.log(params.get('func'));
-
   const init = () => {
     axios
       .get<Response>(`/functions/${params.get('func')}/later`, {
