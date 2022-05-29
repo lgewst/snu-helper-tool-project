@@ -7,6 +7,7 @@ interface Code {
   line: number;
   content: string;
   function: string;
+  mode: number;
 }
 interface Blame {
   commit_id: string;
@@ -31,9 +32,11 @@ interface Conflict {
 interface Props {
   conflict: Conflict;
   blame: Blame[];
+  relatedUrls: string[];
+  getRelatedCommit: Function;
 }
 
-const ConflictInfo = ({ conflict, blame }: Props) => {
+const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props) => {
   console.log(blame);
   const renderBlame = (line: number) => {
     const blameline = blame.find((bi) => bi.line_start === line);
@@ -42,6 +45,10 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
 
     const copyToClipboard = () => {
       navigator.clipboard.writeText(blameline.commit_id);
+    };
+
+    const getRelatedUrls = (index: number, line_num: number, commit_num: number) => {
+      getRelatedCommit(index, line_num, commit_num);
     };
 
     return (
@@ -57,6 +64,19 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
             <a className="review_url" href={blameline.review_url}>
               review_url
             </a>
+            <div className="related_url">
+              <button
+                className="related_submit"
+                onClick={() => getRelatedUrls(Number(conflict.id), blameline.line_start, 5)}
+              >
+                Related commit urls
+              </button>
+              <div className="related_urls">
+                {relatedUrls?.map((url, i) => (
+                  <div key={i}>{url}</div>
+                ))}
+              </div>
+            </div>
           </span>
         </div>
         <div className="author_email_box">
@@ -98,7 +118,13 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
             ) : (
               <div className="codeline">
                 <div className="line">{code.line}</div>
-                <pre className="code">{colorFunc(code)}</pre>
+                <div className="code">
+                  {code.mode === 1 ? (
+                    <pre className="current_code">{colorFunc(code)}</pre>
+                  ) : (
+                    <pre className="incoming_code">{colorFunc(code)}</pre>
+                  )}
+                </div>
                 {blame.length != 0 ? (
                   <div className="blame">{renderBlame(code.line)}</div>
                 ) : (

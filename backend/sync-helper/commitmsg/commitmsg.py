@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
-#chromium 용
+# chromium 용
 def Chromium_msg(commitId):
     req = requests.get('https://chromium.googlesource.com/chromium/src/+/'+commitId)
 
@@ -16,7 +16,7 @@ def Chromium_msg(commitId):
     commitMessages = commitMessage.splitlines()
     return {'release': commitMessages[0], 'detail': commitMessages[2]+'\n'+commitMessages[3]}
 
-#LG용
+# LG용
 def Webos_msg(commitId):
     req = requests.get('https://github.com/webosose/chromium91/commit/'+commitId)
     html = req.text
