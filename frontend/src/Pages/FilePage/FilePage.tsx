@@ -50,7 +50,7 @@ const FilePage = () => {
   const { reinitialize } = useInitContext();
   const [conflictList, setConflictList] = useState<Conflict[]>();
   const [blameList, setBlameList] = useState<BlameConflict[]>();
-  const [relatedUrls] = useState<RelatedUrl[]>();
+  const [relatedUrls, setRelatedUrls] = useState<RelatedUrl[]>();
   const location = useLocation();
 
   const init = () => {
@@ -94,7 +94,13 @@ const FilePage = () => {
       .get('/chromium/conflicts/' + index + '/related/', {
         params: { line_num: line_num, commit_num: commit_num },
       })
-      .then((res) => relatedUrls?.push(res.data.response))
+      .then((res) => {
+        if (relatedUrls === undefined) {
+          setRelatedUrls(res.data.response);
+        } else {
+          setRelatedUrls(relatedUrls.concat(res.data.response[0]));
+        }
+      })
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
           reinitialize();

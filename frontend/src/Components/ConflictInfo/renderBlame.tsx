@@ -23,6 +23,10 @@ const renderBlame = (
     getRelatedCommit(index, line_num, commit_num);
   };
 
+  console.log(relatedUrls);
+  console.log(relatedUrls?.filter((relatedUrl) => Number(relatedUrl.id) === 48)[0]);
+  console.log(relatedUrls?.filter((relatedUrl) => Number(relatedUrl.id) === 46)[0]);
+
   return (
     <div className="blame" key={blameline.line_start}>
       <div className="commit_id">
@@ -46,7 +50,7 @@ const renderBlame = (
             <div className="related_urls">
               {relatedUrls
                 ?.filter((relatedUrl) => Number(relatedUrl.id) === blameline.line_start)[0]
-                .commit_urls.map((url, i) => (
+                ?.commit_urls.map((url, i) => (
                   <a className="related_link" href={url} key={i}>
                     {i + 1}
                   </a>
