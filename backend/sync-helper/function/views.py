@@ -42,10 +42,10 @@ class FunctionViewSet(viewsets.GenericViewSet):
         if not Chromium.INITIALIZED:
             raise InitializeException()
 
-        fname = request.query_params.get('func')
-        if fname is None:
+        origin_fname = request.query_params.get('func')
+        if origin_fname is None:
             return Response({"message": "Send 'func'"}, status=status.HTTP_400_BAD_REQUEST)
-        fname = fname.split("::")[-1]
+        fname = origin_fname.split("::")[-1]
         path = request.query_params.get('path')
         if path is None:
             return Response({"message": "Send 'path'"}, status=status.HTTP_400_BAD_REQUEST)
@@ -76,21 +76,21 @@ class FunctionViewSet(viewsets.GenericViewSet):
         F2L_T = read_function_code(CODE_T, file_extension)
         F2L_L = read_function_code(CODE_L, file_extension)
 
-        data = {"name": fname, "path": path, "target_version": target_version, "later_version": later_version}
+        data = {"name": origin_fname, "path": path, "target_version": target_version, "later_version": later_version}
 
         s1 = e1 = -1
         for i in range(1, len(CODE_T)):
-            if fname in F2L_T[i]:
+            if origin_fname in F2L_T[i]:
                 s1 = e1 = i
-                while e1 + 1 < len(CODE_T) and fname in F2L_T[e1+1]:
+                while e1 + 1 < len(CODE_T) and origin_fname in F2L_T[e1+1]:
                     e1 += 1
                 break
 
         s2 = e2 = -1
         for i in range(1, len(CODE_L)):
-            if fname in F2L_L[i]:
+            if origin_fname in F2L_L[i]:
                 s2 = e2 = i
-                while e2 + 1 < len(CODE_L) and fname in F2L_L[e2+1]:
+                while e2 + 1 < len(CODE_L) and origin_fname in F2L_L[e2+1]:
                     e2 += 1
                 break
 
