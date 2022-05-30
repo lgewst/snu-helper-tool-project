@@ -13,7 +13,7 @@ from readfunc.readfunc import read_function_code
 from commitmsg.commitmsg import Chromium_msg
 
 def comp(code, i, e, CODE):
-    while i < e:
+    while i <= e:
         if code == CODE[i]:
             return i
         i += 1
