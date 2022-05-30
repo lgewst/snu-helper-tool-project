@@ -102,11 +102,12 @@ class Chromium():
 
         ROOT = Chromium.chromium_repo
         conf = Chromium.conflicts[id]
-        path = os.path.relpath(conf.file_path, ROOT)
+        path = os.path.relpath(conf.abs_path(), ROOT)
         start = conf.conflict_mark[0]
         end = conf.conflict_mark[2]
 
         f = open(Chromium.webosose_repo + "src/" + path, "r")
+        print(Chromium.webosose_repo + "src/" + path)
         downstream_code = f.readlines()
         f.close()
 
