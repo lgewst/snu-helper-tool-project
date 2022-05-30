@@ -33,6 +33,64 @@ def get_code(path, version):
     
     return [''] + str(stdout, 'utf-8').split("\n")
 
+def get_diff(CODE_LEFT, CODE_RIGHT, F2L_LEFT, F2L_RIGHT, origin_fname):
+    s1 = e1 = -1
+    for i in range(1, len(CODE_LEFT)):
+        if origin_fname in F2L_LEFT[i]:
+            s1 = e1 = i
+            while e1 + 1 < len(CODE_LEFT) and origin_fname in F2L_LEFT[e1+1]:
+                e1 += 1
+            break
+
+    s2 = e2 = -1
+    for i in range(1, len(CODE_RIGHT)):
+        if origin_fname in F2L_RIGHT[i]:
+            s2 = e2 = i
+            while e2 + 1 < len(CODE_RIGHT) and origin_fname in F2L_RIGHT[e2+1]:
+                e2 += 1
+            break
+
+    left_code = []
+    right_code = []
+
+    l1 = s1
+    l2 = s2
+    idx = 0
+    while l1 <= e1 or l2 <= e2:
+        if l1 <= e1 and l2 <= e2 and CODE_LEFT[l1] == CODE_RIGHT[l2]:
+            left_code.append({"index": idx, "line": l1, "content": CODE_LEFT[l1], "type": "no change"})
+            right_code.append({"index": idx, "line": l2, "content": CODE_RIGHT[l2], "type": "no change"})
+            l1 += 1
+            l2 += 1
+            idx += 1
+        else:
+            nxt1 = comp(CODE_RIGHT[l2], l1, e1, CODE_LEFT)
+            if nxt1 != None:
+                while l1 < nxt1:
+                    left_code.append({"index": idx, "line": l1, "content": CODE_LEFT[l1], "type": "deleted"})
+                    right_code.append({"index": idx, "line": 0, "content": "", "type": "none"})
+                    l1 += 1
+                    idx += 1
+                continue
+            
+            nxt2 = comp(CODE_LEFT[l1], l2, e2, CODE_RIGHT)
+            if nxt2 != None:
+                while l2 < nxt2:
+                    left_code.append({"index": idx, "line": 0, "content": "", "type": "none"})
+                    right_code.append({"index": idx, "line": l2, "content": CODE_RIGHT[l2], "type": "inserted"})
+                    l2 += 1
+                    idx += 1
+                continue
+            
+            left_code.append({"index": idx, "line": l1, "content": CODE_LEFT[l1], "type": "deleted"})
+            right_code.append({"index": idx, "line": l2, "content": CODE_RIGHT[l2], "type": "inserted"})
+            l1 += 1
+            l2 += 1
+            idx += 1
+    
+    return left_code, right_code
+
+
 # Create your views here.
 class FunctionViewSet(viewsets.GenericViewSet):
 
@@ -57,13 +115,13 @@ class FunctionViewSet(viewsets.GenericViewSet):
         ROOT = Chromium.chromium_repo
 
         os.chdir(ROOT)
-        CODE_T = get_code(path, target_version)
-        if type(CODE_T) == dict:
-            return Response(CODE_T, status=status.HTTP_400_BAD_REQUEST)
+        CODE_LEFT = get_code(path, target_version)
+        if type(CODE_LEFT) == dict:
+            return Response(CODE_LEFT, status=status.HTTP_400_BAD_REQUEST)
 
-        CODE_L = get_code(path, later_version)
-        if type(CODE_L) == dict:
-            return Response(CODE_L, status=status.HTTP_400_BAD_REQUEST)
+        CODE_RIGHT = get_code(path, later_version)
+        if type(CODE_RIGHT) == dict:
+            return Response(CODE_RIGHT, status=status.HTTP_400_BAD_REQUEST)
 
         p = Popen(f"git log {target_version}..{later_version} -L:{fname}:{path}", shell=True, stdout=PIPE, stderr=PIPE)
         stdout, stderr = p.communicate()
@@ -73,67 +131,12 @@ class FunctionViewSet(viewsets.GenericViewSet):
         if error != '':
             return Response({"message": f"function '{fname}': no match"}, status=status.HTTP_400_BAD_REQUEST)
 
-        F2L_T = read_function_code(CODE_T, file_extension)
-        F2L_L = read_function_code(CODE_L, file_extension)
+        F2L_LEFT = read_function_code(CODE_LEFT, file_extension)
+        F2L_RIGHT = read_function_code(CODE_RIGHT, file_extension)
 
         data = {"name": origin_fname, "path": path, "target_version": target_version, "later_version": later_version}
-
-        s1 = e1 = -1
-        for i in range(1, len(CODE_T)):
-            if origin_fname in F2L_T[i]:
-                s1 = e1 = i
-                while e1 + 1 < len(CODE_T) and origin_fname in F2L_T[e1+1]:
-                    e1 += 1
-                break
-
-        s2 = e2 = -1
-        for i in range(1, len(CODE_L)):
-            if origin_fname in F2L_L[i]:
-                s2 = e2 = i
-                while e2 + 1 < len(CODE_L) and origin_fname in F2L_L[e2+1]:
-                    e2 += 1
-                break
-
-        target_version_code = []
-        later_version_code = []
-
-        l1 = s1
-        l2 = s2
-        idx = 0
-        while l1 <= e1 or l2 <= e2:
-            if l1 <= e1 and l2 <= e2 and CODE_T[l1] == CODE_L[l2]:
-                target_version_code.append({"index": idx, "line": l1, "content": CODE_T[l1], "type": "no change"})
-                later_version_code.append({"index": idx, "line": l2, "content": CODE_L[l2], "type": "no change"})
-                l1 += 1
-                l2 += 1
-                idx += 1
-            else:
-                nxt1 = comp(CODE_L[l2], l1, e1, CODE_T)
-                if nxt1 != None:
-                    while l1 < nxt1:
-                        target_version_code.append({"index": idx, "line": l1, "content": CODE_T[l1], "type": "deleted"})
-                        later_version_code.append({"index": idx, "line": 0, "content": "", "type": "none"})
-                        l1 += 1
-                        idx += 1
-                    continue
-                
-                nxt2 = comp(CODE_T[l1], l2, e2, CODE_L)
-                if nxt2 != None:
-                    while l2 < nxt2:
-                        target_version_code.append({"index": idx, "line": 0, "content": "", "type": "none"})
-                        later_version_code.append({"index": idx, "line": l2, "content": CODE_L[l2], "type": "inserted"})
-                        l2 += 1
-                        idx += 1
-                    continue
-                
-                target_version_code.append({"index": idx, "line": l1, "content": CODE_T[l1], "type": "deleted"})
-                later_version_code.append({"index": idx, "line": l2, "content": CODE_L[l2], "type": "inserted"})
-                l1 += 1
-                l2 += 1
-                idx += 1
-
-        data["target_version_code"] = target_version_code
-        data["later_version_code"] = later_version_code
+        data["target_version_code"], data["later_version_code"] = get_diff(CODE_LEFT, CODE_RIGHT, F2L_LEFT, F2L_RIGHT, origin_fname)
+        
         logs = []
 
         if msg == "":
@@ -142,8 +145,11 @@ class FunctionViewSet(viewsets.GenericViewSet):
         else:
 
             commits = msg.split("\n\ncommit ")
+
+            # add lastest commit of target_version
+            commits.append(os.popen(f"git log -n 1 {target_version}").read())
             
-            for cmsg in commits:
+            for i, cmsg in enumerate(commits):
                 msg1 = cmsg.split("\n")
                 commit_id = msg1[0].replace("commit ", "")
                 author_name = msg1[1][msg1[1].find(' ') + 1:msg1[1].find('<') - 1]
@@ -159,10 +165,52 @@ class FunctionViewSet(viewsets.GenericViewSet):
                 c_url = commit_url(commit_id, path, Chromium.chromium_repo)
                 r_url = review_url(commit_id, Chromium.chromium_repo)
                 a_url = f"https://chromium-review.googlesource.com/q/owner:{author_email}"
-                commit_msg = Chromium_msg(commit_id)
+                commit_msg = Chromium_msg(commit_id) if i < len(commits) - 1 else target_version
                 logs.append({'commit_id': commit_id, 'commit_url': c_url, 'review_url': r_url, 'author_url': a_url,
                                'author_name': author_name, 'author_email': author_email, 'date': date,
                                'commit_msg': commit_msg})
         
         data["logs"] = logs
+        return Response(data, status=status.HTTP_200_OK)
+
+
+    # GET /functions/diff
+    @action(detail=False, methods=['GET'], url_path='diff')
+    def diff(self, request):
+        if not Chromium.INITIALIZED:
+            raise InitializeException()
+
+        origin_fname = request.query_params.get('func')
+        if origin_fname is None:
+            return Response({"message": "Send 'func'"}, status=status.HTTP_400_BAD_REQUEST)
+        fname = origin_fname.split("::")[-1]
+        path = request.query_params.get('path')
+        if path is None:
+            return Response({"message": "Send 'path'"}, status=status.HTTP_400_BAD_REQUEST)
+        file_extension = path.split('.')[-1]
+
+        left_id = request.query_params.get('left_id')
+        if left_id is None:
+            return Response({"message": "Send 'left_id'"}, status=status.HTTP_400_BAD_REQUEST)
+        right_id = request.query_params.get('right_id')
+        if right_id is None:
+            return Response({"message": "Send 'right_id'"}, status=status.HTTP_400_BAD_REQUEST)
+        
+        ROOT = Chromium.chromium_repo
+
+        os.chdir(ROOT)
+        CODE_LEFT = get_code(path, left_id)
+        if type(CODE_LEFT) == dict:
+            return Response(CODE_LEFT, status=status.HTTP_400_BAD_REQUEST)
+
+        CODE_RIGHT = get_code(path, right_id)
+        if type(CODE_RIGHT) == dict:
+            return Response(CODE_RIGHT, status=status.HTTP_400_BAD_REQUEST)
+
+        F2L_LEFT = read_function_code(CODE_LEFT, file_extension)
+        F2L_RIGHT = read_function_code(CODE_RIGHT, file_extension)
+
+        data = {"name": origin_fname, "path": path, "left_id": left_id, "right_id": right_id}
+        data["left_code"], data["right_code"] = get_diff(CODE_LEFT, CODE_RIGHT, F2L_LEFT, F2L_RIGHT, origin_fname)
+
         return Response(data, status=status.HTTP_200_OK)
