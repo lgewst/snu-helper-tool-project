@@ -3,3 +3,6 @@ django-debug-toolbar==3.2.4
 djangorestframework==3.13.1
 requests==2.27.1
 bs4==0.0.1
+transformers==4.19.2
+torch==1.9.1
+sklearn==0.0

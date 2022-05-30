@@ -16,6 +16,16 @@
   height: 17px;
   overflow-x: scroll;
 }
+.current_code {
+  background-color: rgb(254, 241, 241);
+  height: 17px;
+  margin: 0 0 0 0;
+}
+.incoming_code {
+  background-color: rgb(239, 255, 239);
+  height: 17px;
+  margin: 0 0 0 0;
+}
 .author_email_box {
   width: 200px;
   margin-left: 10px;
@@ -68,7 +78,7 @@
   top: 100%;
   left: 16%;
   margin-left: -5px;
-  border-width: 5px;
+  border-width: 15px;
   border-style: solid;
   border-color: rgb(255, 255, 255) transparent transparent transparent;
 }
@@ -88,4 +98,18 @@
   position: relative;
   left: 79%;
   font-weight: bold;
+}
+
+.related_urls {
+  height: 30px;
+  color: black;
+}
+
+.related_submit {
+  margin: 5px 0 0 0;
+  cursor: pointer;
+}
+
+.related_link {
+  margin: 0 5px 0 5px;
 }

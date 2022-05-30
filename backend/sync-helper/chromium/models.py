@@ -11,6 +11,7 @@ from commitmsg import commitmsg
 class Chromium():
     INITIALIZED =       False
     WEBOS, CHROM =      0, 1
+    NORM, CURR, INCM =  0, 1, 2
     chromium_repo =     "/home/seunghan/chromium/src/"
     webosose_repo =     "/home/seunghan/chromium91/"
     current_version =   "91.0.4472.0"
@@ -208,6 +209,7 @@ class Chromium():
                 blame_start = blame['line_start']
                 blame_end = blame['line_end']
                 line_patch = blame['line_patch']
+                commit_msg = blame['commit_msg']['release']
                 if line_patch == Chromium.WEBOS:
                     os.chdir(Chromium.webosose_repo + "src/")
                 else:
@@ -219,7 +221,7 @@ class Chromium():
                 repr_line_number = l
                 break
 
-        return repr_line_number, line_patch
+        return repr_line_number, line_patch, commit_msg
 
 
 class Conflict():

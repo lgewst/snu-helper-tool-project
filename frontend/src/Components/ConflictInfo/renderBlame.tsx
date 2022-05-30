@@ -1,10 +1,16 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
-import { Blame } from '../../Utils/interface';
+import { Blame, RelatedUrl } from '../../Utils/interface';
 
 import { HTMLTooltip } from './ConflictInfo.style';
 
-const renderBlame = (line: number, blame: Blame[]) => {
+const renderBlame = (
+  id: number,
+  line: number,
+  blame: Blame[],
+  relatedUrls: RelatedUrl[],
+  getRelatedCommit: Function,
+) => {
   const blameline = blame.find((bi) => bi.line_start === line);
 
   if (!blameline) return null;
@@ -12,6 +18,14 @@ const renderBlame = (line: number, blame: Blame[]) => {
   const copyToClipboard = () => {
     navigator.clipboard.writeText(blameline.commit_id);
   };
+
+  const getRelatedUrls = (index: number, line_num: number, commit_num: number) => {
+    getRelatedCommit(index, line_num, commit_num);
+  };
+
+  console.log(relatedUrls);
+  console.log(relatedUrls?.filter((relatedUrl) => Number(relatedUrl.id) === 48)[0]);
+  console.log(relatedUrls?.filter((relatedUrl) => Number(relatedUrl.id) === 46)[0]);
 
   return (
     <div className="blame" key={blameline.line_start}>
@@ -26,6 +40,23 @@ const renderBlame = (line: number, blame: Blame[]) => {
           <a className="review_url" href={blameline.review_url}>
             review_url
           </a>
+          <div className="related_url">
+            <button
+              className="related_submit"
+              onClick={() => getRelatedUrls(id, blameline.line_start, 5)}
+            >
+              Related commit urls
+            </button>
+            <div className="related_urls">
+              {relatedUrls
+                ?.filter((relatedUrl) => Number(relatedUrl.id) === blameline.line_start)[0]
+                ?.commit_urls.map((url, i) => (
+                  <a className="related_link" href={url} key={i}>
+                    {i + 1}
+                  </a>
+                ))}
+            </div>
+          </div>
         </span>
       </div>
       <div className="author_email_box">

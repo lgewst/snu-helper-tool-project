@@ -54,6 +54,8 @@ module.exports = {
     '@typescript-eslint/no-use-before-define': 'off',
     '@typescript-eslint/explicit-function-return-type': 'off',
     '@typescript-eslint/interface-name-prefix': 'off',
+    '@typescript-eslint/ban-types': 'off',
+    '@typescript-eslint/no-non-null-assertion': 'off',
     'import/order': [
       'error',
       {

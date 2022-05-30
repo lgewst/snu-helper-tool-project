@@ -9,6 +9,8 @@ from config.error import *
 from chromium.parse_url import *
 
 from readfunc.readfunc import read_function
+from sentence.sentence import sentence_similarity
+from commitmsg import commitmsg
 
 # Create your views here.
 class ChromiumViewSet(viewsets.GenericViewSet):
@@ -85,8 +87,15 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                 try:
                     l = line_start
                     code = []
+                    mode = Chromium.NORM
                     for l in range(line_start, line_end+1):
-                        tmp = {"line": l, "content": CODE[l], "function": ''}
+                        if '<<<<<<' in CODE[l]:
+                            mode = Chromium.CURR
+                        elif '======' in CODE[l]:
+                            mode = Chromium.INCM
+                        elif '>>>>>>' in CODE[l]:
+                            mode = Chromium.NORM
+                        tmp = {"line": l, "content": CODE[l], "function": '', "mode": mode}
                         if (l >= 2 and len(func_for_line[l]) == len(func_for_line[l-1]) + 1) or (l == 1 and len(func_for_line[l] > 1)):
                             # function declare
                             tmp["function"] = func_for_line[l][0]
@@ -108,10 +117,19 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                             code = [{"line": i, "content": CODE[i], "function": fname} for i in range(st, en+1)] + [{"line": 0, "content": "", "function": ""}] + code
                     
                 except:
-                    code = [{"line": l, "content": CODE[l], "function": ''} for l in range(line_start, line_end + 1)]
+                    mode = Chromium.NORM
+                    code = []
+                    for l in range(line_start, line_end + 1):
+                        if '<<<<<<' in CODE[l]:
+                            mode = Chromium.CURR
+                        elif '======' in CODE[l]:
+                            mode = Chromium.INCM
+                        elif '>>>>>>' in CODE[l]:
+                            mode = Chromium.NORM
+                        code.append({"line": l, "content": CODE[l], "function": '', "mode": mode})
                 
                 if last_conf_line != 0:
-                    code = [{"line": 0, "content": "", "function": ""}] + code
+                    code = [{"line": 0, "content": "", "function": "", "mode": 0}] + code
                 
                 last_conf_line = line_end
                 conflicts.append({"id" : str(id), "code": code})
@@ -157,23 +175,37 @@ class ChromiumViewSet(viewsets.GenericViewSet):
         commit_ids = []
         commit_urls = []
         try:
-            if len(Chromium.related_commits[id][line_num]) > commit_num:
+            if len(Chromium.related_commits[id][line_num]) >= commit_num:
                 commit_urls = Chromium.related_commits[id][line_num][:commit_num]
             else:
-                repr_line_number, line_patch = Chromium.get_repr_line(id, line_num)
-                commit_ids = Chromium.get_log(id, file_path, line_num, line_num, commit_num)
+                repr_line_number, line_patch, current_msg = Chromium.get_repr_line(id, line_num)
+                commit_ids = Chromium.get_log(id, file_path, line_num, line_num, 2 * commit_num)
                 if line_patch == Chromium.WEBOS:
                     commit_urls = [f"https://github.com/webosose/chromium91/commit/{commit_id}" for commit_id in commit_ids]
+                    commit_msgs = [commitmsg.Webos_msg(commit_id) for commit_id in commit_ids]
                 else:
                     commit_urls = [commit_url(commit_id, file_path, Chromium.chromium_repo) for commit_id in commit_ids]
-                Chromium.related_commits[id] = {'commit_urls': commit_urls}
+                    commit_msgs = [commitmsg.Chromium_msg(commit_id) for commit_id in commit_ids]
+                related_ids = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
+                commit_urls = [commit_urls[x] for x in related_ids][:commit_num] if len(related_ids) > commit_num else [commit_urls[x] for x in related_ids]
+                try:
+                    Chromium.related_commits[id][line_num] = commit_urls
+                except KeyError:
+                    Chromium.related_commits[id] = {line_num: commit_urls}
         except KeyError:
-            repr_line_number, line_patch = Chromium.get_repr_line(id, line_num)
-            commit_ids = Chromium.get_log(id, file_path, line_num, line_num, commit_num)
+            repr_line_number, line_patch, current_msg = Chromium.get_repr_line(id, line_num)
+            commit_ids = Chromium.get_log(id, file_path, line_num, line_num, 2 * commit_num)
             if line_patch == Chromium.WEBOS:
                 commit_urls = [f"https://github.com/webosose/chromium91/commit/{commit_id}" for commit_id in commit_ids]
+                commit_msgs = [commitmsg.Webos_msg(commit_id) for commit_id in commit_ids]
             else:
                 commit_urls = [commit_url(commit_id, file_path, Chromium.chromium_repo) for commit_id in commit_ids]
-            Chromium.related_commits[id] = {'commit_urls': commit_urls}
+                commit_msgs = [commitmsg.Chromium_msg(commit_id) for commit_id in commit_ids]
+            related_ids = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
+            commit_urls = [commit_urls[x] for x in related_ids][:commit_num] if len(related_ids) > commit_num else [commit_urls[x] for x in related_ids]
+            try:
+                Chromium.related_commits[id][line_num] = commit_urls
+            except KeyError:
+                Chromium.related_commits[id] = {line_num: commit_urls}
 
-        return Response({"commit_urls": commit_urls}, status=status.HTTP_200_OK)
+        return Response({"response": [{"id": str(line_num), "commit_urls": commit_urls}]}, status=status.HTTP_200_OK)
