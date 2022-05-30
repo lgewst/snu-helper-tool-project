@@ -1,6 +1,6 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
-import { Blame } from '../../Utils/interface';
+import { Blame, RelatedUrl } from '../../Utils/interface';
 
 import { HTMLTooltip } from './ConflictInfo.style';
 
@@ -8,7 +8,7 @@ const renderBlame = (
   id: number,
   line: number,
   blame: Blame[],
-  relatedUrls: string[],
+  relatedUrls: RelatedUrl[],
   getRelatedCommit: Function,
 ) => {
   const blameline = blame.find((bi) => bi.line_start === line);
@@ -44,9 +44,13 @@ const renderBlame = (
               Related commit urls
             </button>
             <div className="related_urls">
-              {relatedUrls?.map((url, i) => (
-                <div key={i}>{url}</div>
-              ))}
+              {relatedUrls
+                ?.filter((relatedUrl) => Number(relatedUrl.id) === blameline.line_start)[0]
+                .commit_urls.map((url, i) => (
+                  <a className="related_link" href={url} key={i}>
+                    {i + 1}
+                  </a>
+                ))}
             </div>
           </div>
         </span>

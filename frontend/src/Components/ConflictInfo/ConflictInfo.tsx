@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import { ChangeEvent, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { Blame } from '../../Utils/interface';
+import { Blame, RelatedUrl } from '../../Utils/interface';
 
 import './ConflictInfo.css';
 import { VersionInput, VersionInputModalContent, VersionSubmitButton } from './ConflictInfo.style';
@@ -23,7 +23,7 @@ interface Conflict {
 interface Props {
   conflict: Conflict;
   blame: Blame[];
-  relatedUrls: string[];
+  relatedUrls: RelatedUrl[];
   getRelatedCommit: Function;
 }
 

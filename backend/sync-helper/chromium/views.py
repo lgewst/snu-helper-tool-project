@@ -208,4 +208,4 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             except KeyError:
                 Chromium.related_commits[id] = {line_num: commit_urls}
 
-        return Response({"commit_urls": commit_urls}, status=status.HTTP_200_OK)
+        return Response({"response": {"id": str(line_num), "commit_urls": commit_urls}}, status=status.HTTP_200_OK)

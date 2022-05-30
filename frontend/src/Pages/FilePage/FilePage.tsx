@@ -41,11 +41,16 @@ interface BlameConflict {
   blame: Blame[];
 }
 
+interface RelatedUrl {
+  id: string;
+  commit_urls: string[];
+}
+
 const FilePage = () => {
   const { reinitialize } = useInitContext();
   const [conflictList, setConflictList] = useState<Conflict[]>();
   const [blameList, setBlameList] = useState<BlameConflict[]>();
-  const [relatedUrls, setRelatedUrls] = useState<string[]>();
+  const [relatedUrls] = useState<RelatedUrl[]>();
   const location = useLocation();
 
   const init = () => {
@@ -89,14 +94,13 @@ const FilePage = () => {
       .get('/chromium/conflicts/' + index + '/related/', {
         params: { line_num: line_num, commit_num: commit_num },
       })
-      .then((res) => setRelatedUrls(res.data.commit_urls))
+      .then((res) => relatedUrls?.push(res.data.response))
       .catch((err) => {
         if (err.response.data.error_code === 10000) {
-          reinitialize({ setInit });
+          reinitialize();
         }
         if (err.response.data.error_code === 10004) {
-          alert('invalid path');
-          history.push('/error/');
+          toast.error('invalid path');
         }
       });
   };
