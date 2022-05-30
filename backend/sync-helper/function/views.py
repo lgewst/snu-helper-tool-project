@@ -145,8 +145,11 @@ class FunctionViewSet(viewsets.GenericViewSet):
         else:
 
             commits = msg.split("\n\ncommit ")
+
+            # add lastest commit of target_version
+            commits.append(os.popen(f"git log -n 1 {target_version}").read())
             
-            for cmsg in commits:
+            for i, cmsg in enumerate(commits):
                 msg1 = cmsg.split("\n")
                 commit_id = msg1[0].replace("commit ", "")
                 author_name = msg1[1][msg1[1].find(' ') + 1:msg1[1].find('<') - 1]
@@ -162,7 +165,7 @@ class FunctionViewSet(viewsets.GenericViewSet):
                 c_url = commit_url(commit_id, path, Chromium.chromium_repo)
                 r_url = review_url(commit_id, Chromium.chromium_repo)
                 a_url = f"https://chromium-review.googlesource.com/q/owner:{author_email}"
-                commit_msg = Chromium_msg(commit_id)
+                commit_msg = Chromium_msg(commit_id) if i < len(commits) - 1 else target_version
                 logs.append({'commit_id': commit_id, 'commit_url': c_url, 'review_url': r_url, 'author_url': a_url,
                                'author_name': author_name, 'author_email': author_email, 'date': date,
                                'commit_msg': commit_msg})
