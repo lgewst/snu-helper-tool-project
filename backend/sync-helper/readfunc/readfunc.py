@@ -20,7 +20,7 @@ def read_function_code(CODE, file_extension):
     line_index = 1
     while line_index < len(CODE):
         line = CODE[line_index]
-        if '{' in line and '}' in line:
+        if '#' in line or ('{' in line and '}' in line):
             line_index += 1
             continue
         elif '//' in line and line.split('//')[0].count(' ') == len(line.split('//')[0]):

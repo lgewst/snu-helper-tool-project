@@ -3,7 +3,7 @@ import Modal from '@mui/material/Modal';
 import { ChangeEvent, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
-import { Blame } from '../../Utils/interface';
+import { Blame, RelatedUrl } from '../../Utils/interface';
 
 import './ConflictInfo.css';
 import { VersionInput, VersionInputModalContent, VersionSubmitButton } from './ConflictInfo.style';
@@ -13,6 +13,7 @@ interface Code {
   line: number;
   content: string;
   function: string;
+  mode: number;
 }
 interface Conflict {
   id: string;
@@ -22,9 +23,11 @@ interface Conflict {
 interface Props {
   conflict: Conflict;
   blame: Blame[];
+  relatedUrls: RelatedUrl[];
+  getRelatedCommit: Function;
 }
 
-const ConflictInfo = ({ conflict, blame }: Props) => {
+const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props) => {
   const history = useHistory();
   const [func, setfunc] = useState('');
   const [open, setOpen] = useState(false);
@@ -41,6 +44,10 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
   const onClickFunction = (funcName: string) => {
     setOpen(true);
     setfunc(funcName);
+  };
+
+  const getRelatedUrls = (index: number, line_num: number, commit_num: number) => {
+    getRelatedCommit(index, line_num, commit_num);
   };
 
   const onClickSubmit = () => {
@@ -85,9 +92,23 @@ const ConflictInfo = ({ conflict, blame }: Props) => {
             ) : (
               <div className="codeline">
                 <div className="line">{code.line}</div>
-                <pre className="code">{colorFunc(code)}</pre>
+                <div className="code">
+                  {code.mode === 1 ? (
+                    <pre className="current_code">{colorFunc(code)}</pre>
+                  ) : (
+                    <pre className="incoming_code">{colorFunc(code)}</pre>
+                  )}
+                </div>
                 {blame.length != 0 ? (
-                  <div className="blame">{renderBlame(code.line, blame)}</div>
+                  <div className="blame">
+                    {renderBlame(
+                      Number(conflict.id),
+                      code.line,
+                      blame,
+                      relatedUrls,
+                      getRelatedUrls,
+                    )}
+                  </div>
                 ) : (
                   <CircularProgress
                     sx={{ position: 'fixed', left: 'calc(70vw - 30px)', top: 100 }}
