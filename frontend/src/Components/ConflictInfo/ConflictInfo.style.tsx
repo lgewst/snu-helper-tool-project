@@ -1,5 +1,5 @@
 import styled from '@emotion/styled';
-import { Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
+import { Button, TextField, Tooltip, tooltipClasses, TooltipProps } from '@mui/material';
 
 export const HTMLTooltip = styled(({ className, ...props }: TooltipProps) => (
   <Tooltip {...props} classes={{ popper: className }} />
@@ -12,3 +12,22 @@ export const HTMLTooltip = styled(({ className, ...props }: TooltipProps) => (
     border: '1px solid #dadde9',
   },
 }));
+
+export const VersionInputModalContent = styled.form`
+  background-color: white;
+  position: fixed;
+  width: 400px;
+  padding: 30px;
+  left: calc(50vw - 150px);
+  top: calc(50vh - 150px);
+  box-sizing: border-box;
+  border-radius: 16px;
+  text-align: right;
+`;
+
+export const VersionInput = styled(TextField)`
+  width: 100%;
+  margin-bottom: 16px;
+`;
+
+export const VersionSubmitButton = styled(Button)``;

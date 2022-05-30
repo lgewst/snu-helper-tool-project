@@ -81,7 +81,7 @@ const InitPage = () => {
         placeholder="ex. /home/seunghan/chromium91"
         value={webosose_repo}
         {...textFieldProps}
-      ></TextField>
+      />
       <TextField
         label="current version"
         id="cur_ver"
@@ -89,7 +89,7 @@ const InitPage = () => {
         placeholder="ex. 91.0.4472.0"
         value={current_version}
         {...textFieldProps}
-      ></TextField>
+      />
       <TextField
         label="target version"
         id="tar_ver"
@@ -97,7 +97,7 @@ const InitPage = () => {
         placeholder="ex. 92.0.4515.0"
         value={target_version}
         {...textFieldProps}
-      ></TextField>
+      />
       <Button
         className="button"
         type="submit"

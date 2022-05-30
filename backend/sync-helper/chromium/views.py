@@ -6,7 +6,7 @@ from os import scandir, path, sep
 
 from chromium.models import *
 from config.error import *
-from chromium.crawling import *
+from chromium.parse_url import *
 
 from readfunc.readfunc import read_function
 from sentence.sentence import sentence_similarity

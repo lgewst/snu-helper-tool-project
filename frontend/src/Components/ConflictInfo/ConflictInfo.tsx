@@ -1,28 +1,19 @@
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { CircularProgress } from '@mui/material';
+import Modal from '@mui/material/Modal';
+import { ChangeEvent, useState } from 'react';
+import { useHistory, useLocation } from 'react-router-dom';
 
-import { HTMLTooltip } from './ConflictInfo.style';
+import { Blame } from '../../Utils/interface';
+
 import './ConflictInfo.css';
+import { VersionInput, VersionInputModalContent, VersionSubmitButton } from './ConflictInfo.style';
+import renderBlame from './renderBlame';
+
 interface Code {
   line: number;
   content: string;
   function: string;
   mode: number;
-}
-interface Blame {
-  commit_id: string;
-  commit_url: string;
-  review_url: string;
-  author_url: string;
-  line_start: number;
-  line_end: number;
-  author_name: string;
-  author_email: string;
-  date: string;
-  commit_msg: {
-    detail: string;
-    release: string;
-  };
 }
 interface Conflict {
   id: string;
@@ -37,62 +28,38 @@ interface Props {
 }
 
 const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props) => {
-  console.log(blame);
-  const renderBlame = (line: number) => {
-    const blameline = blame.find((bi) => bi.line_start === line);
+  const history = useHistory();
+  const [func, setfunc] = useState('');
+  const [open, setOpen] = useState(false);
+  const [version, setVersion] = useState('');
+  const location = useLocation();
 
-    if (!blameline) return null;
+  const path = location.pathname.slice(6);
 
-    const copyToClipboard = () => {
-      navigator.clipboard.writeText(blameline.commit_id);
-    };
+  const onChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.target;
+    setVersion(value);
+  };
 
-    const getRelatedUrls = (index: number, line_num: number, commit_num: number) => {
-      getRelatedCommit(index, line_num, commit_num);
-    };
+  const onClickFunction = (funcName: string) => {
+    setOpen(true);
+    setfunc(funcName);
+  };
 
-    return (
-      <div className="blame" key={blameline.line_start}>
-        <div className="commit_id">
-          <span onClick={copyToClipboard}>
-            <ContentCopyIcon fontSize="small" padding-right="10px" />
-          </span>
-          <span className="commit_id_hover">
-            <a className="commit_url" href={blameline.commit_url}>
-              commit_url
-            </a>
-            <a className="review_url" href={blameline.review_url}>
-              review_url
-            </a>
-            <div className="related_url">
-              <button
-                className="related_submit"
-                onClick={() => getRelatedUrls(Number(conflict.id), blameline.line_start, 5)}
-              >
-                Related commit urls
-              </button>
-              <div className="related_urls">
-                {relatedUrls?.map((url, i) => (
-                  <div key={i}>{url}</div>
-                ))}
-              </div>
-            </div>
-          </span>
-        </div>
-        <div className="author_email_box">
-          <a className="author_email" href={blameline.author_url}>
-            {blameline.author_email}
-          </a>
-        </div>
+  const getRelatedUrls = (index: number, line_num: number, commit_num: number) => {
+    getRelatedCommit(index, line_num, commit_num);
+  };
 
-        <div className="date">{blameline.date}</div>
-        <div className="commit_msg">
-          <HTMLTooltip title={blameline.commit_msg.detail}>
-            <div className="commit_msg_release">{blameline.commit_msg.release}</div>
-          </HTMLTooltip>
-        </div>
-      </div>
-    );
+  const onClickSubmit = () => {
+    const params = new URLSearchParams();
+    params.set('path', path);
+    params.set('func', func);
+    params.set('version', version);
+
+    history.push({
+      pathname: '/func/',
+      search: `${params}`,
+    });
   };
 
   const colorFunc = (code: Code) => {
@@ -101,11 +68,18 @@ const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props)
         code.function,
         (match) => `<span style="color: red">${match}</span>`,
       );
-      return <div className="colored_code" dangerouslySetInnerHTML={{ __html: strColor }}></div>;
+      return (
+        <div
+          className="colored_code"
+          onClick={() => onClickFunction(code.function)}
+          dangerouslySetInnerHTML={{ __html: strColor }}
+        />
+      );
     } else {
       return code.content;
     }
   };
+
   return (
     <div key={conflict.id} className="conflict">
       <div className="conflict_codeline">
@@ -126,7 +100,15 @@ const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props)
                   )}
                 </div>
                 {blame.length != 0 ? (
-                  <div className="blame">{renderBlame(code.line)}</div>
+                  <div className="blame">
+                    {renderBlame(
+                      Number(conflict.id),
+                      code.line,
+                      blame,
+                      relatedUrls,
+                      getRelatedUrls,
+                    )}
+                  </div>
                 ) : (
                   <CircularProgress
                     sx={{ position: 'fixed', left: 'calc(70vw - 30px)', top: 100 }}
@@ -137,6 +119,25 @@ const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props)
           </div>
         ))}
       </div>
+      <Modal open={open} onClose={() => setOpen(false)}>
+        <VersionInputModalContent
+          onSubmit={(e) => {
+            e.preventDefault();
+            onClickSubmit();
+          }}
+        >
+          <VersionInput
+            label="version"
+            name="version"
+            value={version}
+            onChange={onChange}
+            placeholder="ex) 94.0.4606.0"
+          />
+          <VersionSubmitButton type="submit" variant="contained">
+            submit
+          </VersionSubmitButton>
+        </VersionInputModalContent>
+      </Modal>
     </div>
   );
 };
