@@ -30,3 +30,8 @@ export const ColorLaterLine = styled.div<{ type: string }>`
   width: 50%;
   background-color: ${(props) => (props.type === 'inserted' ? '#82F9B7' : '')};
 `;
+
+export const LogWrapper = styled.div`
+  padding-top: 50px;
+  border-top: groove;
+`;

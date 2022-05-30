@@ -1,3 +1,4 @@
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { get } from 'lodash';
@@ -5,9 +6,16 @@ import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import { useLocation } from 'react-router-dom';
 
+import { HTMLTooltip } from '../../Components/ConflictInfo/ConflictInfo.style';
 import { Response } from '../../Utils/interface';
 
-import { CodeWrapper, ColorLaterLine, ColorTargetLine, HistoryHeader } from './HistoryPage.style';
+import {
+  CodeWrapper,
+  ColorLaterLine,
+  ColorTargetLine,
+  HistoryHeader,
+  LogWrapper,
+} from './HistoryPage.style';
 
 interface LocationState {
   func: string;
@@ -40,11 +48,15 @@ const HistoryPage = () => {
   const renderCode = (index: number) => {
     const code = response?.later_version_code?.find((code) => code.index === index);
     return (
-      <ColorLaterLine type={code?.type}>
+      <ColorLaterLine type={code?.type || 'none'}>
         <div className="lineNum">{code?.line || ''}</div>
         <pre>{code?.content}</pre>
       </ColorLaterLine>
     );
+  };
+
+  const copyToClipboard = (commit_id: string) => {
+    navigator.clipboard.writeText(commit_id);
   };
 
   useEffect(() => {
@@ -80,6 +92,38 @@ const HistoryPage = () => {
           ))}
         </div>
       </div>
+
+      <LogWrapper>
+        {response?.logs?.map((log) => (
+          <div className="blame" key={log.commit_id}>
+            <div className="commit_id">
+              <span onClick={() => copyToClipboard(log.commit_id)}>
+                <ContentCopyIcon fontSize="small" padding-right="10px" />
+              </span>
+              <span className="commit_id_hover">
+                <a className="commit_url" href={log.commit_url}>
+                  commit_url
+                </a>
+                <a className="review_url" href={log.review_url}>
+                  review_url
+                </a>
+              </span>
+            </div>
+            <div className="author_email_box">
+              <a className="author_email" href={log.author_url}>
+                {log.author_email}
+              </a>
+            </div>
+
+            <div className="date">{log.date}</div>
+            <div className="commit_msg">
+              <HTMLTooltip title={log.commit_msg.detail}>
+                <div className="commit_msg_release">{log.commit_msg.release}</div>
+              </HTMLTooltip>
+            </div>
+          </div>
+        ))}
+      </LogWrapper>
     </div>
   );
 };
