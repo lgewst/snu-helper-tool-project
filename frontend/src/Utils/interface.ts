@@ -23,7 +23,7 @@ export interface Response {
     index: number;
     line: number;
     content: string; // "\n"은 뺌
-    type: 'none' | 'inserted' | 'no change';
+    type: 'none' | 'deleted' | 'no change';
   }[];
   later_version_code: {
     index: number;

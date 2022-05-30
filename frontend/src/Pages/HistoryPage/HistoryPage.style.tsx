@@ -22,7 +22,7 @@ export const CodeWrapper = styled.div`
 export const ColorTargetLine = styled.div<{ type: string }>`
   display: flex;
   width: 50%;
-  background-color: ${(props) => (props.type === 'inserted' ? '#FF92B1' : '')};
+  background-color: ${(props) => (props.type === 'deleted' ? '#FF92B1' : '')};
 `;
 
 export const ColorLaterLine = styled.div<{ type: string }>`
