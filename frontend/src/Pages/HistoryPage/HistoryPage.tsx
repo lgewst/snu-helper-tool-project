@@ -123,6 +123,7 @@ const HistoryPage = () => {
             </div>
           </div>
         ))}
+        {response?.logs.length ? '' : 'No change in this function'}
       </LogWrapper>
     </div>
   );
