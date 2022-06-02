@@ -170,6 +170,8 @@ class FunctionViewSet(viewsets.GenericViewSet):
                                'author_name': author_name, 'author_email': author_email, 'date': date,
                                'commit_msg': commit_msg})
         
+        data["left_id"] = logs[-1]['commit_id']
+        data["right_id"] = logs[0]['commit_id']
         data["logs"] = logs
         return Response(data, status=status.HTTP_200_OK)
 
