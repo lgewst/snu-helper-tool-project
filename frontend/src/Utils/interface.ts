@@ -19,6 +19,8 @@ export interface Response {
   path: string; // file path
   target_version: string;
   later_version: string;
+  left_id: string;
+  right_id: string;
   target_version_code: {
     index: number;
     line: number;
