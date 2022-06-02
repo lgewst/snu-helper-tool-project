@@ -34,10 +34,10 @@ const renderBlame = (
           <ContentCopyIcon fontSize="small" padding-right="10px" />
         </span>
         <span className="commit_id_hover">
-          <a className="commit_url" href={blameline.commit_url}>
+          <a className="commit_url" href={blameline.commit_url} target="_blank">
             commit_url
           </a>
-          <a className="review_url" href={blameline.review_url}>
+          <a className="review_url" href={blameline.review_url} target="_blank">
             review_url
           </a>
           <div className="related_url">
@@ -60,7 +60,7 @@ const renderBlame = (
         </span>
       </div>
       <div className="author_email_box">
-        <a className="author_email" href={blameline.author_url}>
+        <a className="author_email" href={blameline.author_url} target="_blank">
           {blameline.author_email}
         </a>
       </div>
