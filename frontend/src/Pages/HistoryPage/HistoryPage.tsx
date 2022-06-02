@@ -60,9 +60,7 @@ const HistoryPage = () => {
   };
 
   const renderCode = (index: number) => {
-    const code = compCode
-      ? compCode.right_code?.find((code) => code.index === index)
-      : response?.later_version_code?.find((code) => code.index === index);
+    const code = compCode?.right_code?.find((code) => code.index === index);
     return (
       <ColorLaterLine type={code?.type || 'none'}>
         <div className="lineNum">{code?.line || ''}</div>
@@ -134,45 +132,26 @@ const HistoryPage = () => {
       </HistoryHeader>
       <br />
       <div>
-        {compCode ? (
-          <div>
-            <CodeId>
-              <LeftCodeId>{compCode.left_id}</LeftCodeId>
-              <RightCodeId>{compCode.right_id}</RightCodeId>
-            </CodeId>
-            <br />
+        <div>
+          <CodeId>
+            <LeftCodeId>{compCode?.left_id}</LeftCodeId>
+            <RightCodeId>{compCode?.right_id}</RightCodeId>
+          </CodeId>
+          <br />
 
-            {compCode.left_code?.map((code) => (
-              <div key={compCode.left_id + code.content + code.index}>
-                <CodeWrapper>
-                  <ColorTargetLine type={code.type}>
-                    <div className="lineNum">{code.line || ''}</div>
-                    <pre className="code_content">{code.content}</pre>
-                  </ColorTargetLine>
+          {compCode?.left_code?.map((code) => (
+            <div key={compCode?.left_id + code.content + code.index}>
+              <CodeWrapper>
+                <ColorTargetLine type={code.type}>
+                  <div className="lineNum">{code.line || ''}</div>
+                  <pre className="code_content">{code.content}</pre>
+                </ColorTargetLine>
 
-                  {renderCode(code.index)}
-                </CodeWrapper>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div>
-            {response?.left_id}
-            {response?.right_id}
-            {response?.target_version_code?.map((code) => (
-              <div key={code.content + code.index}>
-                <CodeWrapper>
-                  <ColorTargetLine type={code.type}>
-                    <div className="lineNum">{code.line || ''}</div>
-                    <pre className="code_content">{code.content}</pre>
-                  </ColorTargetLine>
-
-                  {renderCode(code.index)}
-                </CodeWrapper>
-              </div>
-            ))}
-          </div>
-        )}
+                {renderCode(code.index)}
+              </CodeWrapper>
+            </div>
+          ))}
+        </div>
       </div>
 
       <LogWrapper>
