@@ -8,6 +8,7 @@ export const CodeWrapper = styled.div`
   display: flex;
   height: 24px;
   line-height: 24px;
+  overflow: scroll;
 
   .lineNum {
     width: 25px;
@@ -19,10 +20,26 @@ export const CodeWrapper = styled.div`
   }
 `;
 
+export const CodeId = styled.div`
+  display: flex;
+  justify-content: space-around;
+`;
+export const LeftCodeId = styled.div`
+  background-color: rgb(253, 246, 226);
+`;
+
+export const RightCodeId = styled.div`
+  background-color: rgb(233, 240, 253);
+`;
+
 export const ColorTargetLine = styled.div<{ type: string }>`
   display: flex;
   width: 50%;
   background-color: ${(props) => (props.type === 'deleted' ? '#FF92B1' : '')};
+  overflow: scroll;
+  .code_content::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const ColorLaterLine = styled.div<{ type: string }>`
@@ -34,4 +51,9 @@ export const ColorLaterLine = styled.div<{ type: string }>`
 export const LogWrapper = styled.div`
   padding-top: 50px;
   border-top: groove;
+`;
+
+export const CommitMessage = styled.div`
+  width: 500px;
+  overflow: scroll;
 `;
