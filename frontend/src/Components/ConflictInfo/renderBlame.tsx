@@ -1,6 +1,8 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { CircularProgress } from '@mui/material';
+import { useState } from 'react';
 
-import { Blame, RelatedUrl } from '../../Utils/interface';
+import { Blame, RelatedUrl, RelatedPressed } from '../../Utils/interface';
 
 import { HTMLTooltip } from './ConflictInfo.style';
 
@@ -12,6 +14,7 @@ const renderBlame = (
   getRelatedCommit: Function,
 ) => {
   const blameline = blame.find((bi) => bi.line_start === line);
+  const [pressed, setPressed] = useState<RelatedPressed[]>();
 
   if (!blameline) return null;
 
@@ -20,12 +23,26 @@ const renderBlame = (
   };
 
   const getRelatedUrls = (index: number, line_num: number, commit_num: number) => {
+    const newpressed: RelatedPressed = {
+      id: index.toString(),
+      pressed: true,
+    };
+    if (pressed === undefined) {
+      console.log('hello');
+      setPressed([newpressed]);
+    } else {
+      setPressed(pressed.concat([newpressed]));
+    }
+    console.log(newpressed);
+    console.log([newpressed]);
+    console.log(pressed?.concat([newpressed]));
+    console.log(pressed);
     getRelatedCommit(index, line_num, commit_num);
   };
 
-  console.log(relatedUrls);
-  console.log(relatedUrls?.filter((relatedUrl) => Number(relatedUrl.id) === 48)[0]);
-  console.log(relatedUrls?.filter((relatedUrl) => Number(relatedUrl.id) === 46)[0]);
+  // console.log(relatedUrls?.filter((relatedUrl) => Number(relatedUrl.id) === 86)[0] === undefined);
+  // console.log(pressed?.filter((press) => Number(press.id) === 86)[0]?.pressed);
+  // console.log(pressed);
 
   return (
     <div className="blame" key={blameline.line_start}>
@@ -47,15 +64,24 @@ const renderBlame = (
             >
               Related commit urls
             </button>
-            <div className="related_urls">
-              {relatedUrls
-                ?.filter((relatedUrl) => Number(relatedUrl.id) === blameline.line_start)[0]
-                ?.commit_urls.map((url, i) => (
-                  <a className="related_link" href={url} key={i}>
-                    {i + 1}
-                  </a>
-                ))}
-            </div>
+            {pressed?.filter((press) => Number(press.id) === blameline.line_start)[0]?.pressed &&
+            relatedUrls?.filter(
+              (relatedUrl) => Number(relatedUrl.id) === blameline.line_start,
+            )[0] === undefined ? (
+              <div className="circular">
+                <CircularProgress />
+              </div>
+            ) : (
+              <div className="related_urls">
+                {relatedUrls
+                  ?.filter((relatedUrl) => Number(relatedUrl.id) === blameline.line_start)[0]
+                  ?.commit_urls.map((url, i) => (
+                    <a className="related_link" href={url} key={i}>
+                      {i + 1}
+                    </a>
+                  ))}
+              </div>
+            )}
           </div>
         </span>
       </div>

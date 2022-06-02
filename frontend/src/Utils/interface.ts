@@ -51,3 +51,8 @@ export interface RelatedUrl {
   id: string;
   commit_urls: string[];
 }
+
+export interface RelatedPressed {
+  id: string;
+  pressed: Boolean;
+}
