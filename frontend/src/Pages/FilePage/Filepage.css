@@ -25,11 +25,11 @@
   overflow-x: scroll;
 }
 
-.author,
-.author_email {
-  width: 200px;
+.header.author,
+.header.author_email {
+  width: 220px;
 }
 
-.date {
+.header.date {
   width: 200px;
 }

@@ -29,11 +29,14 @@
 .author_email_box {
   width: 200px;
   margin-left: 10px;
-  /* border-top: 0.1px solid black; */
+  overflow: scroll;
+}
+.author_email_box::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera*/
 }
 .date {
   margin-left: 20px;
-  text-indent: 30px;
+  margin-right: 20px;
 }
 
 .conflict,
