@@ -1,10 +1,10 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { CircularProgress } from '@mui/material';
+import { Button, CircularProgress } from '@mui/material';
 import axios from 'axios';
 import { get } from 'lodash';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
 
 import { HTMLTooltip } from '../../Components/ConflictInfo/ConflictInfo.style';
 import { Response } from '../../Utils/interface';
@@ -26,8 +26,9 @@ interface LocationState {
 const HistoryPage = () => {
   const location = useLocation<LocationState>();
   const [response, setResponse] = useState<Response>();
-
   const params = new URLSearchParams(location.search);
+  const history = useHistory();
+  const path = params.get('path');
 
   const init = async () => {
     try {
@@ -63,7 +64,17 @@ const HistoryPage = () => {
     init();
   }, [location.search]);
 
-  if (!response) return <CircularProgress />;
+  if (!response) {
+    return (
+      <div>
+        <CircularProgress />
+        <br />
+        <Button onClick={() => history.push(`/file/${path}`)} variant="outlined">
+          return
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -77,20 +88,18 @@ const HistoryPage = () => {
       </HistoryHeader>
       <br />
       <div>
-        <div>
-          {response?.target_version_code?.map((code) => (
-            <div key={code.content + code.index}>
-              <CodeWrapper>
-                <ColorTargetLine type={code.type}>
-                  <div className="lineNum">{code.line || ''}</div>
-                  <pre>{code.content}</pre>
-                </ColorTargetLine>
+        {response?.target_version_code?.map((code) => (
+          <div key={code.content + code.index}>
+            <CodeWrapper>
+              <ColorTargetLine type={code.type}>
+                <div className="lineNum">{code.line || ''}</div>
+                <pre>{code.content}</pre>
+              </ColorTargetLine>
 
-                {renderCode(code.index)}
-              </CodeWrapper>
-            </div>
-          ))}
-        </div>
+              {renderCode(code.index)}
+            </CodeWrapper>
+          </div>
+        ))}
       </div>
 
       <LogWrapper>
@@ -125,6 +134,10 @@ const HistoryPage = () => {
         ))}
         {response?.logs.length ? '' : 'No change in this function'}
       </LogWrapper>
+
+      <Button onClick={() => history.push(`/file/${path}`)} variant="outlined">
+        return
+      </Button>
     </div>
   );
 };
