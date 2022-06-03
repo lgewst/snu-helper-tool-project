@@ -18,9 +18,11 @@ const InitPage = () => {
     webosose_repo: '',
     current_version: '',
     target_version: '',
+    webosose_patchId: '',
   });
 
-  const { chromium_repo, webosose_repo, current_version, target_version } = initState;
+  const { chromium_repo, webosose_repo, current_version, target_version, webosose_patchId } =
+    initState;
 
   const onChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
@@ -44,6 +46,7 @@ const InitPage = () => {
       localStorage.setItem(StorageKey.WEBOSOSE_REPO, initState.webosose_repo);
       localStorage.setItem(StorageKey.CURRENT_VERSION, initState.current_version);
       localStorage.setItem(StorageKey.TARGET_VERSION, initState.target_version);
+      localStorage.setItem(StorageKey.WEBOSOSE_PATCHID, initState.webosose_patchId);
       setInit(true);
 
       history.push('/path');
@@ -98,6 +101,14 @@ const InitPage = () => {
         value={target_version}
         {...textFieldProps}
       />
+      <TextField
+        label="webosose patchId"
+        id="tar_ver"
+        name="webosose_patchId"
+        placeholder="ex. 7cef9376f8f6f59d7dc8f572716c1aaf28b3d9b2"
+        value={webosose_patchId}
+        {...textFieldProps}
+      />
       <Button
         className="button"
         type="submit"
@@ -107,7 +118,8 @@ const InitPage = () => {
             initState.webosose_repo &&
             initState.chromium_repo &&
             initState.target_version &&
-            initState.current_version
+            initState.current_version &&
+            initState.webosose_patchId
           ) || isLoading
         }
       >
