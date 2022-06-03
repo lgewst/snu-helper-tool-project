@@ -25,6 +25,8 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             raise InvalidVersionException()
         if not Chromium.set_target_version(request.query_params.get('target_version')):
             raise InvalidVersionException()
+        if not Chromium.set_webos_patch(request.query_params.get('webos_patch_id')):
+            return Response({"message": "Send 'webos_patch_id'"}, status=status.HTTP_400_BAD_REQUEST)
         
         Chromium.init()
         return Response({'message': 'initialized!'}, status=status.HTTP_200_OK)
