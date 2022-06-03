@@ -76,6 +76,13 @@ class Chromium():
         Chromium.target_version = version
         return True
 
+    def set_webos_patch(id):
+        if not id:
+            return False
+        
+        Chromium.webos_patch = id
+        return True
+
     def fill_conflicts():
         ROOT = Chromium.chromium_repo
         os.chdir(ROOT)

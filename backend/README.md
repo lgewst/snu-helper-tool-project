@@ -23,10 +23,12 @@ We recommend you to pyenv-virtualenv to build our compiler. After cloning our so
 ```
 
 ## How to build and run
-After running build script, run the run script to run server.
+After running build script, run the following commands to run server.
 ```
 # Run
-> ./run.sh
+> . .venv/bin/activate
+> cd sync-helper
+> python3 manage.py
 ```
 
 ## Structure
