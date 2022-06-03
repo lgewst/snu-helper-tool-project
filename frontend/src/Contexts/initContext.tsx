@@ -26,7 +26,8 @@ export const InitContextProvider = ({ children }: PropsWithChildren<never>) => {
       localStorage.getItem(StorageKey.CHROMIUM_REPO) != null &&
       localStorage.getItem(StorageKey.CURRENT_VERSION) != null &&
       localStorage.getItem(StorageKey.TARGET_VERSION) != null &&
-      localStorage.getItem(StorageKey.WEBOSOSE_REPO) != null
+      localStorage.getItem(StorageKey.WEBOSOSE_REPO) != null &&
+      localStorage.getItem(StorageKey.WEBOSOSE_PATCHID) != null
     ) {
       axios
         .get('/chromium/init', {
@@ -35,6 +36,7 @@ export const InitContextProvider = ({ children }: PropsWithChildren<never>) => {
             webosose_repo: localStorage.getItem(StorageKey.WEBOSOSE_REPO),
             current_version: localStorage.getItem(StorageKey.CURRENT_VERSION),
             target_version: localStorage.getItem(StorageKey.TARGET_VERSION),
+            webosose_patchId: localStorage.getItem(StorageKey.WEBOSOSE_PATCHID),
           },
         })
         .then((res) => {
