@@ -114,7 +114,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                             en += 1
                         
                         if last_conf_line < st:
-                            code = [{"line": i, "content": CODE[i], "function": fname} for i in range(st, en+1)] + [{"line": 0, "content": "", "function": ""}] + code
+                            code = [{"line": i, "content": CODE[i], "function": fname, "mode": 3} for i in range(st, en+1)] + [{"line": 0, "content": "", "function": ""}] + code
                     
                 except:
                     mode = Chromium.NORM
