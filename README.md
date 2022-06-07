@@ -38,12 +38,15 @@ export PATH=“$PATH:/path/to/depot_tools”
 
 2-2) 적용할 패치 생성하기
 ```
-> git format-patch -1 <commit_id>
+> cd chromium87
+> git format-patch -1 <commit_id>    // ex. 75729b78817d49249cd004ef734c032269f06e53
 ```
 
 2-3) 패치 적용하기
 생성된 패치 파일을 1-5에서 생성한 브랜치에 적용
 ```
+> mv <patch_file> ~/chromium/src/
+> cd ~/chromium/src/
 > patch -p1 < <patch_file>
 ```
 
@@ -51,7 +54,7 @@ export PATH=“$PATH:/path/to/depot_tools”
 3-1) 스테이지 정리하기
 patch 실행 후 생긴 `.rej`파일 삭제
 ```
-> git add <file_name>
+> git add .
 > git commit -m <message>
 ```
 
