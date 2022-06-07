@@ -36,7 +36,7 @@ export const InitContextProvider = ({ children }: PropsWithChildren<never>) => {
             webosose_repo: localStorage.getItem(StorageKey.WEBOSOSE_REPO),
             current_version: localStorage.getItem(StorageKey.CURRENT_VERSION),
             target_version: localStorage.getItem(StorageKey.TARGET_VERSION),
-            webosose_patch_id: localStorage.getItem(StorageKey.WEBOSOSE_PATCHID),
+            webos_patch_id: localStorage.getItem(StorageKey.WEBOSOSE_PATCHID),
           },
         })
         .then((res) => {
