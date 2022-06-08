@@ -16,6 +16,10 @@
   height: 17px;
   overflow-x: scroll;
 }
+.normal_code{
+  height: 17px;
+  margin: 0 0 0 0;
+}
 .current_code {
   background-color: rgb(254, 241, 241);
   height: 17px;
