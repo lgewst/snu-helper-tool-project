@@ -6,7 +6,7 @@
 
 ## Installation
 - [Backend](https://github.com/lgewst/snu-helper-tool-project/tree/main/backend#Installation)
-- [Frontend](https://github.com/lgewst/snu-helper-tool-project/tree/main/frontend#Installation)
+- [Frontend](https://github.com/lgewst/snu-helper-tool-project/tree/main/frontend#installation)
 
 ## How to build and run
 
