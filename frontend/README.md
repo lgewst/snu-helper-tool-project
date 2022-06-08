@@ -1,70 +1,73 @@
-# Getting Started with Create React App
+## Requirements
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Install [Node >= 14.0.0 and npm >= 5.6](https://nodejs.org/en/) on your machine
 
-## Available Scripts
+## Installation
 
-In the project directory, you can run:
+```
+> cd frontend
+> yarn
+> yarn start
+```
 
-### `npm start`
+[localhost](http://localhost:3000) will open in your file. Make sure you have backend running.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Usage
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Initialization
 
-### `npm test`
+- You will encounter initialization page. Enter your own repo of chromium and webosose, current version, version you want to apply, and patch ID.
+- If you want to re-enter other information, go to inspection tool > application > local storage and delete the keys.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Conflict page
 
-### `npm run build`
+- After initialization, you can see folders/files that causes conflicts.
+- Traverse through folders, and find file you want to inspect.
+- Each file will show the code conflicts, author email, commit date and commit message.
+- Click author email to see related commits made by the author.
+- Hover over commit message to see more details.
+- Hover over `clipboard` to see commit url and review url of that line. You can also get `related commit urls` ordered by modified files and commit message.
+- It takes some time to get commit information. Wait for a while, or go to other page while waiting. It would not take as long when visiting the next time.
+- Click red functions on the code, and modal will appear. Enter the version you wish to seek for.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### History page
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- By entering the version of function, you would be able to see the changes between the two version, and the logs of commits that changed the function.
+- Click `Left, Right` buttons to place the code you wish. It will show the difference between the two.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### Diff page
 
-### `npm run eject`
+- [Diff page](http://localhost:3000/diff) page shows the altered code lines between the current version and the target version.
+- You can traverse through the folders to see which folder/file altered a lot.
+- It will take some time to render page.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## UI
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- [MUI:](https://mui.com/) install anything you want for frontend design
+- toast: alert users for some information(usually for getting info from backend)
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## Structure
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```
+src
+├── Components                       # Subcomponent of each page
+│   ├── ConflictInfo                 # Get conflict info for file page
+│   └── PathInfo                     # Make breadcrumb
+├── Contexts
+│   └── initContext.tsx              # Uses context & local storage for the initializing information
+├── Pages
+│   ├── DiffPage                     # Shows the lines altered by each folder
+│   ├── FilePage                     # Shows code & related information
+│   ├── FolderPage                   # Traverse conflict-made folders
+│   ├── HistoryPage                  # Shows function history
+│   └── InitPage                     # For initializing
+├── Utils
+│   ├── Interface.ts                 # For storing interface types
+│   └── storageKey.ts
+├── Index.js
+└── App.tsx                          # Root page
+```
 
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Use React and typescript
+-eslint
+-prettier
