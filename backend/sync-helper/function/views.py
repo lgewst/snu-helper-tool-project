@@ -165,7 +165,7 @@ class FunctionViewSet(viewsets.GenericViewSet):
             c_url = commit_url(commit_id, path, Chromium.chromium_repo)
             r_url = review_url(commit_id, Chromium.chromium_repo)
             a_url = f"https://chromium-review.googlesource.com/q/owner:{author_email}"
-            commit_msg = Chromium_msg(commit_id) if i < len(commits) - 1 else target_version
+            commit_msg = Chromium_msg(commit_id) if i < len(commits) - 1 else {'release': target_version, 'detail': target_version}
             logs.append({'commit_id': commit_id, 'commit_url': c_url, 'review_url': r_url, 'author_url': a_url,
                             'author_name': author_name, 'author_email': author_email, 'date': date,
                             'commit_msg': commit_msg})
