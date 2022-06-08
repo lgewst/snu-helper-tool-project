@@ -15,6 +15,7 @@ def read_function_code(CODE, file_extension):
     normal_func_list = []
     current_func_list = []
     incoming_func_list = []
+    static_func_list = []
     mode = NORMAL
     
     line_index = 1
@@ -34,8 +35,15 @@ def read_function_code(CODE, file_extension):
                 incoming_func_list.append('not_func')
         elif '<<<<<<' in line:
             mode = CURRENT
+            static_func_list = []
+            for normal_func in normal_func_list:
+                static_func_list.append(normal_func)
+                current_func_list.append(normal_func)
         elif '======' in line:
             mode = INCOMING
+            for static_func in static_func_list:
+                if static_func in current_func_list:
+                    current_func_list.remove(static_func)
             for current_func in reversed(current_func_list):
                 if current_func != 'not_func':
                     for i in range(line_for_func[current_func][0], line_index):
@@ -54,11 +62,17 @@ def read_function_code(CODE, file_extension):
             is_namespace = False
             while not eject:
                 left_bra, right_bra = 0, 0
+                detect_mode = NORMAL
                 while True:
                     detect_line = CODE[detect_index]
                     detect_index -= 1
-                    left_bra += detect_line.count('(')
-                    right_bra += detect_line.count(')')
+                    if detect_mode == NORMAL:
+                        left_bra += detect_line.count('(')
+                        right_bra += detect_line.count(')')
+                    if '======' in detect_line:
+                        detect_mode = INCOMING
+                    elif detect_mode == INCOMING and '<<<<<<' in detect_line:
+                        detect_mode = NORMAL
                     if left_bra >= right_bra:
                         break
 
