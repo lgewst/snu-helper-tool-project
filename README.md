@@ -6,13 +6,13 @@
 
 ## Installation
 - [Backend](https://github.com/lgewst/snu-helper-tool-project/tree/main/backend#Installation)
-- [Frontend](https://github.com/lgewst/snu-helper-tool-project/tree/main/backend#requirements)
+- [Frontend](https://github.com/lgewst/snu-helper-tool-project/tree/main/backend#Installation)
 
 ## How to build and run
 
 1. [pre-setting](https://github.com/lgewst/snu-helper-tool-project/blob/main/PRESETTING.md)
 2. [run backend](https://github.com/lgewst/snu-helper-tool-project/tree/main/backend#how-to-build-and-run)
-3. [run frontend](https://github.com/lgewst/snu-helper-tool-project/tree/main/frontend#usage)
+3. [run frontend](https://github.com/lgewst/snu-helper-tool-project/tree/main/frontend#how-to-build-and-run)
 
 ## Usage
 
