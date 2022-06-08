@@ -1,8 +1,11 @@
 ## Requirements
-
-Install [Node >= 14.0.0 and npm >= 5.6](https://nodejs.org/en/) on your machine
+- Node >= 14.0.0
+- npm >= 5.6
 
 ## Installation
+[nodejs.org](https://nodejs.org/en/)
+
+## How to build and run
 
 ```
 > cd frontend
@@ -11,35 +14,6 @@ Install [Node >= 14.0.0 and npm >= 5.6](https://nodejs.org/en/) on your machine
 ```
 
 [localhost](http://localhost:3000) will open in your file. Make sure you have backend running.
-
-## Usage
-
-### Initialization
-
-- You will encounter initialization page. Enter your own repo of chromium and webosose, current version, version you want to apply, and patch ID.
-- If you want to re-enter other information, go to inspection tool > application > local storage and delete the keys.
-
-### Conflict page
-
-- After initialization, you can see folders/files that causes conflicts.
-- Traverse through folders, and find file you want to inspect.
-- Each file will show the code conflicts, author email, commit date and commit message.
-- Click author email to see related commits made by the author.
-- Hover over commit message to see more details.
-- Hover over `clipboard` to see commit url and review url of that line. You can also get `related commit urls` ordered by modified files and commit message.
-- It takes some time to get commit information. Wait for a while, or go to other page while waiting. It would not take as long when visiting the next time.
-- Click red functions on the code, and modal will appear. Enter the version you wish to seek for.
-
-### History page
-
-- By entering the version of function, you would be able to see the changes between the two version, and the logs of commits that changed the function.
-- Click `Left, Right` buttons to place the code you wish. It will show the difference between the two.
-
-### Diff page
-
-- [Diff page](http://localhost:3000/diff) page shows the altered code lines between the current version and the target version.
-- You can traverse through the folders to see which folder/file altered a lot.
-- It will take some time to render page.
 
 ## UI
 
