@@ -8,11 +8,14 @@ export const CodeWrapper = styled.div`
   display: flex;
   height: 24px;
   line-height: 24px;
-  overflow: scroll;
 
   .lineNum {
+    position: fixed;
     width: 25px;
     background-color: #f5f5f9;
+  }
+  .code_content {
+    left: 25px;
   }
 
   pre {
@@ -37,15 +40,19 @@ export const ColorTargetLine = styled.div<{ type: string }>`
   width: 50%;
   background-color: ${(props) => (props.type === 'deleted' ? '#FF92B1' : '')};
   overflow: scroll;
-  .code_content::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     display: none;
   }
+  ,
 `;
 
 export const ColorLaterLine = styled.div<{ type: string }>`
   display: flex;
   width: 50%;
   background-color: ${(props) => (props.type === 'inserted' ? '#82F9B7' : '')};
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 export const LogWrapper = styled.div`
