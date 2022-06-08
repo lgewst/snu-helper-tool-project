@@ -115,7 +115,6 @@ class Chromium():
         end = conf.conflict_mark[2]
 
         f = open(Chromium.webosose_repo + "src/" + path, "r")
-        print(Chromium.webosose_repo + "src/" + path)
         downstream_code = f.readlines()
         f.close()
 

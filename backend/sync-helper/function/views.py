@@ -148,7 +148,6 @@ class FunctionViewSet(viewsets.GenericViewSet):
 
         # add lastest commit of target_version
         commits.append(os.popen(f"git log -n 1 {target_version}").read())
-        print (len(commits))
         
         for i, cmsg in enumerate(commits):
             msg1 = cmsg.split("\n")
