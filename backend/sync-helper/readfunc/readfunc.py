@@ -5,7 +5,7 @@ CURRENT = 1
 INCOMING = 2
 AFTER_CONF = 3
 not_func_name = ['if', 'else if', 'else', 'for', 'while', 'switch', 'do', '{']
-other_symbol = ['private', 'public', 'const', 'static', 'ALWAYS_INLINE']
+other_symbol = ['private', 'public', 'const', 'static', 'ALWAYS_INLINE', 'inline']
 
 def read_function_code(CODE, file_extension):
     # line_for_func : line range for each function (e.g. {'foo': [12, 27]})
