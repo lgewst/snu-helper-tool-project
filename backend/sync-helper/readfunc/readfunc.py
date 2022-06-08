@@ -78,19 +78,28 @@ def read_function_code(CODE, file_extension):
                 else:
                     try:
                         func_names = detect_line[:detect_line.find('(')].split(' ')
-                        if left_bra == 0 or 'case' in func_names:
+                        if len(func_names) == 0:
                             func_name = 'if'
                         else:
-                            func_name = [x for x in func_names if x not in other_symbol][1]
-                            if func_name == '':
-                                func_name = [x for x in func_names if x not in other_symbol][0]
+                            if left_bra == 0 or 'case' in func_names:
+                                func_name = 'if'
+                            else:
+                                func_name = [x for x in func_names if x not in other_symbol][1]
+                                if func_name == '':
+                                    func_name = [x for x in func_names if x not in other_symbol][0]
                     except IndexError:
                         func_name = detect_line[:detect_line.find('(')]
 
-                if not is_namespace and '_' in func_name and not (file_extension == 'gn' or file_extension == 'gni'):
-                    eject = False
+                PASS = True
 
-                else:
+                if not is_namespace and '_' in func_name and not (file_extension == 'gn' or file_extension == 'gni'):
+                    if '<' in func_name and func_name.find('<') < func_name.find('_'):
+                        eject = True
+                    else:
+                        eject = False
+                        PASS = False
+
+                if PASS:
                     if func_name[0] == '~':
                         is_destructor = False
                         iter_num = 0
