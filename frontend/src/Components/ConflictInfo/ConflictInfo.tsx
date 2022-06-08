@@ -93,10 +93,16 @@ const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props)
               <div className="codeline">
                 <div className="line">{code.line}</div>
                 <div className="code">
-                  {code.mode === 1 ? (
-                    <pre className="current_code">{colorFunc(code)}</pre>
+                  {code.mode === 3 ? (
+                    <pre className="normal_code">{colorFunc(code)}</pre>
                   ) : (
-                    <pre className="incoming_code">{colorFunc(code)}</pre>
+                    <span className="color_back">
+                      {code.mode === 1 ? (
+                        <pre className="current_code">{colorFunc(code)}</pre>
+                      ) : (
+                        <pre className="incoming_code">{colorFunc(code)}</pre>
+                      )}
+                    </span>
                   )}
                 </div>
                 {blame.length != 0 ? (
