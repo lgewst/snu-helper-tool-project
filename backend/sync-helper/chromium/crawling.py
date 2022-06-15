@@ -1,6 +1,7 @@
 import requests
 import json
 import datetime
+import os
 
 # Crawl https://chromium-review.googlesource.com
 
@@ -15,6 +16,36 @@ def get_response(url):
 
 keys = ['id', 'project', 'branch', 'attention_set', 'removed_from_attention_set', 'hashtags', 'change_id', 'subject', 'status', 'created', 'updated', 'submitted', 'submitter', 'insertions', 'deletions', 'total_comment_count', 'unresolved_comment_count', 'has_review_started', 'submission_id', 'meta_rev_id', '_number', 'owner', 'labels', 'removable_reviewers', 'reviewers', 'pending_reviewers', 'requirements', 'submit_records', 'submit_requirements']
 
+# commit id to change id
+def get_change_id(id, ROOT):
+    try:
+        os.chdir(ROOT)
+    except Exception as e:
+        return ""
+
+    msg = os.popen(f"git rev-list --format=%B --max-count=1 {id}").read()
+    
+    if msg.find("Change-Id: ") == -1:
+        return ""
+
+    change_id = msg[msg.find("Change-Id: "):].split('\n')[0].split(" ")[1]
+    return change_id
+
+# change id to commit id
+def get_commit_id(id, ROOT):
+    try:
+        os.chdir(ROOT)
+    except Exception as e:
+        return ""
+
+    msg = os.popen(f"git rev-list --format=%B --max-count=1 {id}").read()
+    
+    if msg.find("Change-Id: ") == -1:
+        return ""
+
+    change_id = msg[msg.find("Change-Id: "):].split('\n')[0].split(" ")[1]
+    return change_id
+
 def date_compare(str1, str2):
     dateFormatter = "%Y-%m-%d %H:%M:%S"
     d1 = datetime.strptime(str1, dateFormatter)
@@ -28,6 +59,7 @@ def date_compare(str1, str2):
         return -1
 
 def find_index(commit_id, owner):
+    change_id = get_change_id(commit_id)
     page_sz = 25
     S = 0
 
@@ -38,7 +70,7 @@ def find_index(commit_id, owner):
             return -1
         
         for i, e in enumerate(res):
-            if e['change_id'] == commit_id:
+            if e['change_id'] == change_id:
                return S + i
         S += page_sz
 
