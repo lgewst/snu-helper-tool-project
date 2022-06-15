@@ -5,8 +5,11 @@ import os
 
 # Crawl https://chromium-review.googlesource.com
 
-def get_url(S, owner):
+def get_author_page_url(S, owner):
     return f"https://chromium-review.googlesource.com/changes/?O=1000081&S={S}&n=25&q=owner:{owner}"
+
+def get_detail_url(change_id):
+    return f"https://chromium-review.googlesource.com/changes/chromium%2Fsrc~{change_id}/detail?O=1916314"
 
 def get_response(url):
     response = requests.get(url)
@@ -31,20 +34,9 @@ def get_change_id(id, ROOT):
     change_id = msg[msg.find("Change-Id: "):].split('\n')[0].split(" ")[1]
     return change_id
 
-# change id to commit id
-def get_commit_id(id, ROOT):
-    try:
-        os.chdir(ROOT)
-    except Exception as e:
-        return ""
-
-    msg = os.popen(f"git rev-list --format=%B --max-count=1 {id}").read()
-    
-    if msg.find("Change-Id: ") == -1:
-        return ""
-
-    change_id = msg[msg.find("Change-Id: "):].split('\n')[0].split(" ")[1]
-    return change_id
+# submission id to commit id
+def get_commit_id(id):
+    return get_response(get_detail_url(id))["current_revision"]
 
 def date_compare(str1, str2):
     dateFormatter = "%Y-%m-%d %H:%M:%S"
@@ -60,11 +52,13 @@ def date_compare(str1, str2):
 
 def find_index(commit_id, owner, ROOT):
     change_id = get_change_id(commit_id, ROOT)
+    if change_id == "":
+        return -1
     page_sz = 25
     S = 0
 
     while(True):
-        res = get_response(get_url(S, owner))
+        res = get_response(get_author_page_url(S, owner))
 
         if res == None or res == []:
             return -1
