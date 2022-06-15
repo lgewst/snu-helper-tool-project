@@ -2,7 +2,7 @@
 
 ## Requirements
 - [Backend](https://github.com/lgewst/snu-helper-tool-project/tree/main/backend#requirements)  
-- [Frontend](https://github.com/lgewst/snu-helper-tool-project/tree/main/backend#requirements)
+- [Frontend](https://github.com/lgewst/snu-helper-tool-project/tree/main/frontend#requirements)
 
 ## Installation
 - [Backend](https://github.com/lgewst/snu-helper-tool-project/tree/main/backend#Installation)
