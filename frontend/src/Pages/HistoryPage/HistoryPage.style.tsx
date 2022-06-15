@@ -12,7 +12,7 @@ export const CodeWrapper = styled.div`
   .lineNum {
     position: sticky;
     left: 0;
-    width: 25px;
+    width: 30px;
     background-color: #f5f5f9;
   }
   .code_content {

@@ -16,6 +16,7 @@ const renderBlame = (
   if (!blameline) return null;
 
   const copyToClipboard = () => {
+    console.log(blameline.commit_id);
     navigator.clipboard.writeText(blameline.commit_id);
   };
 
@@ -30,7 +31,7 @@ const renderBlame = (
   return (
     <div className="blame" key={blameline.line_start}>
       <div className="commit_id">
-        <span onClick={copyToClipboard}>
+        <span onClick={() => copyToClipboard}>
           <ContentCopyIcon fontSize="small" padding-right="10px" />
         </span>
         <span className="commit_id_hover">
