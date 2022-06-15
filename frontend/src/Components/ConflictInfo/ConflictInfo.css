@@ -16,7 +16,7 @@
   height: 17px;
   overflow-x: scroll;
 }
-.normal_code{
+.normal_code {
   height: 17px;
   margin: 0 0 0 0;
 }
@@ -95,15 +95,9 @@
   opacity: 1;
 }
 
-.dots_back {
-  background-color: rgb(254, 248, 223);
-  position: relative;
-  right: 56%;
-}
-
 .dots {
-  position: relative;
-  left: 79%;
+  width: 700px;
+  text-align: center;
   font-weight: bold;
 }
 
