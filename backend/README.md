@@ -25,11 +25,20 @@ We recommend you to pyenv-virtualenv to build our compiler. After cloning our so
 ## How to build and run
 After running build script, run the following commands to run server.
 ```
-# Run
+# Activate virtual environment
 > . .venv/bin/activate
 > cd sync-helper
-> python3 manage.py
 ```
+```
+# Migrate(Only at first run)
+> python3 manage.py makemigrations
+> python3 manage.py migrate
+```
+```
+# Run backend server
+> python3 manage.py runserver
+```
+
 
 ## Structure
 ```
