@@ -58,8 +58,8 @@ def date_compare(str1, str2):
     else:
         return -1
 
-def find_index(commit_id, owner):
-    change_id = get_change_id(commit_id)
+def find_index(commit_id, owner, ROOT):
+    change_id = get_change_id(commit_id, ROOT)
     page_sz = 25
     S = 0
 
