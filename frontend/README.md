@@ -1,6 +1,7 @@
 ## Requirements
 - Node >= 14.0.0
 - npm >= 5.6
+- yarn >= 1.22.11
 
 ## Installation
 [nodejs.org](https://nodejs.org/en/)
@@ -8,8 +9,12 @@
 ## How to build and run
 
 ```
+# Install yarn packages
 > cd frontend
 > yarn
+```
+```
+# Run frontend server
 > yarn start
 ```
 
