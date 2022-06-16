@@ -1,10 +1,10 @@
 import { InsertDriveFile } from '@mui/icons-material';
 import FolderIcon from '@mui/icons-material/Folder';
-import { CircularProgress, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import { Button, CircularProgress, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useLocation, NavLink } from 'react-router-dom';
+import { useLocation, NavLink, useHistory } from 'react-router-dom';
 import './DiffPage.css';
 
 interface Dir {
@@ -41,8 +41,9 @@ const listItemStyle = {
 
 const DiffPage = () => {
   const [diffList, setDiffList] = useState<Diff>();
-  const location = useLocation();
   const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
+  const history = useHistory();
 
   const init = () => {
     const path = location.pathname.slice(6);
@@ -73,6 +74,15 @@ const DiffPage = () => {
         </div>
         <div className="insertion"> +{diffList?.total_insertion}</div>
         <div className="deletion"> - {diffList?.total_deletion}</div>
+        <Button
+          variant="contained"
+          sx={{ position: 'absolute', right: '10px' }}
+          onClick={() => {
+            history.push('/path');
+          }}
+        >
+          Path page
+        </Button>
       </div>
       <br />
       <div className="diff_header">
