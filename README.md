@@ -46,3 +46,12 @@
 
 - By entering the version of function, you would be able to see the changes between the two version, and the logs of commits that changed the function.
 - Click `Left, Right` buttons to place the code you wish. It will show the difference between the two.
+
+### Diff page
+<kbd>
+  <img src = "https://ibb.co/GWmkGvm">
+</kbd>
+
+- You can go to the diff page by entering '/diff' URL or clicking 'Diff page' button.
+- You would be able to see difference between current and target version.
+- You can navigate through all directories and compare the sizes.
