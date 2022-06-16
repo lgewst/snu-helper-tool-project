@@ -1,10 +1,10 @@
 import { InsertDriveFile } from '@mui/icons-material';
 import FolderIcon from '@mui/icons-material/Folder';
-import { List, ListItem, ListItemAvatar, ListItemText, ListSubheader } from '@mui/material';
+import { Button, List, ListItem, ListItemAvatar, ListItemText, ListSubheader } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useLocation, NavLink } from 'react-router-dom';
+import { useLocation, NavLink, useHistory } from 'react-router-dom';
 
 import PathInfo from '../../Components/PathInfo/PathInfo';
 import { useInitContext } from '../../Contexts/initContext';
@@ -27,6 +27,7 @@ const FolderPage = () => {
   const [fileList, setFileList] = useState<File[]>([]);
   const location = useLocation();
   const path = location.pathname.slice(6);
+  const history = useHistory();
 
   const init = () => {
     axios
@@ -66,6 +67,15 @@ const FolderPage = () => {
         subheader={
           <ListSubheader component="div">
             {folderList?.length} folders / {fileList?.length} files
+            <Button
+              variant="contained"
+              sx={{ position: 'absolute', right: '10px' }}
+              onClick={() => {
+                history.push('/diff');
+              }}
+            >
+              Diff page
+            </Button>
           </ListSubheader>
         }
         sx={{ bgcolor: 'background.paper' }}

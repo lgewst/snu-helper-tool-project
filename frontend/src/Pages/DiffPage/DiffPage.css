@@ -3,12 +3,29 @@
 .diff_header {
   display: flex;
 }
+
+.diff_header {
+  padding-bottom: 10px;
+}
+
+.diff_header .diff_name {
+  width: 450px;
+  padding-left: 70px;
+}
+
 .dirname,
 .filename,
-.diff_name,
-.version {
+.diff_name {
   color: black;
-  width: 300px;
+  width: 500px;
+}
+
+.version {
+  padding-left: 30px;
+  width: 480px;
+}
+.dirname {
+  display: flex;
 }
 
 .insertion {

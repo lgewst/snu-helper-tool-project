@@ -1,7 +1,10 @@
+import { InsertDriveFile } from '@mui/icons-material';
+import FolderIcon from '@mui/icons-material/Folder';
+import { Button, CircularProgress, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, NavLink, useHistory } from 'react-router-dom';
 import './DiffPage.css';
 
 interface Dir {
@@ -26,10 +29,21 @@ interface Diff {
   directories: Dir[];
   files: File[];
 }
+const listItemStyle = {
+  padding: 0,
+  paddingLeft: '20px',
+  transition: '0.2s',
+
+  ':hover': {
+    backgroundColor: '#f0f0f0',
+  },
+};
 
 const DiffPage = () => {
   const [diffList, setDiffList] = useState<Diff>();
+  const [isLoading, setIsLoading] = useState(true);
   const location = useLocation();
+  const history = useHistory();
 
   const init = () => {
     const path = location.pathname.slice(6);
@@ -37,8 +51,8 @@ const DiffPage = () => {
       .get('/diff/dir/', { params: { path: path } })
       .then((res) => {
         console.log(res.data);
-        //TODO let user know loading
         setDiffList(res.data);
+        setIsLoading(false);
       })
       .catch((err) => {
         if (err.response.data.error_code === 10004) {
@@ -50,14 +64,25 @@ const DiffPage = () => {
     init();
   }, [location.pathname]);
 
-  return (
+  return isLoading ? (
+    <CircularProgress sx={{ position: 'fixed', left: 'calc(50vw - 30px)', top: 100 }} />
+  ) : (
     <div className="diff">
       <div className="summary">
         <div className="version">
-          {diffList?.current_version} ➔ {diffList?.target_version}
+          Version: {diffList?.current_version} ➔ {diffList?.target_version}
         </div>
         <div className="insertion"> +{diffList?.total_insertion}</div>
         <div className="deletion"> - {diffList?.total_deletion}</div>
+        <Button
+          variant="contained"
+          sx={{ position: 'absolute', right: '10px' }}
+          onClick={() => {
+            history.push('/path');
+          }}
+        >
+          Path page
+        </Button>
       </div>
       <br />
       <div className="diff_header">
@@ -66,24 +91,33 @@ const DiffPage = () => {
         <div className="deletion">deletion</div>
       </div>
       <div>
-        {diffList?.directories.map((dir, i) => (
-          <div className="diff_dir" key={i}>
-            <Link className="dirname" to={`/diff/${dir.path}`} key={i}>
-              {dir.name}
-              <br />
-            </Link>
+        {diffList?.directories.map((dir) => (
+          <ListItem key={dir.name} sx={listItemStyle}>
+            <div className="dirname">
+              <ListItemAvatar>
+                <FolderIcon />
+              </ListItemAvatar>
+              <ListItemText>
+                <NavLink to={`/diff/${dir.path}`}>{dir.name}</NavLink>
+              </ListItemText>
+            </div>
             <div className="insertion">+{dir.insertion}</div>
             <div className="deletion">-{dir.deletion}</div>
-          </div>
+          </ListItem>
         ))}
       </div>
       <div>
-        {diffList?.files.map((file, i) => (
-          <div className="diff_file" key={i}>
-            <div className="filename">{file.name}</div>
+        {diffList?.files.map((file) => (
+          <ListItem key={file.name} sx={listItemStyle}>
+            <div className="dirname">
+              <ListItemAvatar>
+                <InsertDriveFile />
+              </ListItemAvatar>
+              <ListItemText>{file.name}</ListItemText>
+            </div>
             <div className="insertion">+{file.insertion}</div>
             <div className="deletion">-{file.deletion}</div>
-          </div>
+          </ListItem>
         ))}
       </div>
     </div>
