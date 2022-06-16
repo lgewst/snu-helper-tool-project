@@ -9,7 +9,7 @@ from config.error import *
 from chromium.parse_url import *
 
 from readfunc.readfunc import read_function
-from sentence.sentence import sentence_similarity
+from related.sentence import sentence_similarity
 from commitmsg import commitmsg
 
 # Create your views here.
@@ -176,6 +176,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
         
         commit_ids = []
         commit_urls = []
+        reponame = Chromium.webosose_repo[Chromium.webosose_repo.find("chromium"):].replace("/", "")
         try:
             if len(Chromium.related_commits[id][line_num]) >= commit_num:
                 commit_urls = Chromium.related_commits[id][line_num][:commit_num]
@@ -183,12 +184,12 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                 repr_line_number, line_patch, current_msg = Chromium.get_repr_line(id, line_num)
                 commit_ids = Chromium.get_log(id, file_path, line_num, line_num, 2 * commit_num)
                 if line_patch == Chromium.WEBOS:
-                    commit_urls = [f"https://github.com/webosose/chromium91/commit/{commit_id}" for commit_id in commit_ids]
+                    commit_urls = [f"https://github.com/webosose/{reponame}/commit/{commit_id}" for commit_id in commit_ids]
                     commit_msgs = [commitmsg.Webos_msg(commit_id) for commit_id in commit_ids]
                 else:
                     commit_urls = [commit_url(commit_id, file_path, Chromium.chromium_repo) for commit_id in commit_ids]
                     commit_msgs = [commitmsg.Chromium_msg(commit_id) for commit_id in commit_ids]
-                related_ids = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
+                related_ids, sim = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
                 commit_urls = [commit_urls[x] for x in related_ids][:commit_num] if len(related_ids) > commit_num else [commit_urls[x] for x in related_ids]
                 try:
                     Chromium.related_commits[id][line_num] = commit_urls
@@ -198,12 +199,12 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             repr_line_number, line_patch, current_msg = Chromium.get_repr_line(id, line_num)
             commit_ids = Chromium.get_log(id, file_path, line_num, line_num, 2 * commit_num)
             if line_patch == Chromium.WEBOS:
-                commit_urls = [f"https://github.com/webosose/chromium91/commit/{commit_id}" for commit_id in commit_ids]
+                commit_urls = [f"https://github.com/webosose/{reponame}/commit/{commit_id}" for commit_id in commit_ids]
                 commit_msgs = [commitmsg.Webos_msg(commit_id) for commit_id in commit_ids]
             else:
                 commit_urls = [commit_url(commit_id, file_path, Chromium.chromium_repo) for commit_id in commit_ids]
                 commit_msgs = [commitmsg.Chromium_msg(commit_id) for commit_id in commit_ids]
-            related_ids = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
+            related_ids, sim = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
             commit_urls = [commit_urls[x] for x in related_ids][:commit_num] if len(related_ids) > commit_num else [commit_urls[x] for x in related_ids]
             try:
                 Chromium.related_commits[id][line_num] = commit_urls
