@@ -1,7 +1,10 @@
+import { InsertDriveFile } from '@mui/icons-material';
+import FolderIcon from '@mui/icons-material/Folder';
+import { ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
-import { useLocation, Link } from 'react-router-dom';
+import { useLocation, NavLink } from 'react-router-dom';
 import './DiffPage.css';
 
 interface Dir {
@@ -26,6 +29,15 @@ interface Diff {
   directories: Dir[];
   files: File[];
 }
+const listItemStyle = {
+  padding: 0,
+  paddingLeft: '20px',
+  transition: '0.2s',
+
+  ':hover': {
+    backgroundColor: '#f0f0f0',
+  },
+};
 
 const DiffPage = () => {
   const [diffList, setDiffList] = useState<Diff>();
@@ -54,7 +66,7 @@ const DiffPage = () => {
     <div className="diff">
       <div className="summary">
         <div className="version">
-          {diffList?.current_version} ➔ {diffList?.target_version}
+          Version: {diffList?.current_version} ➔ {diffList?.target_version}
         </div>
         <div className="insertion"> +{diffList?.total_insertion}</div>
         <div className="deletion"> - {diffList?.total_deletion}</div>
@@ -66,24 +78,33 @@ const DiffPage = () => {
         <div className="deletion">deletion</div>
       </div>
       <div>
-        {diffList?.directories.map((dir, i) => (
-          <div className="diff_dir" key={i}>
-            <Link className="dirname" to={`/diff/${dir.path}`} key={i}>
-              {dir.name}
-              <br />
-            </Link>
+        {diffList?.directories.map((dir) => (
+          <ListItem key={dir.name} sx={listItemStyle}>
+            <div className="dirname">
+              <ListItemAvatar>
+                <FolderIcon />
+              </ListItemAvatar>
+              <ListItemText>
+                <NavLink to={`/diff/${dir.path}`}>{dir.name}</NavLink>
+              </ListItemText>
+            </div>
             <div className="insertion">+{dir.insertion}</div>
             <div className="deletion">-{dir.deletion}</div>
-          </div>
+          </ListItem>
         ))}
       </div>
       <div>
-        {diffList?.files.map((file, i) => (
-          <div className="diff_file" key={i}>
-            <div className="filename">{file.name}</div>
+        {diffList?.files.map((file) => (
+          <ListItem key={file.name} sx={listItemStyle}>
+            <div className="dirname">
+              <ListItemAvatar>
+                <InsertDriveFile />
+              </ListItemAvatar>
+              <ListItemText>{file.name}</ListItemText>
+            </div>
             <div className="insertion">+{file.insertion}</div>
             <div className="deletion">-{file.deletion}</div>
-          </div>
+          </ListItem>
         ))}
       </div>
     </div>
