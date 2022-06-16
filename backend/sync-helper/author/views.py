@@ -11,6 +11,7 @@ from config.error import *
 from related.changed import *
 from related.sentence import *
 from commitmsg import commitmsg
+from author.cache import *
 
 # Create your views here.
 class AuthorViewSet(viewsets.GenericViewSet):
@@ -49,6 +50,9 @@ class AuthorViewSet(viewsets.GenericViewSet):
         if author_email is None:
             return Response({"message": "Send 'author_email'"}, status=status.HTTP_400_BAD_REQUEST)
 
+        if (commit_id, author_email) in related_cache.keys():
+            return Response(related_cache[(commit_id, author_email)], status=status.HTTP_200_OK)
+
         ROOT = Chromium.chromium_repo
         index = find_index(commit_id, author_email, ROOT)
         
@@ -56,6 +60,7 @@ class AuthorViewSet(viewsets.GenericViewSet):
 
         if index == -1:  # webos commit
             data["commits"] = []
+            related_cache[(commit_id, author_email)] = data
             return Response(data, status=status.HTTP_200_OK)
 
         res = get_response(get_author_page_url(max(0, index - 5), author_email))
@@ -87,4 +92,5 @@ class AuthorViewSet(viewsets.GenericViewSet):
             commits[i]["index"] = i+1
         
         data["commits"] = commits
+        related_cache[(commit_id, author_email)] = data
         return Response(data, status=status.HTTP_200_OK)

@@ -1,6 +1,7 @@
 from django.db import models
 import os
 import datetime
+import author.cache
 
 from chromium.parse_url import *
 from chromium.crawling import find_index
@@ -24,6 +25,7 @@ class Chromium():
     related_commits = {}
 
     def init():
+        author.cache.related_cache = {}
         Chromium.blames = {}
         Chromium.diff_cache = {}
         Chromium.conflicts = []
