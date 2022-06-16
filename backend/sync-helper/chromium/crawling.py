@@ -72,7 +72,7 @@ def find_index(commit_id, owner, ROOT):
 def f(owner):
     idx = find_index("Ifd7541c603e95aff05731ddd75874d90809d3dca", owner)
     print(f"index: {idx}")
-    res = get_response(get_url(max(0, idx - 6), owner))
+    res = get_response(get_author_page_url(max(0, idx - 6), owner))
     for i in range(0, 11):
         if i == 6:
             continue
