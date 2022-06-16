@@ -48,4 +48,4 @@ def sentence_similarity(target, sentences):
         return_id.append(i)
     return_id.sort(reverse=True)
 
-    return return_id
+    return return_id, sim[0]

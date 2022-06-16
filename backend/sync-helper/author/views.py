@@ -9,6 +9,8 @@ from chromium.models import *
 from chromium.crawling import *
 from config.error import *
 from related.changed import *
+from related.sentence import *
+from commitmsg import commitmsg
 
 # Create your views here.
 class AuthorViewSet(viewsets.GenericViewSet):
@@ -66,14 +68,23 @@ class AuthorViewSet(viewsets.GenericViewSet):
                 change_id = res[i]["submission_id"]
                 targets.append(get_commit_id(change_id))
 
-        commits = []
+        commit_ids = []
 
         for id in targets:
-            if compare_two_commits(id, commit_id, ROOT) >= 0.7:
-                commits.append(id)
+            relevance = compare_two_commits(id, commit_id, ROOT)
+            if relevance >= 0.7:
+                commit_ids.append((id, float(relevance)))
 
-        commit_id
-        commit_url = f"https://source.chromium.org/chromium/chromium/src/+/{commit_id}"
+        current_msg = commitmsg.Chromium_msg(commit_id)['release']
+        commit_msgs = [commitmsg.Chromium_msg(id[0]) for id in commit_ids]
+        related_ids, sim = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
+        commits = [{"id": ci[0], "relevance": ci[1] * 0.7 + sim[i] * 0.3} for i, ci in enumerate(commit_ids)]
+        
+        commits = sorted(commits, key = lambda d: -d["relevance"])
+        for i in range(len(commits)):
+            id = commits[i]["id"]
+            commits[i]["commit_url"] = f"https://source.chromium.org/chromium/chromium/src/+/{id}"
+            commits[i]["index"] = i+1
         
         data["commits"] = commits
         return Response(data, status=status.HTTP_200_OK)

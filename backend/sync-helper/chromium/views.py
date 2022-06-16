@@ -189,7 +189,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                 else:
                     commit_urls = [commit_url(commit_id, file_path, Chromium.chromium_repo) for commit_id in commit_ids]
                     commit_msgs = [commitmsg.Chromium_msg(commit_id) for commit_id in commit_ids]
-                related_ids = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
+                related_ids, sim = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
                 commit_urls = [commit_urls[x] for x in related_ids][:commit_num] if len(related_ids) > commit_num else [commit_urls[x] for x in related_ids]
                 try:
                     Chromium.related_commits[id][line_num] = commit_urls
@@ -204,7 +204,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             else:
                 commit_urls = [commit_url(commit_id, file_path, Chromium.chromium_repo) for commit_id in commit_ids]
                 commit_msgs = [commitmsg.Chromium_msg(commit_id) for commit_id in commit_ids]
-            related_ids = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
+            related_ids, sim = sentence_similarity(current_msg, [c['release'] for c in commit_msgs])
             commit_urls = [commit_urls[x] for x in related_ids][:commit_num] if len(related_ids) > commit_num else [commit_urls[x] for x in related_ids]
             try:
                 Chromium.related_commits[id][line_num] = commit_urls
