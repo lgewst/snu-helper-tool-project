@@ -8,6 +8,7 @@ from subprocess import PIPE, Popen
 from chromium.models import *
 from chromium.crawling import *
 from config.error import *
+from related.changed import *
 
 # Create your views here.
 class AuthorViewSet(viewsets.GenericViewSet):
@@ -46,27 +47,33 @@ class AuthorViewSet(viewsets.GenericViewSet):
         if author_email is None:
             return Response({"message": "Send 'author_email'"}, status=status.HTTP_400_BAD_REQUEST)
 
-        index = find_index(commit_id, author_email, Chromium.chromium_repo)
+        ROOT = Chromium.chromium_repo
+        index = find_index(commit_id, author_email, ROOT)
         
         data = {"commit_id": commit_id, "author_email": author_email}
 
         if index == -1:  # webos commit
             data["commits"] = []
             return Response(data, status=status.HTTP_200_OK)
-        
-        commits = []
 
         res = get_response(get_author_page_url(max(0, index - 5), author_email))
-        j = 0
+        
+        targets = []
         for i in range(0, 11):
             if i == 5:
                 continue
             if res[i]['status'] == "MERGED" and res[i]["project"] == "chromium/src":
                 change_id = res[i]["submission_id"]
-                commit_id = get_commit_id(change_id)
-                commit_url = f"https://source.chromium.org/chromium/chromium/src/+/{commit_id}"
-                commits.append({"index": j, "id": commit_id, "commit_url": commit_url, "relevance": 0.0})
-                j += 1
+                targets.append(get_commit_id(change_id))
+
+        commits = []
+
+        for id in targets:
+            if compare_two_commits(id, commit_id, ROOT) >= 0.7:
+                commits.append(id)
+
+        commit_id
+        commit_url = f"https://source.chromium.org/chromium/chromium/src/+/{commit_id}"
         
         data["commits"] = commits
         return Response(data, status=status.HTTP_200_OK)
