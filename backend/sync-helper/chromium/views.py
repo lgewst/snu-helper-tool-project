@@ -9,7 +9,7 @@ from config.error import *
 from chromium.parse_url import *
 
 from readfunc.readfunc import read_function
-from sentence.sentence import sentence_similarity
+from related.sentence import sentence_similarity
 from commitmsg import commitmsg
 
 # Create your views here.
