@@ -185,7 +185,6 @@ class Chromium():
                     commit_msg = commitmsg.Webos_msg(rev)
                 else:
                     a_url = f"https://chromium-review.googlesource.com/q/owner:{author_email}"
-                    print(rev)
                     commit_msg = commitmsg.Chromium_msg(rev)
                 prev_struct = {'commit_id': rev, 'commit_url': c_url, 'review_url': r_url, 'author_url': a_url,
                                'line_start': line_number, 'line_end': line_number, 'author_name': author_name,
