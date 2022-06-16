@@ -49,7 +49,7 @@
 
 ### Diff page
 <kbd>
-  <img src = "https://ibb.co/GWmkGvm">
+  <img src="https://i.ibb.co/8rk2GDk/2022-06-16-3-53-32.png" />
 </kbd>
 
 - You can go to the diff page by entering '/diff' URL or clicking 'Diff page' button.
