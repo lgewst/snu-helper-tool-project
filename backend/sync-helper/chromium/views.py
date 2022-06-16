@@ -176,6 +176,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
         
         commit_ids = []
         commit_urls = []
+        reponame = Chromium.webosose_repo[Chromium.webosose_repo.find("chromium"):].replace("/", "")
         try:
             if len(Chromium.related_commits[id][line_num]) >= commit_num:
                 commit_urls = Chromium.related_commits[id][line_num][:commit_num]
@@ -183,7 +184,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
                 repr_line_number, line_patch, current_msg = Chromium.get_repr_line(id, line_num)
                 commit_ids = Chromium.get_log(id, file_path, line_num, line_num, 2 * commit_num)
                 if line_patch == Chromium.WEBOS:
-                    commit_urls = [f"https://github.com/webosose/chromium91/commit/{commit_id}" for commit_id in commit_ids]
+                    commit_urls = [f"https://github.com/webosose/{reponame}/commit/{commit_id}" for commit_id in commit_ids]
                     commit_msgs = [commitmsg.Webos_msg(commit_id) for commit_id in commit_ids]
                 else:
                     commit_urls = [commit_url(commit_id, file_path, Chromium.chromium_repo) for commit_id in commit_ids]
@@ -198,7 +199,7 @@ class ChromiumViewSet(viewsets.GenericViewSet):
             repr_line_number, line_patch, current_msg = Chromium.get_repr_line(id, line_num)
             commit_ids = Chromium.get_log(id, file_path, line_num, line_num, 2 * commit_num)
             if line_patch == Chromium.WEBOS:
-                commit_urls = [f"https://github.com/webosose/chromium91/commit/{commit_id}" for commit_id in commit_ids]
+                commit_urls = [f"https://github.com/webosose/{reponame}/commit/{commit_id}" for commit_id in commit_ids]
                 commit_msgs = [commitmsg.Webos_msg(commit_id) for commit_id in commit_ids]
             else:
                 commit_urls = [commit_url(commit_id, file_path, Chromium.chromium_repo) for commit_id in commit_ids]
