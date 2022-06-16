@@ -177,13 +177,15 @@ class Chromium():
             else:
                 if len(prev_struct) > 0:
                     blame.append(prev_struct)
-                c_url = commit_url(rev, path, Chromium.chromium_repo) if upstream else f"https://github.com/webosose/chromium91/commit/{rev}"
+                reponame = Chromium.webosose_repo[Chromium.webosose_repo.find("chromium"):].replace("/", "")
+                c_url = commit_url(rev, path, Chromium.chromium_repo) if upstream else f"https://github.com/webosose/{reponame}/commit/{rev}"
                 r_url = review_url(rev, Chromium.chromium_repo if upstream else Chromium.webosose_repo)
                 if not upstream:
-                    a_url = f"https://github.com/webosose/chromium91/commits?author={author_name.split(' ')[0]}"
+                    a_url = f"https://github.com/webosose/{reponame}/commits?author={author_name.split(' ')[0]}"
                     commit_msg = commitmsg.Webos_msg(rev)
                 else:
                     a_url = f"https://chromium-review.googlesource.com/q/owner:{author_email}"
+                    print(rev)
                     commit_msg = commitmsg.Chromium_msg(rev)
                 prev_struct = {'commit_id': rev, 'commit_url': c_url, 'review_url': r_url, 'author_url': a_url,
                                'line_start': line_number, 'line_end': line_number, 'author_name': author_name,

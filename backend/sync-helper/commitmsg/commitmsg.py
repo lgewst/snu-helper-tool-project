@@ -14,7 +14,7 @@ def Chromium_msg(commitId):
         return ''
     commitMessage =  commitMessage.text
     commitMessages = commitMessage.splitlines()
-    return {'release': commitMessages[0], 'detail': commitMessages[2]+'\n'+commitMessages[3]}
+    return {'release': commitMessages[0], 'detail': commitMessages[2]+'\n'+commitMessages[3] if len(commitMessages) >= 4 else ""}
 
 # LG용
 def Webos_msg(commitId):
