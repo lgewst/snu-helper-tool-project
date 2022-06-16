@@ -1,6 +1,6 @@
 import { InsertDriveFile } from '@mui/icons-material';
 import FolderIcon from '@mui/icons-material/Folder';
-import { ListItem, ListItemAvatar, ListItemText } from '@mui/material';
+import { CircularProgress, ListItem, ListItemAvatar, ListItemText } from '@mui/material';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import toast from 'react-hot-toast';
@@ -42,6 +42,7 @@ const listItemStyle = {
 const DiffPage = () => {
   const [diffList, setDiffList] = useState<Diff>();
   const location = useLocation();
+  const [isLoading, setIsLoading] = useState(true);
 
   const init = () => {
     const path = location.pathname.slice(6);
@@ -49,8 +50,8 @@ const DiffPage = () => {
       .get('/diff/dir/', { params: { path: path } })
       .then((res) => {
         console.log(res.data);
-        //TODO let user know loading
         setDiffList(res.data);
+        setIsLoading(false);
       })
       .catch((err) => {
         if (err.response.data.error_code === 10004) {
@@ -62,7 +63,9 @@ const DiffPage = () => {
     init();
   }, [location.pathname]);
 
-  return (
+  return isLoading ? (
+    <CircularProgress sx={{ position: 'fixed', left: 'calc(50vw - 30px)', top: 100 }} />
+  ) : (
     <div className="diff">
       <div className="summary">
         <div className="version">
