@@ -39,7 +39,7 @@ def Webos_msg(commitId, reponame):
     testingIndex = commitDetail.find(TESTING)
 
     if releaseIndex == -1  | detailIndex == -1 | testingIndex == -1 :
-        return ''
+         return {'release':"", 'detail':""}
 
     release = commitDetail[releaseIndex+len(RELEASE): detailIndex].strip()
     detail = commitDetail[detailIndex+len(DETAIL): testingIndex].strip()
