@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import json
 
+
 # chromium 용
 def Chromium_msg(commitId):
     req = requests.get('https://chromium.googlesource.com/chromium/src/+/'+commitId)
@@ -11,7 +12,7 @@ def Chromium_msg(commitId):
 
     commitMessage = soup.find('pre','MetadataMessage')
     if commitMessage == None: 
-        return ''
+        return {'release':"", 'detail':""}
     commitMessage =  commitMessage.text
     commitMessages = commitMessage.splitlines()
     return {'release': commitMessages[0], 'detail': commitMessages[2]+'\n'+commitMessages[3] if len(commitMessages) >= 4 else ""}
@@ -24,10 +25,10 @@ def Webos_msg(commitId, reponame):
 
     commitMessage = soup.find("div", "full-commit")
     if commitMessage == None: 
-            return ''
+            return {'release':"", 'detail':""}
     commitDetail = commitMessage.find('pre')
     if commitDetail == None: 
-        return ''
+        return {'release':"", 'detail':""}
     commitDetail =  commitDetail.text
     RELEASE = ':Release Notes:'
     DETAIL = ':Detailed Notes:'
