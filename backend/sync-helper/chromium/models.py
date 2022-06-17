@@ -184,7 +184,7 @@ class Chromium():
                 r_url = review_url(rev, Chromium.chromium_repo if upstream else Chromium.webosose_repo)
                 if not upstream:
                     a_url = f"https://github.com/webosose/{reponame}/commits?author={author_name.split(' ')[0]}"
-                    commit_msg = commitmsg.Webos_msg(rev)
+                    commit_msg = commitmsg.Webos_msg(rev, reponame)
                 else:
                     a_url = f"https://chromium-review.googlesource.com/q/owner:{author_email}"
                     commit_msg = commitmsg.Chromium_msg(rev)
