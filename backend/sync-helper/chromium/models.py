@@ -218,7 +218,6 @@ class Chromium():
                 blame_start = blame['line_start']
                 blame_end = blame['line_end']
                 line_patch = blame['line_patch']
-                print(blame['commit_msg'])
                 commit_msg = blame['commit_msg']['release']
                 if line_patch == Chromium.WEBOS:
                     os.chdir(Chromium.webosose_repo + "src/")
