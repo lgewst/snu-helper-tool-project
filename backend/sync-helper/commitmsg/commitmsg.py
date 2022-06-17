@@ -17,8 +17,8 @@ def Chromium_msg(commitId):
     return {'release': commitMessages[0], 'detail': commitMessages[2]+'\n'+commitMessages[3] if len(commitMessages) >= 4 else ""}
 
 # LG용
-def Webos_msg(commitId):
-    req = requests.get('https://github.com/webosose/chromium91/commit/'+commitId)
+def Webos_msg(commitId, reponame):
+    req = requests.get(f'https://github.com/webosose/{reponame}/commit/'+commitId)
     html = req.text
     soup = BeautifulSoup(html, 'html.parser')
 

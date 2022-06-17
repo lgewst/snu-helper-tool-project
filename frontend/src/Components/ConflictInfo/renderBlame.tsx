@@ -51,11 +51,17 @@ const renderBlame = (
             <div className="related_urls">
               {relatedUrls
                 ?.filter((relatedUrl) => Number(relatedUrl.id) === blameline.line_start)[0]
-                ?.commit_urls.map((url, i) => (
-                  <a className="related_link" href={url} key={i}>
-                    {i + 1}
-                  </a>
-                ))}
+                ?.commit_urls.map((url, i) => {
+                  if (url === 'None') {
+                    return <a className="related_link">No related commit</a>;
+                  } else {
+                    return (
+                      <a className="related_link" href={url} key={i}>
+                        {i + 1}
+                      </a>
+                    );
+                  }
+                })}
             </div>
           </div>
         </span>
