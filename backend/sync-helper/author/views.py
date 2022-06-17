@@ -70,8 +70,8 @@ class AuthorViewSet(viewsets.GenericViewSet):
             if i == 5:
                 continue
             if res[i]['status'] == "MERGED" and res[i]["project"] == "chromium/src":
-                change_id = res[i]["submission_id"]
-                targets.append(get_commit_id(change_id))
+                submission_id = res[i]["_number"]
+                targets.append(get_commit_id(submission_id))
 
         commit_ids = []
 

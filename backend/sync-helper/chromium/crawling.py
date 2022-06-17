@@ -8,16 +8,14 @@ import os
 def get_author_page_url(S, owner):
     return f"https://chromium-review.googlesource.com/changes/?O=1000081&S={S}&n=25&q=owner:{owner}"
 
-def get_detail_url(change_id):
-    return f"https://chromium-review.googlesource.com/changes/chromium%2Fsrc~{change_id}/detail?O=1916314"
+def get_detail_url(submission_id):
+    return f"https://chromium-review.googlesource.com/changes/chromium%2Fsrc~{submission_id}/detail?O=1916314"
 
 def get_response(url):
     response = requests.get(url)
     if response.status_code != 200:
         return None
     return json.loads(response.text.split("\n")[1])
-
-keys = ['id', 'project', 'branch', 'attention_set', 'removed_from_attention_set', 'hashtags', 'change_id', 'subject', 'status', 'created', 'updated', 'submitted', 'submitter', 'insertions', 'deletions', 'total_comment_count', 'unresolved_comment_count', 'has_review_started', 'submission_id', 'meta_rev_id', '_number', 'owner', 'labels', 'removable_reviewers', 'reviewers', 'pending_reviewers', 'requirements', 'submit_records', 'submit_requirements']
 
 # commit id to change id
 def get_change_id(id, ROOT):
@@ -76,6 +74,6 @@ def f(owner):
     for i in range(0, 11):
         if i == 6:
             continue
-        print(res[i]['change_id'])
+        print(res[i]['submission_id'])
 
 # f("ayzhao@google.com")
