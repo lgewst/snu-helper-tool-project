@@ -1,8 +1,19 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import { useState } from 'react';
 
 import { Blame, RelatedUrl } from '../../Utils/interface';
 
 import { HTMLTooltip } from './ConflictInfo.style';
+interface RelatedAuthorCommit {
+  commit_id: string;
+  author_email: string;
+  commits: {
+    index: number; // 1부터 시작, 관련도가 높은 것 먼저
+    id: string; // related commit id
+    commit_url: string; // related commit url
+    relevance: number; // 관련도 0 ~ 1.0 사이의 값
+  }[];
+}
 
 const renderBlame = (
   id: number,
@@ -10,23 +21,27 @@ const renderBlame = (
   blame: Blame[],
   relatedUrls: RelatedUrl[],
   getRelatedCommit: Function,
+  relAuthCommit: RelatedAuthorCommit[],
+  getAuthorRel: Function,
 ) => {
   const blameline = blame.find((bi) => bi.line_start === line);
-
   if (!blameline) return null;
+
+  const [commit, setCommit] = useState<RelatedAuthorCommit>();
 
   const copyToClipboard = () => {
     console.log(blameline.commit_id);
     navigator.clipboard.writeText(blameline.commit_id);
   };
 
-  const getRelatedUrls = (index: number, line_num: number, commit_num: number) => {
-    getRelatedCommit(index, line_num, commit_num);
+  const hoverAuthor = () => {
+    const findcommit = relAuthCommit?.find((commit) => blameline.commit_id === commit.commit_id);
+    if (!findcommit) {
+      getAuthorRel(blameline.commit_id, blameline.author_email);
+    } else {
+      setCommit(findcommit);
+    }
   };
-
-  console.log(relatedUrls);
-  console.log(relatedUrls?.filter((relatedUrl) => Number(relatedUrl.id) === 48)[0]);
-  console.log(relatedUrls?.filter((relatedUrl) => Number(relatedUrl.id) === 46)[0]);
 
   return (
     <div className="blame" key={blameline.line_start}>
@@ -44,7 +59,7 @@ const renderBlame = (
           <div className="related_url">
             <button
               className="related_submit"
-              onClick={() => getRelatedUrls(id, blameline.line_start, 5)}
+              onClick={() => getRelatedCommit(id, blameline.line_start, 5)}
             >
               Related commit urls
             </button>
@@ -52,7 +67,7 @@ const renderBlame = (
               {relatedUrls
                 ?.filter((relatedUrl) => Number(relatedUrl.id) === blameline.line_start)[0]
                 ?.commit_urls.map((url, i) => (
-                  <a className="related_link" href={url} key={i}>
+                  <a className="related_link" href={url} key={i} target="_blank">
                     {i + 1}
                   </a>
                 ))}
@@ -61,9 +76,35 @@ const renderBlame = (
         </span>
       </div>
       <div className="author_email_box">
-        <a className="author_email" href={blameline.author_url} target="_blank">
-          {blameline.author_email}
-        </a>
+        <HTMLTooltip
+          onMouseEnter={() => {
+            hoverAuthor();
+          }}
+          title={
+            <div>
+              {commit ? (
+                commit.commits.length === 0 ? (
+                  'No related commits'
+                ) : (
+                  <>
+                    {commit.commits.length}
+                    {commit.commits.map((commit) => {
+                      <a href={commit.commit_url} target="_blank">
+                        {commit.index}
+                      </a>;
+                    })}
+                  </>
+                )
+              ) : (
+                'Loading'
+              )}
+            </div>
+          }
+        >
+          <a className="author_email" href={blameline.author_url} target="_blank">
+            {blameline.author_email}
+          </a>
+        </HTMLTooltip>
       </div>
 
       <div className="date">{blameline.date}</div>

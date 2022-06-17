@@ -1,5 +1,6 @@
 import { CircularProgress } from '@mui/material';
 import Modal from '@mui/material/Modal';
+import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
 
@@ -27,11 +28,23 @@ interface Props {
   getRelatedCommit: Function;
 }
 
+interface RelatedAuthorCommit {
+  commit_id: string;
+  author_email: string;
+  commits: {
+    index: number; // 1부터 시작, 관련도가 높은 것 먼저
+    id: string; // related commit id
+    commit_url: string; // related commit url
+    relevance: number; // 관련도 0 ~ 1.0 사이의 값
+  }[];
+}
+
 const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props) => {
   const history = useHistory();
   const [func, setfunc] = useState('');
   const [open, setOpen] = useState(false);
   const [version, setVersion] = useState('');
+  const [relAuthCommit, setRelAuthCommit] = useState<RelatedAuthorCommit[]>();
   const location = useLocation();
 
   const path = location.pathname.slice(6);
@@ -80,6 +93,16 @@ const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props)
     }
   };
 
+  const getAuthorRel = (commit_id: string, author_email: string) => {
+    axios.get('/author/related/', { params: { commit_id, author_email } }).then((res) => {
+      if (relAuthCommit === undefined) {
+        setRelAuthCommit([res.data]);
+      } else {
+        setRelAuthCommit([...relAuthCommit, res.data]);
+      }
+    });
+  };
+
   return (
     <div key={conflict.id} className="conflict">
       <div className="conflict_codeline">
@@ -113,6 +136,8 @@ const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props)
                       blame,
                       relatedUrls,
                       getRelatedUrls,
+                      relAuthCommit!,
+                      getAuthorRel,
                     )}
                   </div>
                 ) : (
