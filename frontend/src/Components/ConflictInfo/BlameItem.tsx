@@ -1,5 +1,6 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 import { Blame, RelatedUrl } from '../../Utils/interface';
 
@@ -39,6 +40,7 @@ const BlameItem = ({
   if (!blameline) return null;
 
   const copyToClipboard = () => {
+    toast.success('클립보드에 복사되었습니다.');
     navigator.clipboard.writeText(blameline.commit_id);
   };
 
@@ -56,7 +58,7 @@ const BlameItem = ({
   return (
     <div className="blame" key={blameline.line_start}>
       <div className="commit_id">
-        <span onClick={() => copyToClipboard}>
+        <span onClick={copyToClipboard}>
           <ContentCopyIcon fontSize="small" padding-right="10px" />
         </span>
         <span className="commit_id_hover">
