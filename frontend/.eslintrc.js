@@ -7,6 +7,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:react/recommended',
+    'plugin:react-hooks/recommended',
 
     'plugin:@typescript-eslint/eslint-recommended',
     'plugin:@typescript-eslint/recommended',
@@ -37,6 +38,7 @@ module.exports = {
     'no-useless-escape': 'off',
     'react/display-name': 'off',
     'react/jsx-no-target-blank': 'off',
+    'array-callback-return': 'error',
     'no-restricted-imports': [
       'error',
       {

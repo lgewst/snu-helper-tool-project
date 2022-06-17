@@ -6,9 +6,10 @@ import { useHistory, useLocation } from 'react-router-dom';
 
 import { Blame, RelatedUrl } from '../../Utils/interface';
 
-import './ConflictInfo.css';
+import BlameItem from './BlameItem';
 import { VersionInput, VersionInputModalContent, VersionSubmitButton } from './ConflictInfo.style';
-import renderBlame from './renderBlame';
+
+import './ConflictInfo.css';
 
 interface Code {
   line: number;
@@ -16,6 +17,7 @@ interface Code {
   function: string;
   mode: number;
 }
+
 interface Conflict {
   id: string;
   code: Code[];
@@ -130,15 +132,15 @@ const ConflictInfo = ({ conflict, blame, relatedUrls, getRelatedCommit }: Props)
                 </div>
                 {blame.length != 0 ? (
                   <div className="blame">
-                    {renderBlame(
-                      Number(conflict.id),
-                      code.line,
-                      blame,
-                      relatedUrls,
-                      getRelatedUrls,
-                      relAuthCommit!,
-                      getAuthorRel,
-                    )}
+                    <BlameItem
+                      id={Number(conflict.id)}
+                      line={code.line}
+                      blame={blame}
+                      relatedUrls={relatedUrls}
+                      getRelatedCommit={getRelatedUrls}
+                      relAuthCommit={relAuthCommit!}
+                      getAuthorRel={getAuthorRel}
+                    />
                   </div>
                 ) : (
                   <CircularProgress

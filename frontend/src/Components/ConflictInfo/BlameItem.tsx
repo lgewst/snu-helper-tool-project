@@ -15,22 +15,30 @@ interface RelatedAuthorCommit {
   }[];
 }
 
-const renderBlame = (
-  id: number,
-  line: number,
-  blame: Blame[],
-  relatedUrls: RelatedUrl[],
-  getRelatedCommit: Function,
-  relAuthCommit: RelatedAuthorCommit[],
-  getAuthorRel: Function,
-) => {
-  const blameline = blame.find((bi) => bi.line_start === line);
-  if (!blameline) return null;
-
+const BlameItem = ({
+  id,
+  line,
+  blame,
+  getAuthorRel,
+  getRelatedCommit,
+  relAuthCommit,
+  relatedUrls,
+}: {
+  id: number;
+  line: number;
+  blame: Blame[];
+  relatedUrls: RelatedUrl[];
+  getRelatedCommit: Function;
+  relAuthCommit: RelatedAuthorCommit[];
+  getAuthorRel: Function;
+}) => {
   const [commit, setCommit] = useState<RelatedAuthorCommit>();
 
+  const blameline = blame.find((bi) => bi.line_start === line);
+
+  if (!blameline) return null;
+
   const copyToClipboard = () => {
-    console.log(blameline.commit_id);
     navigator.clipboard.writeText(blameline.commit_id);
   };
 
@@ -42,6 +50,8 @@ const renderBlame = (
       setCommit(findcommit);
     }
   };
+
+  console.log(commit?.commits);
 
   return (
     <div className="blame" key={blameline.line_start}>
@@ -87,12 +97,16 @@ const renderBlame = (
                   'No related commits'
                 ) : (
                   <>
-                    {commit.commits.length}
-                    {commit.commits.map((commit) => {
-                      <a href={commit.commit_url} target="_blank">
-                        {commit.index}
-                      </a>;
-                    })}
+                    {commit.commits.map((commit) => (
+                      <a
+                        href={commit.commit_url}
+                        target="_blank"
+                        key={commit.commit_url}
+                        style={{ textDecoration: 'none' }}
+                      >
+                        {commit.index + ' '}
+                      </a>
+                    ))}
                   </>
                 )
               ) : (
@@ -117,4 +131,4 @@ const renderBlame = (
   );
 };
 
-export default renderBlame;
+export default BlameItem;
