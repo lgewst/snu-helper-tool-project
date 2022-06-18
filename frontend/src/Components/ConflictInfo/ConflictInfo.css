@@ -79,6 +79,17 @@
   opacity: 0;
 }
 
+.commit_id .commit_id_hover::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 16%;
+  margin-left: -5px;
+  border-width: 15px;
+  border-style: solid;
+  border-color: rgb(255, 255, 255) transparent transparent transparent;
+}
+
 .commit_id:hover .commit_id_hover {
   visibility: visible;
   opacity: 1;
